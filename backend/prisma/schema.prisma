@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  role        Role
+  domain      Domain?  // Optional, applicable for coordinators and leads
+  learners    Learner[]
+  coordinators Coordinator[]
+  events      Event[]  @relation("UserEvents") // Opposite relation field
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  date        DateTime
+  createdBy   String
+  createdByUser User    @relation(fields: [createdBy], references: [id], name: "UserEvents")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Learner {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  attendance  Attendance[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Coordinator {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  domain      Domain
+  type        CoordinatorType
+  servingDays DayOfWeek[] 
+  timetables  Timetable[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Attendance {
+  id          String   @id @default(uuid())
+  learnerId   String
+  learner     Learner  @relation(fields: [learnerId], references: [id])
+  date        DateTime
+  status      AttendanceStatus
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Timetable {
+  id          String   @id @default(uuid())
+  coordinatorId String
+  coordinator Coordinator @relation(fields: [coordinatorId], references: [id])
+  day         DayOfWeek
+  time        String    // E.g., "10:00 AM - 12:00 PM"
+  activity    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  LEARNER
+  COORDINATOR
+  LEAD
+  PRESIDENT
+}
+
+enum Domain {
+  WEB_DEVELOPMENT
+  ANDROID_DEVELOPMENT
+  MACHINE_LEARNING
+  AR_VR
+  UI_UX
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum CoordinatorType {
+  WEB_DEVELOPMENT
+  ANDROID_DEVELOPMENT
+  UI_UX
+  AR_VR
+  CONTENT
+  GRAPHICS
+  MACHINE_LEARNING
+}

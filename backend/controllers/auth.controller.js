@@ -34,9 +34,16 @@ export const register = asyncHandler(async (req, res) => {
 
   const existingEmail = await prisma.user.findUnique({ where: { email } });
   if (existingEmail) throw new ResponseError("Email already registered", 400);
-
-  // @todo! Generate a random password here
-  const hashedPassword = bcrypt.hashSync("TestPass123", 10);
+  const generateRandomPassword = (length = 10) => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+  };
+  const randomPassword = generateRandomPassword();
+  const hashedPassword = bcrypt.hashSync(randomPassword, 10);
 
   const user = await prisma.user.create({
     data: {

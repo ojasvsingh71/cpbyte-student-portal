@@ -59,3 +59,43 @@ export const markAttendance = asyncHandler(async (req, res) => {
     message: "Attendance marked successfully",
   });
 });
+
+export const memberOfDomain = asyncHandler(async (req, res) => {
+  const {domain} = req.query;
+
+  if (!domain) {
+    throw new ResponseError("Domain is required", 400);
+  }
+
+  const validDevDomains = {
+    ANDROID: "ANDROID",
+    ARVR: "ARVR",
+    ML: "ML",
+    WEBDEV: "WEBDEV",
+    UIUX: "UIUX",
+  };
+
+  const validDsaDomains = {
+    JAVA: "JAVA",
+    CPP: "CPP"
+  };
+
+  if (!validDevDomains[domain] && !validDsaDomains[domain]) {
+    throw new ResponseError("Invalid domain", 400);
+  }
+
+  const users = await prisma.user.findMany({
+    where: { role: "USER",
+      OR:[
+        { domain_dev: validDevDomains[domain] },
+        { domain_dsa: validDsaDomains[domain] },
+      ]
+     },
+  });
+
+  res.json({
+    success: true,
+    data: users,
+    message: `Users in domain ${domain} fetched successfully`,
+  });
+})

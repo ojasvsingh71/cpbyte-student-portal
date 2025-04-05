@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import coordinatorRoutes from "./routes/coordinator.route.js";
 import settingsRoutes from "./routes/settings.route.js";
+import adminRoutes from "./routes/admin.route.js";
 
 import errorHandler from "./utils/errorHandler.js";
 
@@ -21,6 +22,8 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/coordinator", coordinatorRoutes);
 
 app.use("/api/v1/settings", settingsRoutes);
+
+app.use("/api/v1/admin", adminRoutes)
 
 app.use(errorHandler);
 

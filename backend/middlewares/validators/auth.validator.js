@@ -69,6 +69,14 @@ export const validateRegisterRequest = asyncHandler(async (req, res, next) => {
           "Role must be either 'ADMIN' or 'USER' or a 'COORDINATOR'",
       },
     },
+    year: {
+      notEmpty: {
+        errorMessage: "Year is required",
+      },
+      isInt: {
+        errorMessage: "Year must be an integer",
+      }
+    },
     domain_dev: {
       isString: {
         errorMessage: "Domain Dev must be a string",

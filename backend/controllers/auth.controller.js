@@ -27,7 +27,7 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const register = asyncHandler(async (req, res) => {
-  const { name, library_id, email, role, domain_dev, domain_dsa } = req.body;
+  const { name, library_id, email, role, domain_dev, domain_dsa, year } = req.body;
 
   const existingUser = await prisma.user.findUnique({ where: { library_id } });
   if (existingUser) throw new ResponseError("User already exists", 400);
@@ -51,6 +51,7 @@ export const register = asyncHandler(async (req, res) => {
       library_id,
       email,
       role,
+      year,
       domain_dev,
       domain_dsa,
       password: hashedPassword,

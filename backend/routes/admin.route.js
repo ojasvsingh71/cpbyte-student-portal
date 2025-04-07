@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/editUserProfile',isAdmin, editUserProfile);
 
-router.delete('/deleteUser', deleteUser);
+router.delete('/deleteUser',isAdmin, deleteUser);
 
 
 export default router;

@@ -47,7 +47,7 @@ export const markAttendance = asyncHandler(async (req, res) => {
   await prisma.attendance.create({
     data: {
       user: { connect: { id: user.id } },
-      status: status==="PRESENT" ? "PRESENT" : status==="ABSENT_WITH_REASON" ? "ABSENT_WITH_REASON" : "ABSENT_WITHOUT_REASON",
+      status: status==="PRESENT" ? "PRESENT" : status==="ABSENT WITH REASON" ? "ABSENT_WITH_REASON" : "ABSENT_WITHOUT_REASON",
       date: new Date(),
     },
   });

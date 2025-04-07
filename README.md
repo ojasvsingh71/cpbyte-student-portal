@@ -47,6 +47,26 @@ npm run dev
 
 The server should start at [https://localhost:8080](https://localhost:8080)
 
+### Frontend
+The frontend is written in ReactJS and Tailwind CSS for styling.
+
+#### Steps
+
+1. Navigate to the `frontend` directory
+```sh
+cd frontend
+```
+
+2. Install dependencies 
+```sh
+npm install
+```
+
+3. Go Live
+```sh
+npm run dev
+```
+
 ### Documentation
 
 #### Importing and using the Insomnia Request Collection

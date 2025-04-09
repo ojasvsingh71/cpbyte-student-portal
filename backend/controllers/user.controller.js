@@ -12,3 +12,15 @@ export const userAttendance = asyncHandler(async (req, res) => {
 
     res.json({ success: true,message: "Attendance Fetched successfully", data: user.attendances });
 });
+
+export const getProfile = asyncHandler(async (req, res) => {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      include:{
+        attendances: true,
+      }
+    });
+    if (!user) throw new ResponseError("User not found", 404);
+  
+    res.status(200).json({ success: true, message: "User profile fetched", data: user });
+  });

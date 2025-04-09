@@ -5,6 +5,7 @@ import noimage from "../../public/noImage.webp";
 const MarkAttendance = () => {
   const [selectedStatus, setSelectedStatus] = useState({});
   const [DSA, setDSA] = useState(true);
+  const [toggleAll, setToggleAll] = useState(false);
   
   const permissionRequests = [
     {
@@ -89,6 +90,18 @@ const MarkAttendance = () => {
     console.log(result);
   };
 
+  const markAllPresent = () => {
+    setToggleAll(!toggleAll);
+    if(!toggleAll) {
+    permissionRequests.map((items)=>{
+      handleStatusChange(items.libraryId, "PRESENT")
+    })
+  }
+  else {
+    setSelectedStatus({});
+  }
+  };
+
   return (
     <div className="bg-[#070b0f] text-white min-h-screen w-full p-8">
       <div className="p-4">
@@ -142,13 +155,18 @@ const MarkAttendance = () => {
               WEBDEV Attendance
             </button>
           </div>
+          <h2 className="text-lg font-semibold mb-4">132 JAVA Members</h2>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">132 JAVA Members</h2>
             <div className="flex text-sm gap-2">
               <span className="text-zinc-500">Attendance for Date:</span>
               <span>07 April 2025</span>
             </div>
+            <div className="flex items-center gap-2 ml-auto">
+              <input type="checkbox" className="ml-4" onChange={markAllPresent}/>
+              <span className="text-sm text-zinc-300">Mark all present</span>
+            </div>
           </div>
+          
           <div className="overflow-x-auto rounded-2xl">
             <form onSubmit={handleSubmit}>
               <table className="w-full">

@@ -45,6 +45,7 @@ enum Role {
   ADMIN
   COORDINATOR
   USER
+  LEAD
 }
 
 enum DevDomain {

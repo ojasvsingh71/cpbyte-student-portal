@@ -12,6 +12,6 @@ import isAdmin from "../middlewares/auth/isAdmin.js";
 const router = Router();
 
 router.post("/login", validateLoginRequest, login);
-router.post("/register", isAdmin, validateRegisterRequest, register);
+router.post("/register", isAdmin , validateRegisterRequest, register);
 
 export default router;

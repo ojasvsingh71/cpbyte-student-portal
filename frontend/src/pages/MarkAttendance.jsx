@@ -1,93 +1,69 @@
-import React, { useState } from "react";
-import { Search } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import noimage from "../../public/noImage.webp";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const MarkAttendance = () => {
   const [selectedStatus, setSelectedStatus] = useState({});
   const [DSA, setDSA] = useState(true);
-  
-  const permissionRequests = [
-    {
-      id: 13,
-      employee: "Dianne Russell",
-      libraryId: "2327CSE1290",
-      duration: "7 days",
-      attended: "50%",
-      status: "Pendimg",
-    },
-    {
-      id: 14,
-      employee: "Jane Cooper",
-      libraryId: "2327CSE1291",
-      duration: "5 days",
-      attended: "50%",
-      status: "Pending",
-    },
-    {
-      id: 15,
-      employee: "Kristin Watson",
-      libraryId: "2327CSE1292",
-      duration: "3 days",
-      attended: "50%",
-      status: "Pending",
-    },
-    {
-      id: 16,
-      employee: "Marvin McKinney",
-      libraryId: "2327CSE1293",
-      duration: "3 days",
-      attended: "50%",
-      status: "Pending",
-    },
-    {
-      id: 17,
-      employee: "Eleanor Pena",
-      libraryId: "2327CSE1294",
-      duration: "30 days",
-      attended: "50%",
-      status: "Pending",
-    },
-    {
-      id: 18,
-      employee: "Piastri O",
-      libraryId: "2327CSE1295",
-      duration: "2 days",
-      attended: "50%",
-      status: "Pending",
-    },
-    {
-      id: 19,
-      employee: "Charles Zao",
-      libraryId: "2327CSE1296",
-      duration: "3 days",
-      attended: "50%",
-      status: "Pending",
-    },
-    {
-      id: 20,
-      employee: "Devon Lane",
-      libraryId: "2327CSE1297",
-      duration: "5 days",
-      attended: "50%",
-      status: "pending",
-    },
-  ];
+  const [toggleAll, setToggleAll] = useState(false);
+  const { domain_dev, domain_dsa} = useSelector(state=>state.dashboard.data)
+  const [permissionRequests, setPermissionRequests]= useState([])
 
-  const handleStatusChange = (libraryId, status) => {
+  const handleStatusChange = (library_id, status) => {
     setSelectedStatus((prev) => ({
       ...prev,
-      [libraryId]: status,
+      [library_id]: status,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const result = permissionRequests.map((req) => ({
-      libraryId: req.libraryId,
-      status: selectedStatus[req.libraryId] || "ABSENT_WITHOUT_REASON",
+      library_id: req.library_id,
+      status: selectedStatus[req.library_id] || "ABSENT_WITHOUT_REASON",
     }));
-    console.log(result);
+    
+    await axios.post("http://localhost:8080/api/v1/coordinator/markAttendance",{
+      responses:result,
+      subject:DSA?"DSA":"DEV"
+    },{
+      headers:{
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
   };
+
+  const markAllPresent = () => {
+    setToggleAll(!toggleAll);
+    if(!toggleAll) {
+    permissionRequests.map((items)=>{
+      handleStatusChange(items.library_id, "PRESENT")
+    })
+  }
+  else {
+    setSelectedStatus({});
+  }
+  };
+
+  const allMembers = useSelector(state=>state.attendance.data)
+  const {name, role} = useSelector(state=> state.dashboard.data)
+  
+  useEffect(()=>{
+      setPermissionRequests(DSA?allMembers.dsaMembers:allMembers.devMembers)
+  },[DSA,allMembers])
+
+  if(role!=="COORDINATOR"){
+    return (
+      <div className="bg-[#070b0f] text-white min-h-screen w-full p-8">
+        <div className="flex flex-col items-center justify-center h-full">
+          <h1 className="text-4xl font-bold text-red-500 mb-4">403</h1>
+          <p className="text-lg text-gray-300">You are not authorized to access this page.</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-[#070b0f] text-white min-h-screen w-full p-8">
@@ -122,8 +98,8 @@ const MarkAttendance = () => {
                 />
               </div>
               <div className="text-xs">
-                <div className="font-medium">Roushan Srivastav</div>
-                <div className="text-gray-400">COORDINATOR</div>
+                <div className="font-medium">{name}</div>
+                <div className="text-gray-400">{role}</div>
               </div>
             </div>
           </div>
@@ -131,24 +107,34 @@ const MarkAttendance = () => {
         <div>
           <div className="flex gap-2 mb-8">
             <button
-              onClick={() => setDSA(true)}
+              onClick={() => {setDSA(true)
+                setPermissionRequests(allMembers.dsaMembers)
+              }}
               className={`${DSA?"bg-[#0ec1e7]":"bg-[#212327]"} px-4 py-2 rounded text-sm font-medium cursor-pointer`}
             >
-              JAVA Attendance
+              {domain_dsa} Attendance
             </button>
             <button 
-              onClick={() => setDSA(false)}
+              onClick={() => {setDSA(false)
+                setPermissionRequests(allMembers.devMembers)
+              }
+              }
             className={`${!DSA?"bg-[#0ec1e7]":"bg-[#212327]"} px-4 py-2 rounded text-sm font-medium cursor-pointer`}>
-              WEBDEV Attendance
+              {domain_dev} Attendance
             </button>
           </div>
+          <h2 className="text-lg font-semibold mb-4">{`${permissionRequests?.length} ${DSA?domain_dsa:domain_dev} Members`}</h2>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">132 JAVA Members</h2>
             <div className="flex text-sm gap-2">
               <span className="text-zinc-500">Attendance for Date:</span>
-              <span>07 April 2025</span>
+              <span>{new Date().toDateString()}</span>
+            </div>
+            <div className="flex items-center gap-2 ml-auto">
+              <input type="checkbox" className="ml-4" onChange={markAllPresent}/>
+              <span className="text-sm text-zinc-300">Mark all present</span>
             </div>
           </div>
+          
           <div className="overflow-x-auto rounded-2xl">
             <form onSubmit={handleSubmit}>
               <table className="w-full">
@@ -162,26 +148,26 @@ const MarkAttendance = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {permissionRequests.map((request) => (
-                    <tr key={request.id} className="border-b border-gray-800">
-                      <td className="py-4 px-4">{request.id}</td>
+                  {permissionRequests?.map((request, key) => (
+                    <tr key={key} className="border-b border-gray-800">
+                      <td className="py-4 px-4">{key+1}</td>
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-2">
                           <div className="h-8 w-8 bg-gray-500 rounded-full overflow-hidden">
                             <img
                               src={noimage}
-                              alt={request.employee}
+                              alt={request.name}
                               className="h-full w-full object-cover"
                             />
                           </div>
-                          <span>{request.employee}</span>
+                          <span>{request.name}</span>
                         </div>
                       </td>
                       <td className="py-4 px-4 w-[15rem]">
-                        {request.libraryId}
+                        {request.library_id}
                       </td>
                       <td className="py-4 px-4 w-[13rem]">
-                        {request.attended}
+                        {request.dsaAttendance}
                       </td>
                       <td className="py-4 px-4 gap-2 flex">
                         {[
@@ -190,7 +176,7 @@ const MarkAttendance = () => {
                           "ABSENT_WITH_REASON",
                         ].map((status) => {
                           const isSelected =
-                            selectedStatus[request.libraryId] === status;
+                            selectedStatus[request.library_id] === status;
                           let colorClasses = "";
                           if (status === "PRESENT")
                             colorClasses = isSelected
@@ -210,7 +196,7 @@ const MarkAttendance = () => {
                               type="button"
                               key={status}
                               onClick={() =>
-                                handleStatusChange(request.libraryId, status)
+                                handleStatusChange(request.library_id, status)
                               }
                               className={`text-white px-3 py-1 rounded text-xs ${colorClasses}`}
                             >

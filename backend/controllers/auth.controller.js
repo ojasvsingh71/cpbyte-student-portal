@@ -23,6 +23,11 @@ export const login = asyncHandler(async (req, res) => {
     { expiresIn: "1h" }
   );
 
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+  });
+
   res.json({ success: true, message: "Login successfull", data: token });
 });
 
@@ -66,4 +71,9 @@ export const register = asyncHandler(async (req, res) => {
     message: "User registered successfully",
     data: user,
   });
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  res.clearCookie("token", { httpOnly: true, secure: true });
+  res.status(200).json({ success: true, message: "Logout successful" });
 });

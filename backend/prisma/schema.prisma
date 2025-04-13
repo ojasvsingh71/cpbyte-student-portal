@@ -22,6 +22,8 @@ model User {
   role        Role         @default(USER)
   domain_dev  DevDomain
   domain_dsa  DSADomain
+  dsaAttendance  Int       @default(0)
+  devAttendance  Int       @default(0)
   mentor_dev  String?
   mentor_dsa  String?
   year        Int          @default(1)
@@ -37,6 +39,7 @@ model Attendance {
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   date      DateTime
   status    AttendanceStatus
+  subject   Subject
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 }
@@ -53,6 +56,11 @@ enum DevDomain {
   ML
   WEBDEV
   UIUX
+}
+
+enum Subject{
+  DSA
+  DEV
 }
 
 enum DSADomain {

@@ -1,8 +1,11 @@
 import React from 'react'
 import { FaFilter } from 'react-icons/fa'
 import DaysCard from './DaysCard'
+import { useSelector } from 'react-redux';
 
 function AttendanceCard() {
+  const {attendances} = useSelector(state=>state.dashboard.data)
+  
   return (
     <div className='w-full h-fit text-white p-5 mr-5'>
       <div className='bg-gray-900 border border-gray-600 rounded-2xl p-8 flex flex-col gap-8'>
@@ -16,12 +19,11 @@ function AttendanceCard() {
             </div>
         </div>
         <div className='grid grid-cols-4 gap-4'>
-            <DaysCard date="07 April 2025" subject="DSA" status="PRESENT" />
-            <DaysCard date="06 April 2025" subject="DEV" status="ABSENT" />
-            <DaysCard date="05 April 2025" subject="DEV" status="PRESENT" />
-            <DaysCard date="04 April 2025" subject="DSA" status="PRESENT" />
-            <DaysCard date="03 April 2025" subject="DSA" status="ABSENT" />
-            <DaysCard date="02 April 2025" subject="DEV" status="PRESENT" />
+          {
+          attendances?.map(day=>{
+            return <DaysCard date={new Date(day.date).toDateString()} subject={day.subject} status={day.status} />
+          })
+          }
         </div>
       </div>
     </div>

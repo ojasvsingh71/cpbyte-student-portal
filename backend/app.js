@@ -6,12 +6,15 @@ import userRoutes from "./routes/user.route.js";
 import coordinatorRoutes from "./routes/coordinator.route.js";
 import settingsRoutes from "./routes/settings.route.js";
 import adminRoutes from "./routes/admin.route.js";
+import cors from "cors";
 
 import errorHandler from "./utils/errorHandler.js";
 
 config();
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json({ limit: "16kb" }));
 

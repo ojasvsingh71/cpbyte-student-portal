@@ -1,25 +1,70 @@
 import React, { useState } from 'react';
 import { User, Lock, Mail, BookOpen, Calendar, CreditCard, Camera, Save } from 'lucide-react';
 import noimage from '../../public/noImage.webp';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 export default function UserSettings() {
-  const [formData, setFormData] = useState({
-    email: 'user@example.com',
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-    role: 'COORDINATOR',
-    year: '2',
-    libraryId: '2327CSE1290'
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+  const user=useSelector(state=>state.dashboard.data)
+  
+  const fixed={
+    email: user.email,
+    role: user.role,
+    year: user.year,
+    libraryId: user.library_id
   };
+
+  const handlePass=async(e)=>{
+    e.preventDefault();
+    const oldPass=e.target[0].value;
+    const newPass=e.target[1].value;
+    const confPass=e.target[2].value;
+
+    if(!oldPass||!newPass||!confPass)
+      return console.log("Fill all the fields");
+    try {
+      await axios.post("http://localhost:8080/api/v1/settings/editPass",{
+        oldPass,
+        newPass,
+        confPass
+      },{
+        headers:{
+          "Authorization":`Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      console.log("Succesfully edited!!");
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleAvatar=(e)=>{
+    e.preventDefault();
+    const avatar = e.target[0].files[0];
+    if(!avatar)
+      return console.log("Choose an image!!");
+      
+    const reader = new FileReader()
+    reader.readAsDataURL(avatar)
+    reader.onload=async()=>{
+      const image=reader.result;
+      try {
+        await axios.post("http://localhost:8080/api/v1/settings/editAvatar",{
+          image
+        },{
+          headers:{
+            "Authorization":`Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        console.log("Avatar edited Successfully!!");
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#070b0f] w-full text-gray-200 p-4 md:p-8">
@@ -28,7 +73,7 @@ export default function UserSettings() {
           <div className='bg-[#0ec1e7] w-2 h-8 rounded-full'></div>
           <h1 className="text-2xl md:text-3xl font-bold text-white">Account Settings</h1>
         </div>
-        <form className="space-y-8">
+        <div className="space-y-8">
           <div className="bg-gray-900 border border-gray-500 rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center">
               <User className="mr-2" size={20} />
@@ -38,7 +83,7 @@ export default function UserSettings() {
               <div className="relative">
                 <div className="w-32 h-32 bg-gray-700 rounded-full overflow-hidden flex items-center justify-center">
                   <img 
-                    src={noimage} 
+                    src={user.avatar||noimage} 
                     alt="User avatar" 
                     className="w-full h-full object-cover"
                   />
@@ -50,9 +95,10 @@ export default function UserSettings() {
                   <Camera size={16} />
                 </button>
               </div>
-              <div className="flex flex-col gap-2">
+              <form onSubmit={handleAvatar} className='w-full'>
+              <div className="flex flex-col gap-2 mb-4">
                 <p className="text-gray-400">Upload a new profile picture</p>
-                <label htmlFor="image" className="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 text-center rounded-md transition-colors" >
+                <label htmlFor="image" className="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 w-fit text-center rounded-md transition-colors" >
                 <input
                   type="file"
                   id="image"
@@ -66,14 +112,26 @@ export default function UserSettings() {
                 <p className="text-xs text-gray-500">Recommended: .jpep, .png, .webp
                 </p>
               </div>
+              <div className="flex justify-end">
+                <button
+                type="submit"
+                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
+                >
+                  <Save className="mr-2" size={18} />
+                  Save Changes
+                </button>
+              </div>
+              </form>
             </div>
           </div>
           <div className="bg-gray-900 border border-gray-500 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <div className='mb-4 w-full'>
+            <h2 className="text-xl font-semibold flex items-center">
               <Mail className="mr-2" size={20} />
               Account Information
             </h2>
-            
+            <h2 className='text-red-500 text-xs'>*Only Admin has the Access to Edit your Account information.</h2>
+            </div>
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-1">
@@ -84,8 +142,8 @@ export default function UserSettings() {
                     type="email"
                     id="email"
                     name="email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={fixed.email}
+                    disabled
                     className="w-full bg-gray-800 border border-gray-600 rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   />
                   <Mail className="absolute left-3 top-2.5 text-gray-400" size={16} />
@@ -101,8 +159,8 @@ export default function UserSettings() {
                     id="role"
                     name="role"
                     placeholder="Select Role"
-                    value={formData.role}
-                    onChange={handleChange}
+                    value={fixed.role}
+                    disabled
                     className="w-full bg-gray-800 border border-gray-600 rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none"
                   >
                     <option value="USER">User</option>
@@ -124,8 +182,8 @@ export default function UserSettings() {
                       id="year"
                       name="year"
                       placeholder='Enter Year of College'
-                      value={formData.year}
-                      onChange={handleChange}
+                      value={fixed.year}
+                      disabled
                       className="w-full bg-gray-800 border border-gray-600 rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     />
                     <Calendar className="absolute left-3 top-2.5 text-gray-400" size={16} />
@@ -142,8 +200,8 @@ export default function UserSettings() {
                       id="libraryId"
                       name="libraryId"
                       placeholder='Enter Library ID'
-                      value={formData.libraryId}
-                      onChange={handleChange}
+                      value={fixed.libraryId}
+                      disabled
                       className="w-full bg-gray-800 border border-gray-600 rounded-md py-2 px-4 pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                     />
                     <CreditCard className="absolute left-3 top-2.5 text-gray-400" size={16} />
@@ -158,7 +216,7 @@ export default function UserSettings() {
               Change Password
             </h2>
             
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={handlePass}>
               <div>
                 <label htmlFor="oldPassword" className="block text-sm font-medium mb-1">
                   Current Password
@@ -168,8 +226,6 @@ export default function UserSettings() {
                   id="oldPassword"
                   name="oldPassword"
                   placeholder='Enter Current Password'
-                  value={formData.oldPassword}
-                  onChange={handleChange}
                   className="w-full bg-gray-800 border border-gray-600 rounded-md py-2 px-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 />
               </div>
@@ -183,8 +239,6 @@ export default function UserSettings() {
                   id="newPassword"
                   name="newPassword"
                   placeholder='Enter New Password'
-                  value={formData.newPassword}
-                  onChange={handleChange}
                   className="w-full bg-gray-800 border border-gray-600 rounded-md py-2 px-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 />
               </div>
@@ -198,25 +252,21 @@ export default function UserSettings() {
                   id="confirmPassword"
                   name="confirmPassword"
                   placeholder='Confirm New Password'
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
                   className="w-full bg-gray-800 border border-gray-600 rounded-md py-2 px-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 />
               </div>
-            </div>
+              <div className="flex justify-end">
+                <button
+                type="submit"
+                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
+                >
+                  <Save className="mr-2" size={18} />
+                  Save Changes
+                </button>
+              </div>
+            </form>
           </div>
-          
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
-            >
-              <Save className="mr-2" size={18} />
-              Save Changes
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );

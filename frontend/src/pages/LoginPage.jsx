@@ -3,17 +3,25 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import logo from '../../public/CPBYTE_LOGO.jpg'
+import { useDispatch, useSelector } from 'react-redux';
+import { loginFailure, loginStart, loginSuccess } from '../redux/slices/authSlice';
 
 function LoginPage() {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
+    const dispatch= useDispatch()
+    const {error} = useSelector(state=>state.authSlice)
+
+    const {loading} = useSelector(state=>state.authSlice)
     const handleSubmit = async(e) => {
+        dispatch(loginStart())
         e.preventDefault();
         const libraryId = e.target[0].value;
         const password = e.target[1].value;
         if (!libraryId || !password) {
             return;
         }
+        try{
         const response = await axios.post('http://localhost:8080/api/v1/auth/login', {
             library_id: libraryId,
             password: password,
@@ -21,8 +29,12 @@ function LoginPage() {
 
         if(response.status==200){
             localStorage.setItem('token', response.data.data)
+            dispatch(loginSuccess(response.data.data))            
             navigate('/')
         }
+      }catch(error){
+          dispatch(loginFailure(error.response.data.message))
+      }
     }
 return (
     <div className="flex items-center justify-center min-h-screen bg-[#070b0f]">
@@ -34,6 +46,13 @@ return (
           <h2 className="text-3xl font-extrabold text-white">Student Portal Access</h2>
           <p className="mt-2 text-sm text-gray-400">Sign in to your CPBYTE account</p>
         </div>
+
+        {error!==null&&(
+          <div className='w-full bg-red-500 text-white rounded-xl overflow-hidden'>
+            <h1 className='p-2 w-full text-center'>{error}!!</h1>
+          </div>
+        )
+        }
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -85,10 +104,9 @@ return (
           <div>
             <button
               type="submit"
-              className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-800"
-            >
+              className={`flex justify-center w-full px-4 py-2 text-sm font-medium text-white ${loading?"bg-indigo-200":"bg-indigo-600"} border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-800`}            >
               <LogIn className="w-5 h-5 mr-2" />
-              Sign in
+              {loading?"Signing In":"Sign in"}
             </button>
           </div>
         </form>

@@ -18,8 +18,8 @@ function DetailCard() {
             <span className='text-white text-2xl'>Detail Member</span>
         </div>
         <div className='flex gap-12 items-center mb-4'>
-            <div className='w-28 h-28 rounded-full bg-[#0ec1e7]'>
-                <img src={user?.avatar===""?noimage:user.avatar} alt="avatar" className='rounded-full'/>
+            <div className='w-28 h-28 overflow-hidden flex items-center justify-between rounded-full'>
+                <img src={user?.avatar===""?noimage:user.avatar} alt="avatar" className='rounded-full h-full w-full object-cover'/>
             </div>
             <div className='flex flex-col gap-4'>
                 <div>

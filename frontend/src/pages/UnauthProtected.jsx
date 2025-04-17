@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { FiLoader } from 'react-icons/fi'
 import { fetchUserOfDomainFailure, fetchUsersOfDomainStart, fetchUsersOfDomainSuccess } from '../redux/slices/getDomainUserSlice'
+import { fetchEventsStart } from '../redux/slices/eventSlice'
 
 function UnauthProtected({children}) {
   const dispatch = useDispatch()  
@@ -40,6 +41,7 @@ function UnauthProtected({children}) {
         dispatch(fetchDashboardDataFailure(error.message))
       }
     }
+    dispatch(fetchEventsStart())
     if(!data||Object.keys(data).length==0)
     fetchData();
     },[dispatch,data])

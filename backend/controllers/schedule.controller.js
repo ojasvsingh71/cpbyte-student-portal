@@ -26,7 +26,14 @@ export const getEvents = asyncHandler(async(req, res)=>{
         }
     });
 
-    res.status(200).json(events);
+    const organizedData = events.map((event)=>{
+        return{
+            date:event.date,
+            events:event.events
+        }
+    })
+
+    res.status(200).json(organizedData);
 })
 
 export const addEvent = asyncHandler(async(req, res)=>{

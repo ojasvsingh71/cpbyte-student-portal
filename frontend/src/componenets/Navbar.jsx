@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardDataSuccess } from "../redux/slices";
 import { fetchUsersOfDomainSuccess } from "../redux/slices/getDomainUserSlice";
 import { logoutFailure, logoutSuccess } from "../redux/slices/authSlice";
+import { fetchEventsSuccess } from "../redux/slices/eventSlice";
 
 function Navbar() {
 
@@ -34,6 +35,7 @@ function Navbar() {
       })
       dispatch(fetchDashboardDataSuccess({}))
       dispatch(fetchUsersOfDomainSuccess({}))
+      dispatch(fetchEventsSuccess({}))
       dispatch(logoutSuccess())
       localStorage.removeItem("token");
       navigate("/login")

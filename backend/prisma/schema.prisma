@@ -44,6 +44,23 @@ model Attendance {
   updatedAt DateTime         @updatedAt
 }
 
+model Schedule {
+  id        String   @id @default(uuid())
+  date      DateTime @unique
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  events    Event[]
+}
+
+model Event {
+  id         String   @id @default(uuid())
+  content    String
+  scheduleId String
+  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
 enum Role {
   ADMIN
   COORDINATOR
@@ -59,7 +76,7 @@ enum DevDomain {
   UIUX
 }
 
-enum Subject{
+enum Subject {
   DSA
   DEV
 }

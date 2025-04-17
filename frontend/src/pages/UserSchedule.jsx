@@ -1,23 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
+import {useDispatch, useSelector} from 'react-redux'
+import { fetchEventsStart, fetchEventsSuccess } from '../redux/slices/eventSlice';
 
 const UserSchedule=()=> {
+
+  const user = useSelector(state=> state.dashboard.data)
+  const {event, loading} = useSelector(state=>state.event)
+  
+  const dispatch = useDispatch();
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [events, setEvents] = useState({});
   const [eventText, setEventText] = useState("");
-  const [eventColor, setEventColor] = useState("bg-[#0ec1e7]");
+  
+
+  useEffect(()=>{
+    async function getMonthsEvents(){
+      dispatch(fetchEventsStart())
+      const month = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}`;
+      
+      const response = await axios.get("http://localhost:8080/api/v1/schedule/monthEvents",{
+        headers:{
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+          params:{
+            month:month
+        }
+      })
+
+      const organizedData = {};
+
+      response.data.forEach(entry => {
+      const date = entry.date.slice(0, 10);
+      organizedData[date] = entry.events;
+      });
+      
+      dispatch(fetchEventsSuccess(organizedData))          
+    }
+    if(loading||!event||event.length===0)
+    getMonthsEvents()
+    
+  },[dispatch, loading])
 
   const months = ["January", "February", "March", "April", "May", "June", 
                   "July", "August", "September", "October", "November", "December"];
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  
-  const colors = [
-    { name: "Purple", class: "bg-purple-500" },
-    { name: "Blue", class: "bg-blue-500" },
-    { name: "Green", class: "bg-green-500" },
-    { name: "Red", class: "bg-red-500" },
-    { name: "Orange", class: "bg-orange-500" }
-  ];
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -42,45 +70,54 @@ const UserSchedule=()=> {
   
   const nextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+    dispatch(fetchEventsStart())
   };
   
   const prevMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+    dispatch(fetchEventsStart())
   };
   
   const formatDateKey = (date) => {
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   };
   
-  const addEvent = () => {
-    if (!eventText.trim()) return;
-    
-    const dateKey = formatDateKey(selectedDate);
-    const updatedEvents = {...events};
-    
-    if (!updatedEvents[dateKey]) {
-      updatedEvents[dateKey] = [];
+  const addEvent = async() => {
+    if (!eventText.trim()) return;    
+
+    const dateKey = new Date(selectedDate);    
+    const utcDateOnly = new Date(Date.UTC(
+      dateKey.getFullYear(),
+      dateKey.getMonth(),
+      dateKey.getDate()
+    ));
+
+    try {
+      const event = await axios.post("http://localhost:8080/api/v1/schedule/addEvent",{
+        date:utcDateOnly,
+        event:eventText
+      },
+      {
+        headers:{
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      dispatch(fetchEventsStart())
+    } catch (error) {
+      console.log(error);
     }
-    
-    updatedEvents[dateKey].push({
-      id: Date.now(),
-      text: eventText,
-      color: eventColor
-    });
-    
-    setEvents(updatedEvents);
     setEventText("");
   };
   
-  const removeEvent = (dateKey, eventId) => {
-    const updatedEvents = {...events};
-    updatedEvents[dateKey] = events[dateKey].filter(event => event.id !== eventId);
-    
-    if (updatedEvents[dateKey].length === 0) {
-      delete updatedEvents[dateKey];
-    }
-    
-    setEvents(updatedEvents);
+  const removeEvent = async(eventId) => {
+      await axios.post("http://localhost:8080/api/v1/schedule/removeEvent",{
+        eventId
+      },{
+        headers:{
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      dispatch(fetchEventsStart())
   };
   
   const days = getDaysInMonth(currentMonth);
@@ -132,8 +169,12 @@ const UserSchedule=()=> {
               day.getDate() === selectedDate.getDate() &&
               day.getMonth() === selectedDate.getMonth() &&
               day.getFullYear() === selectedDate.getFullYear() : false;
-            
-            const dayEvents = dateKey && events[dateKey] ? events[dateKey] : [];
+            var dayEvents;
+            if(dateKey && event){
+              dayEvents = event[dateKey] || [];
+            }else{
+              dayEvents=[]
+            }
             
             return (
               <div 
@@ -150,18 +191,9 @@ const UserSchedule=()=> {
                       {dayEvents.map(event => (
                         <div 
                           key={event.id} 
-                          className={`${event.color} text-white text-xs p-1 mb-1 rounded truncate flex justify-between`}
+                          className={`bg-purple-500 text-white text-xs p-1 mb-1 rounded truncate flex justify-between`}
                         >
-                          <span className="truncate">{event.text}</span>
-                          <button 
-                            className="hover:bg-gray-900 hover:bg-opacity-20 rounded px-1" 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeEvent(dateKey, event.id);
-                            }}
-                          >
-                            ×
-                          </button>
+                          <span className="truncate">{event.content}</span>
                         </div>
                       ))}
                     </div>
@@ -172,26 +204,14 @@ const UserSchedule=()=> {
           })}
         </div>
         
+        {user.role==="COORDINATOR"&&(
+        <>
         <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
           <h3 className="text-lg font-medium mb-3 text-[#0ec1e7]">
             {selectedDate.getDate()} {months[selectedDate.getMonth()]} {selectedDate.getFullYear()}
           </h3>
           
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-400 mb-1">
-              Event Colors
-            </label>
-            <div className="flex space-x-2 mb-3">
-              {colors.map(color => (
-                <button
-                  key={color.class}
-                  className={`w-6 h-6 rounded-full ${color.class} ${eventColor === color.class ? 'ring-2 ring-white' : ''}`}
-                  onClick={() => setEventColor(color.class)}
-                  title={color.name}
-                />
-              ))}
-            </div>
-            
+          <div className="mb-4">            
             <textarea
               value={eventText}
               onChange={(e) => setEventText(e.target.value)}
@@ -212,17 +232,17 @@ const UserSchedule=()=> {
         <div className="mt-6">
           <h3 className="text-lg font-medium mb-3 text-[#0ec1e7]">Events for {selectedDate.getDate()} {months[selectedDate.getMonth()]}</h3>
           
-          {events[formatDateKey(selectedDate)] && events[formatDateKey(selectedDate)].length > 0 ? (
+          {event && event[formatDateKey(selectedDate)] && event[formatDateKey(selectedDate)].length > 0 ? (
             <div className="space-y-2">
-              {events[formatDateKey(selectedDate)].map(event => (
+              {event[formatDateKey(selectedDate)].map(event => (
                 <div 
                   key={event.id} 
-                  className={`${event.color} p-3 rounded flex justify-between items-center`}
+                  className={`${event.color} p-3 rounded flex justify-between items-center border-b-2 border-[#0ec1e7]`}
                 >
-                  <span>{event.text}</span>
+                  <span>{event.content}</span>
                   <button 
-                    onClick={() => removeEvent(formatDateKey(selectedDate), event.id)}
-                    className="p-1 hover:bg-black hover:bg-opacity-20 rounded"
+                    onClick={() => removeEvent(event.id)}
+                    className="p-1 text-red-500 cursor-pointer hover:bg-black hover:bg-opacity-20 rounded"
                   >
                     Remove
                   </button>
@@ -233,6 +253,8 @@ const UserSchedule=()=> {
             <p className="text-gray-400">No events scheduled for this day.</p>
           )}
         </div>
+        </>
+      )}
       </div>
     </div>
   );

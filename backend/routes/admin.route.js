@@ -6,10 +6,10 @@ const router = express.Router();
 
 router.post('/editUserProfile',isAdmin, editUserProfile);
 
-router.delete('/deleteUser',isAdmin, deleteUser);
-router.get('/users', getAllUsers);
-router.get('/coordinators', getAllCoordinators);
-router.get('/leads', getAllLeads);
+router.delete('/deleteUser',isAdmin , deleteUser);
+router.get('/users',isAdmin , getAllUsers);
+router.get('/coordinators',isAdmin , getAllCoordinators);
+router.get('/leads',isAdmin, getAllLeads);
 
 
 export default router;

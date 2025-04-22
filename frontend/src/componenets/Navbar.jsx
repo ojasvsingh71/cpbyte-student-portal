@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../public/CPBYTE_Logo.jpg";
 import { RiHome4Line } from "react-icons/ri";
 import { GrSchedulePlay } from "react-icons/gr";
@@ -6,7 +6,7 @@ import { TbHelpOctagon } from "react-icons/tb";
 import { IoMdSettings } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlinePieChart } from "react-icons/ai";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardDataSuccess } from "../redux/slices";
@@ -15,102 +15,156 @@ import { logoutFailure, logoutSuccess } from "../redux/slices/authSlice";
 import { fetchEventsSuccess } from "../redux/slices/eventSlice";
 
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const {role} = useSelector(state=>state.dashboard.data)
+  const { role } = useSelector(state => state.dashboard.data);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth >= 768) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   const getActiveClass = (path) => {
     return location.pathname === path ? 'bg-[#212327] text-[#0ec1e7]' : 'text-gray-300';
   };
 
-  const logout = async()=>{
+  const logout = async() => {
     try {
-      await axios.get("http://localhost:8080/api/v1/auth/logout",{
-        headers:{
-          "Authorization":`Bearer ${localStorage.getItem("token")}`
+      await axios.get("http://localhost:8080/api/v1/auth/logout", {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
-      })
-      dispatch(fetchDashboardDataSuccess({}))
-      dispatch(fetchUsersOfDomainSuccess({}))
-      dispatch(fetchEventsSuccess({}))
-      dispatch(logoutSuccess())
+      });
+      dispatch(fetchDashboardDataSuccess({}));
+      dispatch(fetchUsersOfDomainSuccess({}));
+      dispatch(fetchEventsSuccess({}));
+      dispatch(logoutSuccess());
       localStorage.removeItem("token");
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
-      dispatch(logoutFailure(error.message))
+      dispatch(logoutFailure(error.message));
       console.log(error.message);
     }
-  }
+  };
+
+  const isMobile = windowWidth < 768;
 
   return (
-    <div className="Sidebar bg-[#070b0f] border-r border-gray-600 min-h-screen w-[15rem] flex fixed justify-between overflow-hidden z-50">
-      <div className="flex flex-col items-center h-full w-full m-4">
-        <div className="flex items-center gap-2 justify-start w-full">
-          <img src={logo} alt="" className="w-14 rounded-full" />
-          <h2 className="text-white text-xl tracking-wider font-semibold">
+    <>
+      {isMobile && (
+        <div className={`fixed top-4 ${isOpen?"right-4":"left-4"} z-50`}>
+          <button 
+            onClick={() => setIsOpen(!isOpen)} 
+            className="p-2 bg-[#212327] rounded-md text-white hover:bg-[#0ec1e7] transition-colors duration-200"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      )}
+      {isMobile && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-40 flex items-center gap-2">
+          <img src={logo} alt="CPBYTE Logo" className="w-8 h-8 rounded-full" />
+          <h2 className="text-white text-lg font-semibold">
             CP<span className="text-[#0ec1e7]">BYTE</span>
           </h2>
         </div>
-        <div className="flex flex-col gap-4 items-start justify-start w-full mt-4">
-          <h2 className="text-gray-300 text-sm pl-6 tracking-widest">
-            MAIN MENU
-          </h2>
-          <div className="flex flex-col gap-4 w-full">
-            <Link
-              to={""}
-              className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/") } hover:text-[#0ec1e7] duration-200 w-full p-2 pl-6 rounded-md cursor-pointer`}
-            >
-              <RiHome4Line size={20} />
-              <h2>Dashboard</h2>
-            </Link>
-            <Link
-              to={"Schedule"}
-              className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Schedule") } hover:text-[#0ec1e7] duration-200 w-full p-2 pl-6 rounded-md cursor-pointer`}
-            >
-              <GrSchedulePlay size={20} />
-              <h2>Schedule</h2>
-            </Link>
-            {role==="COORDINATOR"&&<Link
-              to={"Attendance"}
-              className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Attendance") } hover:text-[#0ec1e7] duration-200 w-full p-2 pl-6 rounded-md cursor-pointer`}
-            >
-              <AiOutlinePieChart size={20} />
-              <h2>Attendance</h2>
-            </Link>}
+      )}
+      <div 
+        className={`Sidebar bg-[#070b0f] border-r border-gray-600 min-h-screen flex fixed justify-between overflow-hidden z-40 transition-all duration-300 ease-in-out
+          ${isMobile 
+            ? isOpen 
+              ? 'w-64 opacity-100' 
+              : 'w-0 opacity-0' 
+            : 'w-60'}`}
+      >
+        <div className="flex flex-col items-center h-full w-full m-4">
+          <div className="flex items-center gap-2 justify-start w-full">
+            <img src={logo} alt="" className="w-12 md:w-14 rounded-full" />
+            <h2 className="text-white text-lg md:text-xl tracking-wider font-semibold">
+              CP<span className="text-[#0ec1e7]">BYTE</span>
+            </h2>
           </div>
-        </div>
-        <div className="flex flex-col gap-4 items-start justify-start w-full mt-4">
-          <h2 className="text-gray-300 text-sm pl-6 tracking-widest">
-            SETTINGS
-          </h2>
-          <div className="flex flex-col gap-4 w-full">
-            <Link
-              to={"Settings"}
-              className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Settings") } hover:text-[#0ec1e7] duration-200 w-full p-2 pl-6 rounded-md cursor-pointer`}
-            >
-              <IoMdSettings size={20} />
-              <h2>Settings</h2>
-            </Link>
-            <Link
-              to={"Help"}
-              className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Help") } hover:text-[#0ec1e7] duration-200 w-full p-2 pl-6 rounded-md cursor-pointer`}
-            >
-              <TbHelpOctagon size={20} />
-              <h2>Help Center</h2>
-            </Link>
-            <button
-            onClick={logout}
-            className={`flex items-center text-red-700 gap-2 hover:bg-[#212327] hover:text-red-500 duration-200 w-full p-2 pl-6 rounded-md cursor-pointer`}>
-            <LogOut size={20}/>
-            <h2>LogOut</h2>
-            </button>
+          <div className="flex flex-col gap-4 items-start justify-start w-full mt-4">
+            <h2 className="text-gray-300 text-xs md:text-sm pl-4 md:pl-6 tracking-widest">
+              MAIN MENU
+            </h2>
+            <div className="flex flex-col gap-3 md:gap-4 w-full">
+              <Link
+                to={""}
+                className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+              >
+                <RiHome4Line size={isMobile ? 18 : 20} />
+                <h2>Dashboard</h2>
+              </Link>
+              <Link
+                to={"Schedule"}
+                className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Schedule")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+              >
+                <GrSchedulePlay size={isMobile ? 18 : 20} />
+                <h2>Schedule</h2>
+              </Link>
+              {role === "COORDINATOR" && 
+                <Link
+                  to={"Attendance"}
+                  className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Attendance")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+                >
+                  <AiOutlinePieChart size={isMobile ? 18 : 20} />
+                  <h2>Attendance</h2>
+                </Link>
+              }
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 items-start justify-start w-full mt-4">
+            <h2 className="text-gray-300 text-xs md:text-sm pl-4 md:pl-6 tracking-widest">
+              SETTINGS
+            </h2>
+            <div className="flex flex-col gap-3 md:gap-4 w-full">
+              <Link
+                to={"Settings"}
+                className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Settings")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+              >
+                <IoMdSettings size={isMobile ? 18 : 20} />
+                <h2>Settings</h2>
+              </Link>
+              <Link
+                to={"Help"}
+                className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Help")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+              >
+                <TbHelpOctagon size={isMobile ? 18 : 20} />
+                <h2>Help Center</h2>
+              </Link>
+              <button
+                onClick={logout}
+                className={`flex items-center text-red-700 gap-2 hover:bg-[#212327] hover:text-red-500 duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+              >
+                <LogOut size={isMobile ? 18 : 20} />
+                <h2>LogOut</h2>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {isMobile && isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30" 
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 }
 

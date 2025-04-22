@@ -6,10 +6,12 @@ import Navbar from '../componenets/Navbar';
 function UserLayout() {
   return (
     <div className='flex w-full min-h-screen'>
-        <Navbar className="w-full"/>
-        <div className='MainContent w-full ml-60 min-h-screen bg-white flex flex-col justify-center items-center'>
-            <Outlet/>
+      <Navbar />
+      <div className='flex-1 md:ml-60 transition-all duration-300 ease-in-out'>
+        <div className='MainContent w-full min-h-screen bg-white flex flex-col justify-center items-center'>
+          <Outlet />
         </div>
+      </div>
     </div>
   )
 }

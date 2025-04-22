@@ -4,7 +4,7 @@ import AttendanceCard from '../componenets/AttendanceCard'
 
 function UserDashboard() {
   return (
-    <div className='bg-[#070b0f] w-full min-h-screen flex flex-col text-white pr-15'>
+    <div className='bg-[#070b0f] w-full min-h-screen flex flex-col text-white md:pr-8'>
       <DetailCard/>
       <AttendanceCard/>
     </div>

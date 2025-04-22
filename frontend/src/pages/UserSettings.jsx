@@ -67,7 +67,7 @@ export default function UserSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070b0f] w-full text-gray-200 p-4 md:p-8">
+    <div className="min-h-screen bg-[#070b0f] w-full pt-16 text-gray-200 p-4 md:p-8">
       <div className="max-w-3xl mx-auto">
         <div className='mb-8 flex items-center gap-2'>
           <div className='bg-[#0ec1e7] w-2 h-8 rounded-full'></div>

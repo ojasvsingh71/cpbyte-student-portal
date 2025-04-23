@@ -18,6 +18,9 @@ export const getProfile = asyncHandler(async (req, res) => {
       where: { id: req.userId },
       include:{
         attendances: true,
+      },
+      omit: {
+        password: true
       }
     });
     if (!user) throw new ResponseError("User not found", 404);

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { fetchDashboardDataFailure, fetchDashboardDataStart, fetchDashboardDataSuccess } from '../redux/slices'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
 import { FiLoader } from 'react-icons/fi'
-import { fetchUserOfDomainFailure, fetchUsersOfDomainStart, fetchUsersOfDomainSuccess } from '../redux/slices/getDomainUserSlice'
 import { fetchEventsStart } from '../redux/slices/eventSlice'
+import { userProfile } from '../redux/slices/profileSlice'
+import { getMembersOfDomain } from '../redux/slices/getDomainUserSlice'
 
 function UnauthProtected({children}) {
   const dispatch = useDispatch()  
   const {data, loading} = useSelector((state) => state.dashboard)
-  const [isloading, setLoading] = useState(loading)
+  
+  const [isloading, setLoading] = useState(true)
   const navigate = useNavigate()
   useEffect(()=>{
   const token = localStorage.getItem('token')
@@ -18,69 +18,33 @@ function UnauthProtected({children}) {
       navigate('/login')
     }
   })
+
   useEffect(() => {
     async function fetchData() {
-      dispatch(fetchDashboardDataStart())
-      setLoading(true)
-      try {
-        const response = await axios.get('http://localhost:8080/api/v1/user/getProfile',{
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-        
-        if(response.status==200){
-          dispatch(fetchDashboardDataSuccess(response.data.data))
-          setLoading(false)
-        }
-        else{
-          dispatch(fetchDashboardDataFailure(response.message))
-        }
-      } catch (error) {
-        navigate("/login")
-        dispatch(fetchDashboardDataFailure(error.message))
-      }
+      const res= await dispatch(userProfile())
+
+      if(res.meta.requestStatus==="fulfilled")        
+        setLoading(false)
     }
     dispatch(fetchEventsStart())
     if(!data||Object.keys(data).length==0)
     fetchData();
-    },[dispatch,data])
+
+    },[dispatch, data])
+    
 
   useEffect(()=>{
     async function membersOfDomain() {
-      dispatch(fetchUsersOfDomainStart())
-      try {
-        const membersOfDev= await axios.get("http://localhost:8080/api/v1/coordinator/memberOfDomain",{
-          headers:{
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          },
-          params:{
-            domain:data.domain_dev
-          }
-        })
-        if(membersOfDev.status===403)
-          return dispatch(fetchUserOfDomainFailure(membersOfDev.message))
+      const res1 = await dispatch(getMembersOfDomain({domain:data.domain_dsa, domainType:"dsaMembers"}))
+      const res2 = await dispatch(getMembersOfDomain({domain:data.domain_dev, domainType:"devMembers"}))
 
-        const membersOfDsa=await axios.get("http://localhost:8080/api/v1/coordinator/memberOfDomain",{
-          headers:{
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          },
-          params:{
-            domain:data.domain_dsa
-          }
-        })
-        dispatch(fetchUsersOfDomainSuccess({
-          devMembers:membersOfDev.data.data,
-          dsaMembers:membersOfDsa.data.data
-        }));
-      } catch (error) {
-        dispatch(fetchUserOfDomainFailure(error.message))
-      }
+      if(res1.meta.requestStatus==="fulfilled"&&res2.meta.requestStatus==="fulfilled")
+        setLoading(false)
     }
-    if(data.role=="COORDINATOR")
+    if(data && data.role=="COORDINATOR")
     membersOfDomain()
   
-  },[data])
+  },[data, dispatch])
     if(isloading) {
       return (
           <div className="flex justify-center items-center h-screen bg-gray-950">

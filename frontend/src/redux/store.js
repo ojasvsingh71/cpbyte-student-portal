@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import dashboardSlice from './slices/index';
+import dashboardSlice from './slices/profileSlice';
 import AttendanceSlice from './slices/getDomainUserSlice';
 import authSlice from './slices/authSlice';
 import eventSlice from './slices/eventSlice';

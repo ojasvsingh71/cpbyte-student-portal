@@ -8,7 +8,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlinePieChart } from "react-icons/ai";
 import { LogOut, Menu, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEventsSuccess } from "../redux/slices/eventSlice";
 import { refreshDash } from "../redux/slices/profileSlice";
 import { authRefresh, logoutUser } from "../redux/slices/authSlice";
 import { refreshAttendance } from "../redux/slices/getDomainUserSlice";

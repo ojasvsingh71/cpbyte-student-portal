@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { FiLoader } from 'react-icons/fi'
-import { fetchEventsStart } from '../redux/slices/eventSlice'
 import { userProfile } from '../redux/slices/profileSlice'
 import { getMembersOfDomain } from '../redux/slices/getDomainUserSlice'
 
@@ -26,7 +25,6 @@ function UnauthProtected({children}) {
       if(res.meta.requestStatus==="fulfilled")        
         setLoading(false)
     }
-    dispatch(fetchEventsStart())
     if(!data||Object.keys(data).length==0)
     fetchData();
 

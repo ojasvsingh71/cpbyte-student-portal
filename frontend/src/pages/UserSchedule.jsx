@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEventsStart, fetchEventsSuccess } from '../redux/slices/eventSlice';
+import {getEvents, addEvents, removeEvents} from '../redux/slices/eventSlice';
 
 const UserSchedule = () => {
   const user = useSelector(state => state.dashboard.data);
@@ -23,38 +23,21 @@ const UserSchedule = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const formatMonthKey = (currentMonth)=>{
+    return `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}`
+  }
+
   useEffect(() => {
     async function getMonthsEvents() {
-      dispatch(fetchEventsStart());
-      const month = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}`;
-      
-      try {
-        const response = await axios.get("http://localhost:8080/api/v1/schedule/monthEvents", {
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          },
-          params: {
-            month: month
-          }
-        });
+      const month = formatMonthKey(currentMonth);
 
-        const organizedData = {};
-
-        response.data.forEach(entry => {
-          const date = entry.date.slice(0, 10);
-          organizedData[date] = entry.events;
-        });
-        
-        dispatch(fetchEventsSuccess(organizedData));
-      } catch (error) {
-        console.error("Failed to fetch events:", error);
-      }
+      if(event[month])
+        return;
+        dispatch(getEvents({month}));         
     }
-    
-    if (loading || !event || Object.keys(event).length === 0) {
       getMonthsEvents();
-    }
-  }, [currentMonth, dispatch, loading, event]);
+      
+  }, [currentMonth]);
 
   const months = ["January", "February", "March", "April", "May", "June", 
                 "July", "August", "September", "October", "November", "December"];
@@ -82,12 +65,10 @@ const UserSchedule = () => {
   
   const nextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-    dispatch(fetchEventsStart());
   };
   
   const prevMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-    dispatch(fetchEventsStart());
   };
   
   const formatDateKey = (date) => {
@@ -103,37 +84,12 @@ const UserSchedule = () => {
       dateKey.getMonth(),
       dateKey.getDate()
     ));
-
-    try {
-      await axios.post("http://localhost:8080/api/v1/schedule/addEvent", {
-        date: utcDateOnly,
-        event: eventText
-      },
-      {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
-      });
-      dispatch(fetchEventsStart());
+      dispatch(addEvents({date:utcDateOnly, event:eventText}))
       setEventText("");
-    } catch (error) {
-      console.error("Failed to add event:", error);
-    }
   };
   
   const removeEvent = async(eventId) => {
-    try {
-      await axios.post("http://localhost:8080/api/v1/schedule/removeEvent", {
-        eventId
-      }, {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
-      });
-      dispatch(fetchEventsStart());
-    } catch (error) {
-      console.error("Failed to remove event:", error);
-    }
+    dispatch(removeEvents({eventId}))
   };
   
   const days = getDaysInMonth(currentMonth);
@@ -166,8 +122,8 @@ const UserSchedule = () => {
         </header>
         
         <div className="grid grid-cols-7 gap-1 mb-1 md:mb-2">
-          {weekdays.map(day => (
-            <div key={day} className="text-center py-1 md:py-2 text-gray-400 font-medium text-xs md:text-base">
+          {weekdays.map((day, index) => (
+            <div key={index} className="text-center py-1 md:py-2 text-gray-400 font-medium text-xs md:text-base">
               {day}
             </div>
           ))}
@@ -185,10 +141,9 @@ const UserSchedule = () => {
               day.getDate() === selectedDate.getDate() &&
               day.getMonth() === selectedDate.getMonth() &&
               day.getFullYear() === selectedDate.getFullYear() : false;
+              
+            const dayEvents = dateKey && event[formatMonthKey(currentMonth)] ? (event[formatMonthKey(currentMonth)][dateKey] || []) : [];
             
-            const dayEvents = dateKey && event ? (event[dateKey] || []) : [];
-            
-            // Calculate dynamic cell height
             const cellHeightClass = isMobile ? 'h-14 md:h-24' : 'h-24';
             
             return (
@@ -249,9 +204,9 @@ const UserSchedule = () => {
                 Events for {selectedDate.getDate()} {months[selectedDate.getMonth()]}
               </h3>
               
-              {event && event[formatDateKey(selectedDate)] && event[formatDateKey(selectedDate)].length > 0 ? (
+              {event[formatMonthKey(currentMonth)] && event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)] && event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].length > 0 ? (
                 <div className="space-y-1 md:space-y-2">
-                  {event[formatDateKey(selectedDate)].map(event => (
+                  {event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].map(event => (
                     <div 
                       key={event.id} 
                       className="p-2 md:p-3 rounded flex justify-between items-center border-b-2 border-[#0ec1e7] bg-gray-800"

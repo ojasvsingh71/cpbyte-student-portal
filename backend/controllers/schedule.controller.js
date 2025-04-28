@@ -57,12 +57,11 @@ export const addEvent = asyncHandler(async(req, res)=>{
                 content: event
             }
         });
-
+    }
         eventEntry = await prisma.schedule.findUnique({
             where: { date: date },
             include: { events: true }
         });
-    }
 
     res.status(200).json(eventEntry);
 })

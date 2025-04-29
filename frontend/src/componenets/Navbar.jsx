@@ -7,12 +7,11 @@ import { IoMdSettings } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlinePieChart } from "react-icons/ai";
 import { LogOut, Menu, X } from "lucide-react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDashboardDataSuccess } from "../redux/slices";
-import { fetchUsersOfDomainSuccess } from "../redux/slices/getDomainUserSlice";
-import { logoutFailure, logoutSuccess } from "../redux/slices/authSlice";
-import { fetchEventsSuccess } from "../redux/slices/eventSlice";
+import { refreshDash } from "../redux/slices/profileSlice";
+import { authRefresh, logoutUser } from "../redux/slices/authSlice";
+import { refreshAttendance } from "../redux/slices/getDomainUserSlice";
+import { refreshEvent } from "../redux/slices/eventSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,22 +42,13 @@ function Navbar() {
   };
 
   const logout = async() => {
-    try {
-      await axios.get("http://localhost:8080/api/v1/auth/logout", {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
-      });
-      dispatch(fetchDashboardDataSuccess({}));
-      dispatch(fetchUsersOfDomainSuccess({}));
-      dispatch(fetchEventsSuccess({}));
-      dispatch(logoutSuccess());
-      localStorage.removeItem("token");
+      dispatch(logoutUser());
+      dispatch(refreshAttendance())
+      dispatch(refreshDash())
+      dispatch(refreshEvent())
+      dispatch(authRefresh())
+      localStorage.removeItem("token")
       navigate("/login");
-    } catch (error) {
-      dispatch(logoutFailure(error.message));
-      console.log(error.message);
-    }
   };
 
   const isMobile = windowWidth < 768;

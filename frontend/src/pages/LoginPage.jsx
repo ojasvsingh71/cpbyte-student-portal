@@ -1,41 +1,27 @@
-import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import logo from '../../public/CPBYTE_LOGO.jpg'
 import { useDispatch, useSelector } from 'react-redux';
-import { loginFailure, loginStart, loginSuccess } from '../redux/slices/authSlice';
+import { loginUser } from '../redux/slices/authSlice';
 
 function LoginPage() {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
     const dispatch= useDispatch()
-    const {error} = useSelector(state=>state.authSlice)
+    const {error, loading} = useSelector(state=>state.authSlice)
 
-    const {loading} = useSelector(state=>state.authSlice)
     const handleSubmit = async(e) => {
-        dispatch(loginStart())
         e.preventDefault();
-        const libraryId = e.target[0].value;
+        const library_id = e.target[0].value;
         const password = e.target[1].value;
-        if (!libraryId || !password) {
+        if (!library_id || !password) {
             return;
         }
-        try{
-        const response = await axios.post('http://localhost:8080/api/v1/auth/login', {
-            library_id: libraryId,
-            password: password,
-        })
-
-        if(response.status==200){
-            localStorage.setItem('token', response.data.data)
-            dispatch(loginSuccess(response.data.data))            
+        const res = await dispatch(loginUser({library_id,password}));
+        if (res.meta.requestStatus === "fulfilled")            
             navigate('/')
         }
-      }catch(error){
-          dispatch(loginFailure(error.response.data.message))
-      }
-    }
 return (
     <div className="flex items-center justify-center min-h-screen bg-[#070b0f]">
       <div className="w-full max-w-md p-8 space-y-8 bg-gray-900 rounded-lg shadow-xl border border-gray-600">

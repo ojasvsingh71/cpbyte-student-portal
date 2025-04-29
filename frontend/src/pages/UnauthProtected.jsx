@@ -24,6 +24,10 @@ function UnauthProtected({children}) {
 
       if(res.meta.requestStatus==="fulfilled")        
         setLoading(false)
+      else{
+        localStorage.removeItem('token')
+        navigate('/login')
+      }
     }
     if(!data||Object.keys(data).length==0)
     fetchData();

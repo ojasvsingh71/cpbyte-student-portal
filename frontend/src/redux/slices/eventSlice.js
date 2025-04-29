@@ -44,14 +44,12 @@ export const addEvents = createAsyncThunk(
                     Authorization: `Bearer ${token}`
                 }
             })
-            const organizedData = {};
 
-            res.data.forEach(entry => {
-            const date = entry.date.slice(0, 10);
-            organizedData[date] = entry.events;
-            }); 
-            return ({month:date.slice(0, 7),
-                events:organizedData});
+            const eventDate = res.data.date.slice(0,10)
+            
+            return ({month:eventDate.slice(0,7),
+                date:eventDate,
+                events:res.data.events});
         }
         catch(err){
             return rejectWithValue(err.response?.data?.message || "Event addition failed");
@@ -61,7 +59,7 @@ export const addEvents = createAsyncThunk(
 
 export const removeEvents = createAsyncThunk(
     "event/removeEvent",
-    async({eventId},{rejectWithValue})=>{
+    async({eventId, eventDate},{rejectWithValue})=>{
         try{
             const token = localStorage.getItem("token");
             const res = await axiosInstance.post("/schedule/removeEvent",{
@@ -72,14 +70,18 @@ export const removeEvents = createAsyncThunk(
                     Authorization: `Bearer ${token}`
                 }
             })
-            const organizedData = {};
 
-            res.data.forEach(entry => {
-            const date = entry.date.slice(0, 10);
-            organizedData[date] = entry.events;
-            }); 
-            return ({month:res.data.data.date.slice(0, 7),
-                events:organizedData});
+            if(res.data.date){
+                return ({month:eventDate.slice(0, 7),
+                    date:eventDate,
+                    events:res.data.events});
+            }
+
+            return ({
+                month:eventDate.slice(0,7),
+                date:eventDate,
+                events:[]
+            })
         }
         catch(err){
             return rejectWithValue(err.response?.data?.message || "Event addition failed");
@@ -120,8 +122,8 @@ const eventSlice = createSlice({
             })
             .addCase(addEvents.fulfilled, (state, action) => {
                 state.loading = false;
-                const { month, events } = action.payload;
-                state.event[month] = events;
+                const { month, date, events } = action.payload;
+                state.event[month][date] = events;
             })
             .addCase(addEvents.rejected, (state, action) => {
                 state.loading = false;
@@ -133,8 +135,8 @@ const eventSlice = createSlice({
             })
             .addCase(removeEvents.fulfilled, (state, action) => {
                 state.loading = false;
-                const { month, events } = action.payload;
-                state.event[month] = events;
+                const { month, date, events } = action.payload;
+                state.event[month][date] = events;
             })
             .addCase(removeEvents.rejected, (state, action) => {
                 state.loading = false;

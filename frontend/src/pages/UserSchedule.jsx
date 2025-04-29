@@ -88,8 +88,8 @@ const UserSchedule = () => {
       setEventText("");
   };
   
-  const removeEvent = async(eventId) => {
-    dispatch(removeEvents({eventId}))
+  const removeEvent = async(eventId, eventDate) => {
+    dispatch(removeEvents({eventId, eventDate}))
   };
   
   const days = getDaysInMonth(currentMonth);
@@ -206,14 +206,15 @@ const UserSchedule = () => {
               
               {event[formatMonthKey(currentMonth)] && event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)] && event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].length > 0 ? (
                 <div className="space-y-1 md:space-y-2">
-                  {event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].map(event => (
+                  {
+                  event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].map((event) => (
                     <div 
                       key={event.id} 
                       className="p-2 md:p-3 rounded flex justify-between items-center border-b-2 border-[#0ec1e7] bg-gray-800"
                     >
                       <span className="text-sm md:text-base break-words flex-1 pr-2">{event.content}</span>
-                      <button 
-                        onClick={() => removeEvent(event.id)}
+                      <button
+                        onClick={() => removeEvent(event.id, formatDateKey(selectedDate))}
                         className="p-1 text-red-500 cursor-pointer hover:bg-black hover:bg-opacity-20 rounded text-xs md:text-sm whitespace-nowrap"
                       >
                         Remove

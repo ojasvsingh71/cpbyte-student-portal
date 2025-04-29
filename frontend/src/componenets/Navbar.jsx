@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { refreshDash } from "../redux/slices/profileSlice";
 import { authRefresh, logoutUser } from "../redux/slices/authSlice";
 import { refreshAttendance } from "../redux/slices/getDomainUserSlice";
+import { refreshEvent } from "../redux/slices/eventSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +45,9 @@ function Navbar() {
       dispatch(logoutUser());
       dispatch(refreshAttendance())
       dispatch(refreshDash())
+      dispatch(refreshEvent())
       dispatch(authRefresh())
+      localStorage.removeItem("token")
       navigate("/login");
   };
 

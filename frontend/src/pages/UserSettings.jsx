@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { User, Lock, Mail, BookOpen, Calendar, CreditCard, Camera, Save } from 'lucide-react';
 import noimage from '../../public/noImage.webp';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { updateAvatar, updatePass } from '../redux/slices/settingsSlice';
 
 export default function UserSettings() {
 
   const user=useSelector(state=>state.dashboard.data)
+  const dispatch = useDispatch();
   
   const fixed={
     email: user.email,
@@ -23,21 +25,7 @@ export default function UserSettings() {
 
     if(!oldPass||!newPass||!confPass)
       return console.log("Fill all the fields");
-    try {
-      await axios.post("http://localhost:8080/api/v1/settings/editPass",{
-        oldPass,
-        newPass,
-        confPass
-      },{
-        headers:{
-          "Authorization":`Bearer ${localStorage.getItem("token")}`
-        }
-      })
-      console.log("Succesfully edited!!");
-      
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(updatePass({oldPass, newPass, confPass}))
   }
 
   const handleAvatar=(e)=>{
@@ -50,19 +38,7 @@ export default function UserSettings() {
     reader.readAsDataURL(avatar)
     reader.onload=async()=>{
       const image=reader.result;
-      try {
-        await axios.post("http://localhost:8080/api/v1/settings/editAvatar",{
-          image
-        },{
-          headers:{
-            "Authorization":`Bearer ${localStorage.getItem('token')}`
-          }
-        })
-        console.log("Avatar edited Successfully!!");
-        
-      } catch (error) {
-        console.log(error);
-      }
+      dispatch(updateAvatar({image}))
     }
   }
 

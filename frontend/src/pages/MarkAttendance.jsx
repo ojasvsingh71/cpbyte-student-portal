@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import noimage from "../../public/noImage.webp";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { markAttendance } from "../redux/slices/attendanceSlice";
 
 const MarkAttendance = () => {
   const [selectedStatus, setSelectedStatus] = useState({});
@@ -9,6 +9,8 @@ const MarkAttendance = () => {
   const [toggleAll, setToggleAll] = useState(false);
   const { domain_dev, domain_dsa } = useSelector(state => state.dashboard.data);
   const [permissionRequests, setPermissionRequests] = useState([]);
+
+  const dispatch = useDispatch();
 
   const handleStatusChange = (library_id, status) => {
     setSelectedStatus((prev) => ({
@@ -25,14 +27,7 @@ const MarkAttendance = () => {
       status: selectedStatus[req.library_id] || "ABSENT_WITHOUT_REASON",
     }));
     
-    await axios.post("http://localhost:8080/api/v1/coordinator/markAttendance", {
-      responses: result,
-      subject: DSA ? "DSA" : "DEV"
-    }, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    dispatch(markAttendance({responses:result, subject: DSA? "DSA" : "DEv"}))
   };
 
   const markAllPresent = () => {

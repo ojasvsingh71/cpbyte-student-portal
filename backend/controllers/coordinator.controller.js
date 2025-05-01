@@ -147,3 +147,49 @@ export const memberOfDomain = asyncHandler(async (req, res) => {
     message: `Users in domain ${domain} fetched successfully`,
   });
 })
+
+export const checkStatus = asyncHandler(async (req, res)=>{
+    const {domain, date} = req.body;
+
+    if (!domain) {
+      throw new ResponseError("Domain is required", 400);
+    }
+
+    const status = await prisma.attendanceLog.findMany(
+      {
+        where: {
+            domain: domain,
+            date: date
+        }
+      }
+    )
+
+    if(status.length>0)
+      res.json({
+          marked:true
+      })
+    else
+      res.json({
+          marked:false
+      })
+})
+
+export const updateStatus = asyncHandler(async (req, res)=>{
+  const {domain, date} = req.body;
+
+  if(!domain)
+    throw new ResponseError("Domain is required", 400)
+
+  await prisma.attendanceLog.create(
+    {
+      data:{
+        domain:domain,
+        date:date
+      }
+    }
+  )
+  res.json({
+    success:true,
+    message:"Status updated successfully"
+  })
+})

@@ -61,6 +61,14 @@ model Event {
   updatedAt DateTime  @updatedAt
 }
 
+model AttendanceLog {
+  id        String   @id @default(uuid())
+  date      DateTime
+  domain    String  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum Role {
   ADMIN
   COORDINATOR

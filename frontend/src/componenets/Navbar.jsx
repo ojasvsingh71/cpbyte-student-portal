@@ -12,6 +12,7 @@ import { refreshDash } from "../redux/slices/profileSlice";
 import { authRefresh, logoutUser } from "../redux/slices/authSlice";
 import { refreshAttendance } from "../redux/slices/getDomainUserSlice";
 import { refreshEvent } from "../redux/slices/eventSlice";
+import toast from "react-hot-toast";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,6 +43,7 @@ function Navbar() {
   };
 
   const logout = async() => {
+    const toastId = toast.loading("Logging Out")
       dispatch(logoutUser());
       dispatch(refreshAttendance())
       dispatch(refreshDash())
@@ -49,6 +51,9 @@ function Navbar() {
       dispatch(authRefresh())
       localStorage.removeItem("token")
       navigate("/login");
+      toast.success("Logged out",{
+        id:toastId
+      })
   };
 
   const isMobile = windowWidth < 768;

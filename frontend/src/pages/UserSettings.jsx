@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, Lock, Mail, BookOpen, Calendar, CreditCard, Camera, Save } from 'lucide-react';
 import noimage from '../../public/noImage.webp';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import toast from "react-hot-toast"
 import { updateAvatar, updatePass } from '../redux/slices/settingsSlice';
 
 export default function UserSettings() {
@@ -29,6 +29,7 @@ export default function UserSettings() {
   }
 
   const handleAvatar=(e)=>{
+    const toastId = toast.loading("Updating Avatar...")
     e.preventDefault();
     const avatar = e.target[0].files[0];
     if(!avatar)
@@ -38,7 +39,11 @@ export default function UserSettings() {
     reader.readAsDataURL(avatar)
     reader.onload=async()=>{
       const image=reader.result;
-      dispatch(updateAvatar({image}))
+      const res = dispatch(updateAvatar({image}))
+      if(res.meta.requestStatus==="fulfilled")
+        toast.success("Avatar added Successfully",{
+            id:toastId
+        })
     }
   }
 

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {getEvents, addEvents, removeEvents} from '../redux/slices/eventSlice';
+import toast from 'react-hot-toast';
 
 const UserSchedule = () => {
   const user = useSelector(state => state.dashboard.data);
@@ -76,6 +77,7 @@ const UserSchedule = () => {
   };
   
   const addEvent = async() => {
+    const toastId = toast.loading("Adding Event..")
     if (!eventText.trim()) return;    
 
     const dateKey = new Date(selectedDate);    
@@ -84,12 +86,21 @@ const UserSchedule = () => {
       dateKey.getMonth(),
       dateKey.getDate()
     ));
-      dispatch(addEvents({date:utcDateOnly, event:eventText}))
+      const res = await dispatch(addEvents({date:utcDateOnly, event:eventText}))
+      if(res.meta.requestStatus==="fulfilled")
+        toast.success("Event Added Successfully",{
+          id:toastId
+      })
       setEventText("");
   };
   
   const removeEvent = async(eventId, eventDate) => {
-    dispatch(removeEvents({eventId, eventDate}))
+    const toastId = toast.loading("Removing Event..")
+    const res = await dispatch(removeEvents({eventId, eventDate}))
+    if(res.meta.requestStatus==="fulfilled")
+        toast.success("Event Removed Successfully",{
+            id:toastId
+        })
   };
   
   const days = getDaysInMonth(currentMonth);

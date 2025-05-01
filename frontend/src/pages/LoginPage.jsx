@@ -4,6 +4,7 @@ import { BookOpen, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import logo from '../../public/CPBYTE_LOGO.jpg'
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slices/authSlice';
+import toast from 'react-hot-toast';
 
 function LoginPage() {
     const navigate = useNavigate()
@@ -13,15 +14,19 @@ function LoginPage() {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
+        const toastId = toast.loading("Logging in...")
         const library_id = e.target[0].value;
         const password = e.target[1].value;
         if (!library_id || !password) {
             return;
         }
         const res = await dispatch(loginUser({library_id,password}));
-        if (res.meta.requestStatus === "fulfilled")            
+        if (res.meta.requestStatus === "fulfilled")  {          
             navigate('/')
-        }
+            toast.success("logedin successfully",{
+              id:toastId
+            })
+        }}
 return (
     <div className="flex items-center justify-center min-h-screen bg-[#070b0f]">
       <div className="w-full max-w-md p-8 space-y-8 bg-gray-900 rounded-lg shadow-xl border border-gray-600">

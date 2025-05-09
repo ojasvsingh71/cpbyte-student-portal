@@ -5,6 +5,7 @@ import authSlice from './slices/authSlice';
 import eventSlice from './slices/eventSlice';
 import markAttendance from './slices/attendanceSlice';
 import SettingsSlice from './slices/settingsSlice'
+import checkStatusSlice from './slices/checkStatus';
 
 const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
     authSlice: authSlice,
     event:eventSlice,
     markAttendance:markAttendance,
-    settings:SettingsSlice
+    settings:SettingsSlice,
+    checkStatus: checkStatusSlice
   },
 })
 

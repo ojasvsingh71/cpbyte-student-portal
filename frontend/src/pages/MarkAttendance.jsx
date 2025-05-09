@@ -2,11 +2,18 @@ import React, { useEffect, useState } from "react";
 import noimage from "../../public/noImage.webp";
 import { useDispatch, useSelector } from "react-redux";
 import { markAttendance } from "../redux/slices/attendanceSlice";
+import MarkAttendanceProtector from "../componenets/MarkAttendanceProtector";
+import { updateStatus } from "../redux/slices/checkStatus";
+import { toast } from "react-hot-toast";
+import AttendanceAlreadyMarked from "../componenets/AttendanceAlreadyMarked";
 
 const MarkAttendance = () => {
   const [selectedStatus, setSelectedStatus] = useState({});
-  const [DSA, setDSA] = useState(true);
+  const { subject } = useSelector(state => state.checkStatus);
+  const [DSA, setDSA] = useState(subject);
+  
   const [toggleAll, setToggleAll] = useState(false);
+  const [isMarked, setIsMarked] = useState(0);
   const { domain_dev, domain_dsa } = useSelector(state => state.dashboard.data);
   const [permissionRequests, setPermissionRequests] = useState([]);
 
@@ -21,13 +28,23 @@ const MarkAttendance = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    const toastId = toast.loading("Marking Attendance...");
     const result = permissionRequests.map((req) => ({
       library_id: req.library_id,
       status: selectedStatus[req.library_id] || "ABSENT_WITHOUT_REASON",
     }));
     
-    dispatch(markAttendance({responses:result, subject: DSA? "DSA" : "DEv"}))
+    const marked = await dispatch(markAttendance({responses:result, subject: DSA? "DSA" : "DEV"}))
+    if (marked.meta.requestStatus === "fulfilled") {
+      const today = new Date().toLocaleDateString('en-CA');
+      const date = new Date(today + 'T00:00:00.000Z');
+      dispatch(updateStatus({ domain: DSA ? domain_dsa : domain_dev, date: date }));
+      setIsMarked(2);
+      toast.success("Attendance marked successfully", { id: toastId });
+    } else {
+      setIsMarked(0);
+      toast.error("Failed to mark attendance", { id: toastId });
+    }
   };
 
   const markAllPresent = () => {
@@ -45,8 +62,9 @@ const MarkAttendance = () => {
   const { name, role } = useSelector(state => state.dashboard.data);
   
   useEffect(() => {
+    setDSA(subject);
     setPermissionRequests(DSA ? allMembers.dsaMembers : allMembers.devMembers);
-  }, [DSA, allMembers]);
+  }, [DSA, isMarked]);
 
   if (role !== "COORDINATOR") {
     return (
@@ -60,7 +78,9 @@ const MarkAttendance = () => {
   }
 
   return (
-    <div className="bg-[#070b0f] text-white min-h-screen w-full p-2 md:p-8 mt">
+    <>
+    {isMarked==0 && <MarkAttendanceProtector setIsMarked={setIsMarked}/>}
+    {isMarked==1 && (<div className="bg-[#070b0f] text-white min-h-screen w-full p-2 md:p-8 mt">
       <div className="p-2 md:p-4 mt-14 md:mt-0">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <div className="flex items-center gap-2 mb-4">
@@ -100,23 +120,8 @@ const MarkAttendance = () => {
         </div>
         <div>
           <div className="flex gap-2 mb-6">
-            <button
-              onClick={() => {
-                setDSA(true);
-                setPermissionRequests(allMembers.dsaMembers);
-              }}
-              className={`${DSA ? "bg-[#0ec1e7]" : "bg-[#212327]"} px-3 py-2 rounded text-xs md:text-sm font-medium cursor-pointer`}
-            >
-              {domain_dsa} Attendance
-            </button>
-            <button 
-              onClick={() => {
-                setDSA(false);
-                setPermissionRequests(allMembers.devMembers);
-              }}
-              className={`${!DSA ? "bg-[#0ec1e7]" : "bg-[#212327]"} px-3 py-2 rounded text-xs md:text-sm font-medium cursor-pointer`}
-            >
-              {domain_dev} Attendance
+            <button className={`bg-[#0ec1e7] px-3 py-2 rounded text-xs md:text-sm font-medium cursor-pointer`}>
+              {DSA?domain_dsa:domain_dev} Attendance
             </button>
           </div>
           <h2 className="text-base md:text-lg font-semibold mb-4">{`${permissionRequests?.length} ${DSA ? domain_dsa : domain_dev} Members`}</h2>
@@ -215,7 +220,7 @@ const MarkAttendance = () => {
               <div className="w-full flex justify-end mt-4">
                 <button
                   type="submit"
-                  className="bg-blue-700 hover:bg-blue-600 px-3 py-2 rounded text-white text-sm"
+                  className="bg-[#0ec1e7] hover:bg-[#0ea2e7] px-3 py-2 rounded text-white text-sm cursor-pointer"
                 >
                   Submit
                 </button>
@@ -224,8 +229,10 @@ const MarkAttendance = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>)}
+    {isMarked==2 && <AttendanceAlreadyMarked setIsMarked={setIsMarked}/>}
+    </>
+  )
 };
 
 export default MarkAttendance;

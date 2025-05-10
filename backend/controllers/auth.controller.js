@@ -66,6 +66,25 @@ export const register = asyncHandler(async (req, res) => {
 
   // @todo! Mail the generated password to the user through their email
 
+  const tracker = await prisma.trackerDashboard.create({
+    data: {
+      userId: user.id,
+      skills: [],
+      github: {
+        create: {
+          url: "",
+          username: ""
+        },
+      },
+      leetcode: {
+        create: {
+          url: "",
+          username: ""
+        },
+      },
+    },
+  })
+
   res.status(201).json({
     success: true,
     message: "User registered successfully",

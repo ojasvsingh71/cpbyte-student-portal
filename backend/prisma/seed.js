@@ -150,10 +150,41 @@ async function main() {
   ];
 
   for (const user of users) {
-    await prisma.user.create({
+    const createdUser = await prisma.user.create({
       data: {
         ...user,
         password: hashedPassword,
+      },
+    });
+    const tracker = await prisma.trackerDashboard.create({
+      data: {
+        userId: createdUser.id,
+        past5: [0, 0, 0, 0, 0],
+        skills: ["JavaScript", "React"],
+      },
+    });
+
+    await prisma.leetcode.create({
+      data: {
+        trackerId: tracker.id,
+        username: "Roushan_Srivastav",
+        url: "https://leetcode.com/Roushan_Srivastav/",
+        solvedProblems: 0,
+        easy: 0,
+        medium: 0,
+        hard: 0,
+        calendar: "",
+      },
+    });
+
+    await prisma.gitHub.create({
+      data: {
+        trackerId: tracker.id,
+        username: "RoushanSri",
+        url: "https://github.com/RoushanSri",
+        contributions: 0,
+        prs: 0,
+        repos: 0,
       },
     });
   }

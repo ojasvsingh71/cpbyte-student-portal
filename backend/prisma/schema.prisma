@@ -31,6 +31,62 @@ model User {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   attendances Attendance[]
+  tracker     TrackerDashboard?
+}
+
+model TrackerDashboard {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  past5     Int[] 
+  leetcode  Leetcode?
+  github    GitHub?
+  projects  Projects[]
+  rank      Int      @default(0)
+  skills    String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Leetcode{
+  id                 String   @id @default(uuid())
+  trackerId          String   @unique
+  tracker            TrackerDashboard @relation(fields: [trackerId], references: [id], onDelete: Cascade)
+  url                String
+  username           String
+  solvedProblems     Int     @default(0)
+  easy               Int     @default(0)
+  medium             Int     @default(0)
+  hard               Int     @default(0)
+  calendar           String   @default("")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model GitHub {
+  id              String   @id @default(uuid())
+  trackerId       String   @unique
+  tracker         TrackerDashboard @relation(fields: [trackerId], references: [id], onDelete: Cascade)
+  url             String
+  username        String
+  contributions   Int   @default(0)
+  prs             Int   @default(0)
+  repos           Int   @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Projects{
+  id          String   @id @default(uuid())
+  coverImage  String
+  projectName String
+  githubUrl   String
+  description String
+  websiteUrl  String?
+  trackerId   String
+  tracker     TrackerDashboard @relation(fields: [trackerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Attendance {

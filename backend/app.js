@@ -7,6 +7,7 @@ import coordinatorRoutes from "./routes/coordinator.route.js";
 import settingsRoutes from "./routes/settings.route.js";
 import adminRoutes from "./routes/admin.route.js";
 import scheduleRoutes from "./routes/schedule.route.js"
+import trackerRoutes from "./routes/Tracker.routes.js";
 import cors from "cors";
 
 import errorHandler from "./utils/errorHandler.js";
@@ -35,6 +36,8 @@ app.use("/api/v1/settings", settingsRoutes);
 app.use("/api/v1/admin", adminRoutes)
 
 app.use("/api/v1/schedule", scheduleRoutes)
+
+app.use("/api/v1/Tracker", trackerRoutes);
 
 app.use(errorHandler);
 

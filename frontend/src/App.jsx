@@ -8,6 +8,7 @@ import UserHelp from './pages/UserHelp'
 import MarkAttendance from './pages/MarkAttendance'
 import LoginPage from './pages/LoginPage'
 import UnauthProtected from './pages/UnauthProtected'
+import TrackerDashboard from './pages/TrackerDashboard'
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="Attendance" element={<MarkAttendance/>} />
         <Route path="Settings" element={<UserSettings/>} />
         <Route path="Help" element={<UserHelp/>} />
+        <Route path='Tracker' element={<TrackerDashboard/>} />
       </Route>
     </Routes>
     </>

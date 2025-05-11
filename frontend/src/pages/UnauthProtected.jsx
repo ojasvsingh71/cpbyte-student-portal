@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FiLoader } from 'react-icons/fi'
 import { userProfile } from '../redux/slices/profileSlice'
 import { getMembersOfDomain } from '../redux/slices/getDomainUserSlice'
+import { getTrackerDataOfUser } from "../redux/slices/TrackerSlice";
 
 function UnauthProtected({children}) {
   const dispatch = useDispatch()  
@@ -45,6 +46,9 @@ function UnauthProtected({children}) {
     }
     if(data && data.role=="COORDINATOR")
     membersOfDomain()
+
+    if(data)
+    dispatch(getTrackerDataOfUser({library_id:data.library_id}))
   
   },[data, dispatch])
     if(isloading) {

@@ -6,6 +6,7 @@ import { TbHelpOctagon } from "react-icons/tb";
 import { IoMdSettings } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlinePieChart } from "react-icons/ai";
+import { IoStatsChartOutline } from "react-icons/io5";
 import { LogOut, Menu, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshDash } from "../redux/slices/profileSlice";
@@ -14,6 +15,7 @@ import { refreshAttendance } from "../redux/slices/getDomainUserSlice";
 import { refreshEvent } from "../redux/slices/eventSlice";
 import toast from "react-hot-toast";
 import { resetCheckStatus } from "../redux/slices/checkStatus";
+import { refreshTracker } from "../redux/slices/TrackerSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +52,7 @@ function Navbar() {
       dispatch(refreshDash())
       dispatch(refreshEvent())
       dispatch(authRefresh())
+      dispatch(refreshTracker())
       dispatch(resetCheckStatus())
       localStorage.removeItem("token")
       navigate("/login");
@@ -123,6 +126,13 @@ function Navbar() {
                   <h2>Attendance</h2>
                 </Link>
               }
+              <Link 
+                to={"Tracker"} 
+                className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Tracker")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+                >
+                  <IoStatsChartOutline size={isMobile ? 18 : 20}/>
+                  <h2>Tracker</h2>
+              </Link>
             </div>
           </div>
           <div className="flex flex-col gap-4 items-start justify-start w-full mt-4">

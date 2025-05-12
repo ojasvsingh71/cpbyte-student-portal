@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import prisma from "../config/db.js";
 import ResponseError from "../types/ResponseError.js";
 import axios from "axios";
+import cloudinary from "../config/cloudinary.js";
 
 export const getTrackerDashboard = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -19,6 +20,7 @@ export const getTrackerDashboard = asyncHandler(async (req, res) => {
         include: {
           leetcode: true,
           github: true,
+          projects:true
         },
       },
     },
@@ -196,6 +198,16 @@ export const addProject = asyncHandler(async (req, res) => {
   if (!tracker) {
     throw new ResponseError("Tracker not found for this user", 404);
   }
+
+  const {coverImage} = project
+  const result = await cloudinary.uploader.upload(coverImage);
+
+  if (!result) {
+          throw new ResponseError("Image upload failed", 500);
+  }
+
+  project.coverImage=result.url
+
   const addedProject = await prisma.projects.create({
     data: {
       ...project,
@@ -223,6 +235,11 @@ export const removeProject = asyncHandler(async (req, res) => {
       id: projectId,
     },
   });
+
+   if (deletedProject.coverImage) {
+          const publicId = deletedProject.coverImage.split('/').pop().split('.')[0];
+          await cloudinary.uploader.destroy(publicId);
+  }
 
   const newProject = await prisma.projects.findMany({
     where: {

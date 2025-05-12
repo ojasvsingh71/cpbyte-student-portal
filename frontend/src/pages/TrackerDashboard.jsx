@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiLeetcode } from "react-icons/si";
 import { LuPenLine } from "react-icons/lu";
@@ -6,13 +6,12 @@ import { Link } from "react-router-dom";
 import git from "../../public/github.webp";
 import { Star } from "lucide-react";
 import { IoStatsChartSharp } from "react-icons/io5";
-import { useDispatch, useSelector } from "react-redux";
-import { getTrackerDataOfUser } from "../redux/slices/TrackerSlice";
+import { useSelector } from "react-redux";
 
 function TrackerDashboard() {
   const { data } = useSelector((state) => state.tracker);
 
-  const username = "Roushan Srivastav"
+  const user = useSelector((state) => state.dashboard.data) 
 
   const [date, setDate] = useState("");
   useEffect(() => {
@@ -25,7 +24,7 @@ function TrackerDashboard() {
       <div className="mb-6 md:mb-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 lg:pt-0">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-white">
-            Hello, {username}
+            Hello, {user?.name}
           </h1>
           <p className="text-sm text-gray-400">Today is {date}</p>
         </div>
@@ -149,7 +148,7 @@ function TrackerDashboard() {
             <div className="text-xl md:text-2xl flex items-center gap-2 font-medium mb-4 md:mb-7">
               <h2>Skills</h2>
               <Link
-                to="/Settings"
+                to="/ManageTracker/SkillManagement"
                 className="opacity-70 hover:opacity-100 duration-200"
               >
                 <LuPenLine />
@@ -181,9 +180,15 @@ function TrackerDashboard() {
           </div>
 
           <div className="w-fit flex flex-col items-start md:items-center">
-            <h2 className="text-lg md:text-xl font-medium mb-2 md:mb-3">
-              Platforms
-            </h2>
+            <div className="text-xl md:text-2xl flex items-center gap-2 font-medium mb-4 md:mb-7">
+              <h2>Platforms</h2>
+              <Link
+                to="/ManageTracker"
+                className="opacity-70 hover:opacity-100 duration-200"
+              >
+                <LuPenLine />
+              </Link>
+            </div>
             <div className="flex">
               {data?.leetcode.url !== "" && (
                 <a
@@ -208,14 +213,14 @@ function TrackerDashboard() {
               Projects
             </h2>
             <Link
-              to="/Settings"
+              to="/ManageTracker/AddProject"
               className="text-gray-400 hover:text-white duration-200"
             >
               <LuPenLine size={24} />
             </Link>
           </div>
           <div className="flex justify-center">
-            {data?.projects?.length == 0 ? (
+            {(data?.projects?.length == 0 || !data.projects) ? (
               <p className="text-gray-400 py-6">
                 Currently No Projects are added..
               </p>

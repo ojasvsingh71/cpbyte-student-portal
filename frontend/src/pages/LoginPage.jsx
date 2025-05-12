@@ -26,6 +26,10 @@ function LoginPage() {
             toast.success("logedin successfully",{
               id:toastId
             })
+        }else{
+          toast.error("Logging failed",{
+            id:toastId
+          })
         }}
 return (
     <div className="flex items-center justify-center min-h-screen bg-[#070b0f]">

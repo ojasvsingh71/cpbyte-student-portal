@@ -133,15 +133,17 @@ export const removeProject = createAsyncThunk(
   async({projectId},{rejectWithValue})=>{
     try {
       const token = localStorage.getItem("token")
-      const updateProject = await axiosInstance.patch(`/Tracker/removeProject?projectId=${projectId}`, {
+      const updateProject = await axiosInstance.patch(`/Tracker/removeProject?projectId=${projectId}`,{}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
       return updateProject.data
     } catch (error) {
+      console.log(error);
+      
       return rejectWithValue(
-        error.response?.data?.message || "Failed to add Project"
+        error.response?.data?.message || "Failed to remove Project"
       );
     }
   }
@@ -177,6 +179,7 @@ const initialState={
         medium: 0,
         hard: 0,
         url: "",
+        username: "",
       },
       rank: 0,
       dsaLanguage: "",
@@ -185,6 +188,8 @@ const initialState={
         prs: 0,
         contributions: 0,
         repos: 0,
+        url:"",
+        username:""
       },
       skills: [],
       projects: [],
@@ -214,6 +219,7 @@ const TrackerSlice = createSlice({
                 medium: data.tracker.leetcode.medium,
                 hard: data.tracker.leetcode.hard,
                 url: data.tracker.leetcode.url,
+                username: data.tracker.leetcode.username
             },
             rank: data.tracker.rank,
             dsaLanguage: data.domain_dsa,
@@ -222,6 +228,8 @@ const TrackerSlice = createSlice({
                 prs: data.tracker.github.prs,
                 contributions: data.tracker.github.contributions,
                 repos: data.tracker.github.repos,
+                url:data.tracker.github.url,
+                username:data.tracker.github.username
             },
             skills: data.tracker.skills,
             projects: data.tracker.projects,
@@ -245,6 +253,7 @@ const TrackerSlice = createSlice({
             medium: data.leetcode.medium,
             hard: data.leetcode.hard,
             url: data.leetcode.url,
+            username:data.leetcode.username
         }
         state.data.past5 = data.past5
       })
@@ -260,9 +269,9 @@ const TrackerSlice = createSlice({
         state.loading=false
         const data=action.payload
         state.data.github = {
-            prs: data.github.prs,
-            contributions: data.github.contributions,
-            repos: data.github.repos,
+            prs: data.prs,
+            contributions: data.contributions,
+            repos: data.repos,
         }
       })
       .addCase(addGitHub.rejected, (state,action)=>{

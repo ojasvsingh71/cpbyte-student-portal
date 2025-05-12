@@ -9,6 +9,11 @@ import MarkAttendance from './pages/MarkAttendance'
 import LoginPage from './pages/LoginPage'
 import UnauthProtected from './pages/UnauthProtected'
 import TrackerDashboard from './pages/TrackerDashboard'
+import TrackerManagement from './pages/TrackerManagement'
+import AddProject from './componenets/AddProject'
+import RemoveProject from './componenets/RemoveProject'
+import SkillManagement from './componenets/SkillManagement'
+import AddPlatforms from './componenets/AddPlatform'
 
 function App() {
 
@@ -25,6 +30,12 @@ function App() {
         <Route path="Settings" element={<UserSettings/>} />
         <Route path="Help" element={<UserHelp/>} />
         <Route path='Tracker' element={<TrackerDashboard/>} />
+        <Route path='ManageTracker' element={<TrackerManagement/>}>
+          <Route path='AddProject' element={<AddProject/>}/>
+          <Route path='RemoveProject' element={<RemoveProject/>}/>
+          <Route path='SkillManagement' element={<SkillManagement/>}/>
+          <Route path='' element={<AddPlatforms/>}/>
+        </Route>
       </Route>
     </Routes>
     </>

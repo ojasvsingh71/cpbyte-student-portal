@@ -7,7 +7,7 @@ import { IoMdSettings } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlinePieChart } from "react-icons/ai";
 import { IoStatsChartOutline } from "react-icons/io5";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, Wrench, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshDash } from "../redux/slices/profileSlice";
 import { authRefresh, logoutUser } from "../redux/slices/authSlice";
@@ -146,6 +146,13 @@ function Navbar() {
               >
                 <IoMdSettings size={isMobile ? 18 : 20} />
                 <h2>Settings</h2>
+              </Link>
+              <Link
+                to={"ManageTracker"}
+                className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/ManageTracker")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+              >
+                <Wrench size={isMobile ? 18 : 20} />
+                <h2>Manage Tracker</h2>
               </Link>
               <Link
                 to={"Help"}

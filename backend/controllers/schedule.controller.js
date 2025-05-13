@@ -37,7 +37,7 @@ export const getEvents = asyncHandler(async(req, res)=>{
 })
 
 export const addEvent = asyncHandler(async(req, res)=>{
-    const { date, event } = req.body;
+    const { date, title, discription, category } = req.body;
 
     let eventEntry = await prisma.schedule.findUnique({
         where: { date: date }
@@ -47,14 +47,16 @@ export const addEvent = asyncHandler(async(req, res)=>{
         eventEntry = await prisma.schedule.create({
             data: {
                 date: date,
-                events: { create: [{ content: event }] }
+                events: { create: [{ title, discription, category }] }
             }
         });
     } else {
         await prisma.event.create({
             data: {
                 scheduleId: eventEntry.id,
-                content: event
+                title,
+                discription,
+                category
             }
         });
     }

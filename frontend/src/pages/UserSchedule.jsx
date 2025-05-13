@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {getEvents, addEvents, removeEvents} from '../redux/slices/eventSlice';
@@ -6,13 +5,15 @@ import toast from 'react-hot-toast';
 
 const UserSchedule = () => {
   const user = useSelector(state => state.dashboard.data);
-  const { event, loading } = useSelector(state => state.event);
+  const { event } = useSelector(state => state.event);
   
   const dispatch = useDispatch();
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [eventText, setEventText] = useState("");
+  const [title, setTitle] = useState("");
+  const [discription, setDiscription] = useState("");
+  const [category, setCategory] = useState("General")
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
   useEffect(() => {
@@ -78,7 +79,7 @@ const UserSchedule = () => {
   
   const addEvent = async() => {
     const toastId = toast.loading("Adding Event..")
-    if (!eventText.trim()) return;    
+    if (!title.trim()) return;    
 
     const dateKey = new Date(selectedDate);    
     const utcDateOnly = new Date(Date.UTC(
@@ -86,12 +87,14 @@ const UserSchedule = () => {
       dateKey.getMonth(),
       dateKey.getDate()
     ));
-      const res = await dispatch(addEvents({date:utcDateOnly, event:eventText}))
+      const res = await dispatch(addEvents({date:utcDateOnly, title, discription, category}))
       if(res.meta.requestStatus==="fulfilled")
         toast.success("Event Added Successfully",{
           id:toastId
       })
-      setEventText("");
+      setTitle("");
+      setDiscription("");
+      setCategory("General");
   };
   
   const removeEvent = async(eventId, eventDate) => {
@@ -174,7 +177,7 @@ const UserSchedule = () => {
                           key={event.id} 
                           className="bg-purple-500 text-white text-xs p-0.5 md:p-1 mb-0.5 md:mb-1 rounded truncate flex justify-between"
                         >
-                          <span className="truncate text-xs">{event.content}</span>
+                          <span className="truncate text-xs">{event.title}</span>
                         </div>
                       ))}
                     </div>
@@ -193,11 +196,24 @@ const UserSchedule = () => {
               </h3>
               
               <div className="mb-3 md:mb-4">            
-                <textarea
-                  value={eventText}
-                  onChange={(e) => setEventText(e.target.value)}
-                  placeholder="Add event details"
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Add event title"
                   className="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50"
+                  rows="2"
+                />
+                <select name="category" id="category" className='w-full p-2 mt-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50'
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}>
+                  <option value="General">General</option>
+                  <option value="Class">Class</option>
+                </select>
+                <textarea
+                  value={discription}
+                  onChange={(e) => setDiscription(e.target.value)}
+                  placeholder="Add event description"
+                  className="w-full p-2 mt-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50"
                   rows="2"
                 />
               </div>
@@ -223,7 +239,7 @@ const UserSchedule = () => {
                       key={event.id} 
                       className="p-2 md:p-3 rounded flex justify-between items-center border-b-2 border-[#0ec1e7] bg-gray-800"
                     >
-                      <span className="text-sm md:text-base break-words flex-1 pr-2">{event.content}</span>
+                      <span className="text-sm md:text-base break-words flex-1 pr-2">{event.title}</span>
                       <button
                         onClick={() => removeEvent(event.id, formatDateKey(selectedDate))}
                         className="p-1 text-red-500 cursor-pointer hover:bg-black hover:bg-opacity-20 rounded text-xs md:text-sm whitespace-nowrap"

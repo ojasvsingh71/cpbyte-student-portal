@@ -110,7 +110,9 @@ model Schedule {
 
 model Event {
   id         String   @id @default(uuid())
-  content    String
+  category   Category
+  title      String   
+  discription String?
   scheduleId String
   schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
@@ -154,4 +156,9 @@ enum AttendanceStatus {
   PRESENT
   ABSENT_WITHOUT_REASON
   ABSENT_WITH_REASON
+}
+
+enum Category {
+  General
+  Class
 }

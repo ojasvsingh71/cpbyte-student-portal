@@ -32,12 +32,14 @@ export const getEvents = createAsyncThunk(
 
 export const addEvents = createAsyncThunk(
     "event/addEvent",
-    async({date, event},{rejectWithValue})=>{
+    async({date, title, category, discription},{rejectWithValue})=>{
         try{
             const token = localStorage.getItem("token");
             const res = await axiosInstance.post("/schedule/addEvent",{
                 date,
-                event
+                title,
+                discription,
+                category
             },
             {
                 headers:{

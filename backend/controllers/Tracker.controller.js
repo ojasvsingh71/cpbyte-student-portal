@@ -312,44 +312,42 @@ export const refreshAll = asyncHandler(async (req, res) => {
   const leetcodeEntries = await prisma.leetcode.findMany();
   const githubEntries = await prisma.gitHub.findMany();
 
-  for (const entry of leetcodeEntries) {
+await Promise.all(leetcodeEntries.map(async (entry) => {
+  try {
     const leetcode = await axios.get(
       `https://leetcode.com/graphql?query=query%20{%20matchedUser(username:%22${entry.username}%22)%20{%20submissionCalendar%20submitStats%20{%20acSubmissionNum%20{%20count%20}%20}%20}%20}`
     );
 
     const matchedUser = leetcode.data.data.matchedUser;
-
-    if (!matchedUser) {
-      continue;
-    }
-
-    await prisma.leetcode.update({
-      where: {
-        id: entry.id,
-      },
-      data: {
-        solvedProblems: matchedUser.submitStats.acSubmissionNum[0].count,
-        easy: matchedUser.submitStats.acSubmissionNum[1].count,
-        medium: matchedUser.submitStats.acSubmissionNum[2].count,
-        hard: matchedUser.submitStats.acSubmissionNum[3].count,
-        calendar: matchedUser.submissionCalendar,
-      },
-    });
+    if (!matchedUser) return;
 
     const past5Days = getPastFiveDays();
     const record = await check(past5Days, matchedUser.submissionCalendar);
 
-    await prisma.trackerDashboard.update({
-      where: {
-        id: entry.trackerId,
-      },
-      data: {
-        past5: record,
-      },
-    });
+    await Promise.all([
+      prisma.leetcode.update({
+        where: { id: entry.id },
+        data: {
+          solvedProblems: matchedUser.submitStats.acSubmissionNum[0].count,
+          easy: matchedUser.submitStats.acSubmissionNum[1].count,
+          medium: matchedUser.submitStats.acSubmissionNum[2].count,
+          hard: matchedUser.submitStats.acSubmissionNum[3].count,
+          calendar: matchedUser.submissionCalendar,
+        },
+      }),
+      prisma.trackerDashboard.update({
+        where: { id: entry.trackerId },
+        data: { past5: record },
+      }),
+    ]);
+  } catch (err) {
+    console.error(`Failed for user: ${entry.username}`, err);
   }
+}));
 
-  for (const entry of githubEntries) {
+
+  await Promise.all(githubEntries.map(async (entry) => {
+  try {
     const response = await axios.post(
       "https://api.github.com/graphql",
       {
@@ -361,29 +359,69 @@ export const refreshAll = asyncHandler(async (req, res) => {
         },
       }
     );
-    if (response.status !== 200) {
-      continue;
-    }
 
-    const totalContributions =
-      response.data.data.user.contributionsCollection.contributionCalendar
-        .totalContributions;
-    const totalPullRequests = response.data.data.user.pullRequests.totalCount;
-    const totalRepositories = response.data.data.user.repositories.totalCount;
+    const data = response.data.data.user;
+    if (!data) return;
 
     await prisma.gitHub.update({
-      where: {
-        id: entry.id,
-      },
+      where: { id: entry.id },
       data: {
-        contributions: totalContributions,
-        prs: totalPullRequests,
-        repos: totalRepositories
+        contributions: data.contributionsCollection.contributionCalendar.totalContributions,
+        prs: data.pullRequests.totalCount,
+        repos: data.repositories.totalCount,
       },
     });
+  } catch (err) {
+    console.error(`GitHub fetch failed for user: ${entry.username}`, err);
   }
+}));
 
   return res.status(200).json({
     message: "All LeetCode and Github entries refreshed successfully",
   });
+});
+
+export const getAll = asyncHandler(async (req, res) => {
+  const collection = await prisma.leetcode.findMany({
+    include: {
+      tracker: {
+        include: {
+          user: {
+            select: { name: true,
+              library_id:true,
+              avatar:true,
+              domain_dsa:true,
+              year:true
+             }
+          }
+        }
+      }
+    }
+  });
+  const formatted = collection
+    .filter(entry => entry.tracker?.id)
+    .map((entry) => ({
+      id: entry.tracker.id,
+      name: entry.tracker.user.name,
+      library_id: entry.tracker.user.library_id,
+      solvedProblems: entry.solvedProblems,
+      avatar:entry.tracker.user.avatar,
+      language:entry.tracker.user.domain_dsa,
+      previous:entry.tracker.past5,
+      year:entry.tracker.user.year
+    }))
+    .sort((a, b) => b.solvedProblems - a.solvedProblems)
+    .map((entry, index) => ({
+      ...entry,
+      rank: index + 1,
+    }));
+  await Promise.all(
+    formatted.map((entry) =>
+      prisma.trackerDashboard.update({
+        where: { id: entry.id },
+        data: { rank: entry.rank },
+      })
+    )
+  );
+  res.status(200).json(formatted.sort((a, b) => a.rank - b.rank));
 });

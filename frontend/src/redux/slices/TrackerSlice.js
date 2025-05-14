@@ -149,28 +149,6 @@ export const removeProject = createAsyncThunk(
   }
 )
 
-// export const getTrackerDataOfTargetUser = createAsyncThunk(
-//   "Tracker/getTrackerDataOfTargetUser",
-//   async ({ library_id }, { rejectWithValue }) => {
-//     try {
-//       const token = localStorage.getItem("token");
-//       const user = await axiosInstance.get(
-//         `/Tracker/getUserTrackerDashboard/${library_id}`,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-//       return user.data;
-//     } catch (error) {
-//       return rejectWithValue(
-//         error.response?.data?.message || "Failed to Access Users Data"
-//       );
-//     }
-//   }
-// );
-
 const initialState={
     data: {
       leetcode: {
@@ -183,6 +161,7 @@ const initialState={
       },
       rank: 0,
       dsaLanguage: "",
+      name:"",
       past5: [0, 0, 0, 0, 0],
       github: {
         prs: 0,
@@ -224,6 +203,7 @@ const TrackerSlice = createSlice({
             rank: data.tracker.rank,
             dsaLanguage: data.domain_dsa,
             past5: data.tracker.past5,
+            name:data.name,
             github: {
                 prs: data.tracker.github.prs,
                 contributions: data.tracker.github.contributions,

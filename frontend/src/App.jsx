@@ -14,6 +14,8 @@ import AddProject from './componenets/AddProject'
 import RemoveProject from './componenets/RemoveProject'
 import SkillManagement from './componenets/SkillManagement'
 import AddPlatforms from './componenets/AddPlatform'
+import Leaderboard from './pages/Leaderboard'
+import TargetUserDashboard from './pages/TargetUserDashboard'
 
 function App() {
 
@@ -30,6 +32,8 @@ function App() {
         <Route path="Settings" element={<UserSettings/>} />
         <Route path="Help" element={<UserHelp/>} />
         <Route path='Tracker' element={<TrackerDashboard/>} />
+        <Route path={`Tracker/:library_id`} element={<TargetUserDashboard/>} />
+        <Route path='Leaderboard' element={<Leaderboard/>}/>
         <Route path='ManageTracker' element={<TrackerManagement/>}>
           <Route path='AddProject' element={<AddProject/>}/>
           <Route path='RemoveProject' element={<RemoveProject/>}/>

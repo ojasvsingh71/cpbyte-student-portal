@@ -16,6 +16,7 @@ import { refreshEvent } from "../redux/slices/eventSlice";
 import toast from "react-hot-toast";
 import { resetCheckStatus } from "../redux/slices/checkStatus";
 import { refreshTracker } from "../redux/slices/TrackerSlice";
+import { GoTrophy } from "react-icons/go";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -132,6 +133,13 @@ function Navbar() {
                 >
                   <IoStatsChartOutline size={isMobile ? 18 : 20}/>
                   <h2>Tracker</h2>
+              </Link>
+              <Link
+                to={"Leaderboard"}
+                className={`flex items-center gap-2 hover:bg-[#212327] ${getActiveClass("/Leaderboard")} hover:text-[#0ec1e7] duration-200 w-full p-2 pl-4 md:pl-6 rounded-md cursor-pointer text-sm md:text-base`}
+              >
+                <GoTrophy size={isMobile ? 18 : 20} />
+                <h2>Leaderboard</h2>
               </Link>
             </div>
           </div>

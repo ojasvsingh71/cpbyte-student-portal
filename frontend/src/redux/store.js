@@ -7,6 +7,8 @@ import markAttendance from './slices/attendanceSlice';
 import SettingsSlice from './slices/settingsSlice'
 import checkStatusSlice from './slices/checkStatus';
 import TrackerSlice from './slices/TrackerSlice'
+import leaderboardSlice from './slices/Leaderboard'
+import getTargetUserSlice from './slices/targetUserSlice'
 
 const store = configureStore({
   reducer: {
@@ -17,7 +19,9 @@ const store = configureStore({
     markAttendance:markAttendance,
     settings:SettingsSlice,
     checkStatus: checkStatusSlice,
-    tracker:TrackerSlice
+    tracker:TrackerSlice,
+    leaderboard:leaderboardSlice,
+    targetUser:getTargetUserSlice
   },
 })
 

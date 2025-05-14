@@ -1,46 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiLeetcode } from "react-icons/si";
-import { LuPenLine } from "react-icons/lu";
-import { Link } from "react-router-dom";
-import git from "../../public/github.webp";
+import { useParams } from "react-router-dom";
+import noimage from "../../public/noImage.webp";
 import { Star } from "lucide-react";
+import git from "../../public/github.webp";
 import { IoStatsChartSharp } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getTrackerDataOfTargetUser } from "../redux/slices/targetUserSlice";
+import { FiLoader } from "react-icons/fi";
 
-function TrackerDashboard() {
-  const { data } = useSelector((state) => state.tracker);
-
-  const [date, setDate] = useState("");
+function TargetUserDashboard() {
+  const { library_id } = useParams();
+  const dispatch = useDispatch();
+  const [data, setData] = useState();
+  const user = useSelector((state) => state.targetUser.data);
+  const loading = useSelector((state) => state.targetUser.loading);
   useEffect(() => {
-    const date = new Date();
-    setDate(date.toUTCString());
+    dispatch(getTrackerDataOfTargetUser({ library_id }));
   }, []);
+  +useEffect(() => {
+    setData(user);
+  }, [user]);
 
+  if (loading) {
+    return(
+        <div className="flex justify-center w-full items-center h-screen bg-gray-950">
+            <FiLoader size={40} color='white' className='animate-spin'/>
+        </div>
+    )
+  }
+  else
   return (
-    <div className="flex-1 p-8 md:p-8 min-h-screen w-full bg-gray-950">
-      <div className="mb-6 md:mb-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 lg:pt-0">
+    <div className="flex-1 p-8 min-h-screen w-full bg-gray-950">
+      <div className="mb-10 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold text-white">
-            Hello, {data?.name}
+          <h1 className="text-3xl font-semibold text-white flex gap-3 items-center">
+            <div className="w-12 h-12 rounded-full overflow-hidden">
+              <img
+                src={data?.avatar || noimage}
+                alt=""
+                className="object-fit"
+              />
+            </div>
+            {data?.name}
           </h1>
-          <p className="text-sm text-gray-400">Today is {date}</p>
         </div>
         <div className="flex space-x-5">
-          <span className="cursor-pointer hover:opacity-80 transition-opacity">
+          <span>
             <FaInstagram color="white" size={"1.5rem"} />
           </span>
-          <span className="cursor-pointer hover:opacity-80 transition-opacity">
+          <span>
             <FaFacebook color="white" size={"1.5rem"} />
           </span>
-          <span className="cursor-pointer hover:opacity-80 transition-opacity">
+          <span>
             <FaLinkedin color="white" size={"1.5rem"} />
           </span>
-          <span className="cursor-pointer hover:opacity-80 transition-opacity">
+          <span>
             <FaTwitter color="white" size={"1.5rem"} />
           </span>
         </div>
       </div>
+      {/*Triple Cards*/}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         <div className="bg-orange-900 text-white w-full flex items-center justify-around p-4 lg:py-6 rounded-xl">
           <div>
@@ -145,16 +166,10 @@ function TrackerDashboard() {
           <div className="mb-4 md:mb-8 h-auto md:h-1/3">
             <div className="text-xl md:text-2xl flex items-center gap-2 font-medium mb-4 md:mb-7">
               <h2>Skills</h2>
-              <Link
-                to="/ManageTracker/SkillManagement"
-                className="opacity-70 hover:opacity-100 duration-200"
-              >
-                <LuPenLine />
-              </Link>
             </div>
             <div className="flex gap-2 md:gap-3 w-full h-fit flex-wrap">
-              {data?.skills?.length !== 0 ? (
-                data?.skills?.map((skill, index) => (
+              {data?.skills.length !== 0 ? (
+                data?.skills.map((skill, index) => (
                   <div
                     key={index}
                     className="border block items-center text-wrap justify-center bg-gray-800 border-gray-500 rounded-lg p-1 px-2 md:px-3 text-sm md:text-base"
@@ -168,7 +183,7 @@ function TrackerDashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row w-full items-start sm:items-center sm:space-x-4 md:space-x-12 mt-4">
+          <div className="flex flex-col sm:flex-row w-full items-start sm:items-center sm:space-x-4 md:space-x-12 mt-2">
             <div className="text-lg md:text-xl items-center gap-2 font-medium mb-3 flex">
               <h2>Language for DSA</h2>
             </div>
@@ -177,16 +192,10 @@ function TrackerDashboard() {
             </span>
           </div>
 
-          <div className="w-fit flex flex-col items-start md:items-center">
-            <div className="text-xl md:text-2xl flex items-center gap-2 font-medium mb-4 md:mb-7">
-              <h2>Platforms</h2>
-              <Link
-                to="/ManageTracker"
-                className="opacity-70 hover:opacity-100 duration-200"
-              >
-                <LuPenLine />
-              </Link>
-            </div>
+          <div className="w-fit flex flex-col items-start md:items-center mt-4">
+            <h2 className="text-lg md:text-xl font-medium mb-2 md:mb-3">
+              Platforms
+            </h2>
             <div className="flex">
               {data?.leetcode.url !== "" && (
                 <a
@@ -210,21 +219,15 @@ function TrackerDashboard() {
             <h2 className="text-white font-medium text-xl md:text-2xl">
               Projects
             </h2>
-            <Link
-              to="/ManageTracker/AddProject"
-              className="text-gray-400 hover:text-white duration-200"
-            >
-              <LuPenLine size={24} />
-            </Link>
           </div>
           <div className="flex justify-center">
-            {(data?.projects?.length == 0 || !data.projects) ? (
+            {data?.projects.length == 0 ? (
               <p className="text-gray-400 py-6">
                 Currently No Projects are added..
               </p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
-                {data?.projects?.map((project, index) => (
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 w-full">
+                {data?.projects.map((project, index) => (
                   <div
                     key={index}
                     className="bg-gray-800 rounded-lg border border-gray-600 flex flex-col gap-2"
@@ -260,7 +263,7 @@ function TrackerDashboard() {
                         <p className="overflow-hidden">
                           {project.githubUrl.split("com/")[1]}
                         </p>
-                      </a>{" "}
+                      </a>
                     </div>
                   </div>
                 ))}
@@ -273,4 +276,4 @@ function TrackerDashboard() {
   );
 }
 
-export default TrackerDashboard;
+export default TargetUserDashboard;

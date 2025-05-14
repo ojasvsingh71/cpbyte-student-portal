@@ -44,7 +44,7 @@ return (
 
         {error!==null&&(
           <div className='w-full bg-red-500 text-white rounded-xl overflow-hidden'>
-            <h1 className='p-2 w-full text-center'>{error}!!</h1>
+            <h1 className='p-2 w-full text-center'>Login Failed!!</h1>
           </div>
         )
         }

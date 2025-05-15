@@ -1,5 +1,6 @@
 import express from "express";
 import { config } from "dotenv";
+import cron from "node-cron";
 
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
@@ -12,10 +13,18 @@ import cors from "cors";
 
 import errorHandler from "./utils/errorHandler.js";
 
+import { refreshProfiles } from "./utils/cron.js";
+
 config();
 
 const app = express();
 
+const CRON_TIMING = process.env.CRON_TIMING || "0 */2 * * *";
+cron.schedule(CRON_TIMING, async () => {
+  console.log("==============Refreshing profiles==============");
+  await refreshProfiles();
+  console.log("==============Refreshed  profiles==============");
+});
 
 app.use(express.json({ limit: "20mb" }));
 app.use(

@@ -408,7 +408,8 @@ export const getAll = asyncHandler(async (req, res) => {
       avatar:entry.tracker.user.avatar,
       language:entry.tracker.user.domain_dsa,
       previous:entry.tracker.past5,
-      year:entry.tracker.user.year
+      year:entry.tracker.user.year,
+      leetcodeUsername:entry.username
     }))
     .sort((a, b) => b.solvedProblems - a.solvedProblems)
     .map((entry, index) => ({

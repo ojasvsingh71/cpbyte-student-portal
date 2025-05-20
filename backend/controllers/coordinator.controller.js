@@ -32,7 +32,7 @@ const record = await Promise.all(
 });
 
 export const markAttendance = asyncHandler(async (req, res) => {
-  const { responses, subject } = req.body;
+  const { responses, subject, date } = req.body;
 
   if (responses.length === 0) {
     throw new ResponseError("No responses provided", 400);
@@ -85,7 +85,7 @@ export const markAttendance = asyncHandler(async (req, res) => {
       user: { connect: { id: user.id } },
       status: status==="PRESENT" ? "PRESENT" : status==="ABSENT WITH REASON" ? "ABSENT_WITH_REASON" : "ABSENT_WITHOUT_REASON",
       subject:subject,
-      date: new Date(),
+      date: date,
     },
   });
   await prisma.user.update({where:{library_id},

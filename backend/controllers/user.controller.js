@@ -27,3 +27,14 @@ export const getProfile = asyncHandler(async (req, res) => {
   
     res.status(200).json({ success: true, message: "User profile fetched", data: user });
   });
+
+export const getProjects = asyncHandler(async (req, res)=>{
+  const projects = await prisma.trackerDashboard.findUnique({
+    where:{  userId:req.userId  },
+    select:{
+      projects:true
+    }
+  })
+
+  res.status(200).json({success: true, message: "User projects fetched Successfully", data: projects})
+})

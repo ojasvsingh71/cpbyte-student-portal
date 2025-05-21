@@ -33,11 +33,12 @@ const MarkAttendance = () => {
       library_id: req.library_id,
       status: selectedStatus[req.library_id] || "ABSENT_WITHOUT_REASON",
     }));
+
+    const today = new Date().toLocaleDateString('en-CA');
+    const date = new Date(today + 'T00:00:00.000Z');
     
-    const marked = await dispatch(markAttendance({responses:result, subject: DSA? "DSA" : "DEV"}))
+    const marked = await dispatch(markAttendance({responses:result, subject: DSA? "DSA" : "DEV", date:date}))
     if (marked.meta.requestStatus === "fulfilled") {
-      const today = new Date().toLocaleDateString('en-CA');
-      const date = new Date(today + 'T00:00:00.000Z');
       dispatch(updateStatus({ domain: DSA ? domain_dsa : domain_dev, date: date }));
       setIsMarked(2);
       toast.success("Attendance marked successfully", { id: toastId });

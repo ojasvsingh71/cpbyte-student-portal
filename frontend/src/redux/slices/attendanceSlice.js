@@ -3,7 +3,7 @@ import { axiosInstance } from "../../lib/axios";
 
 export const markAttendance = createAsyncThunk(
   "markAttendance/markAttendance",
-  async ({ subject, responses }, { rejectWithValue }) => {
+  async ({ subject, responses, date }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axiosInstance.post(
@@ -11,6 +11,7 @@ export const markAttendance = createAsyncThunk(
         {
           subject,
           responses,
+          date
         },
         {
           headers: {

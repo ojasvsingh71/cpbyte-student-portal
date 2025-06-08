@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import trophy from "../../public/trophy.png";
-import noimage from "../../public/noImage.webp";
+import trophy from "../assets/trophy.png";
+import noimage from "../assets/noImage.webp";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAll } from "../redux/slices/Leaderboard";
@@ -10,16 +10,33 @@ const Leaderboard = () => {
   const dispatch = useDispatch();
   const { users, loading } = useSelector((state) => state.leaderboard);
   const [data, setData] = useState([]);
-
+  const [selectedLanguage,setSelectedLanguage]=useState("All")
+  const [selectedYear, setSelectedYear]=useState("All")
   useEffect(() => {
     if (!users || users.length == 0){ 
       dispatch(getAll({}));
     }
   }, []);
 
-  useEffect(() => {
-    setData(users);
-  }, [users]);
+useEffect(()=>{
+let filteredData=users
+
+if(selectedLanguage!="All"){
+  filteredData=users.filter((user)=>{
+    return user.language===selectedLanguage
+  })
+}
+
+if(selectedYear!="All"){
+  filteredData=filteredData.filter((user)=>{
+    return user.year===selectedYear
+  })
+}
+
+setData(filteredData)
+
+
+},[users,selectedLanguage,selectedYear])
 
   return (
     <div className=" p-4 bg-gray-950 w-full lg:p-8 min-h-screen">
@@ -27,6 +44,33 @@ const Leaderboard = () => {
         <h1 className="text-4xl font-extrabold my-4 text-center text-white drop-shadow-lg">
           Leaderboard🚀
         </h1>
+        
+        <div className="flex flex-wrap gap-4 justify-center mb-6">
+  <select
+    className="px-4 py-2 rounded-lg bg-gray-800 text-white"
+    value={selectedLanguage}
+    onChange={(e) => setSelectedLanguage(e.target.value)}
+  >
+    <option value="All">All Languages</option>
+    <option value="CPP">CPP</option>
+    <option value="Java">Java</option>
+
+  </select>
+
+  <select
+    className="px-4 py-2 rounded-lg bg-gray-800 text-white"
+    value={selectedYear}
+    onChange={(e) => setSelectedYear(e.target.value)}
+  >
+    <option value="All">All Years</option>
+    <option value="1">1st Year</option>
+    <option value="2">2nd Year</option>
+    <option value="3">3rd Year</option>
+    <option value="4">4th Year</option>
+  </select>
+</div>
+
+
         {!loading && <div className="w-full p-4 lg:p-12 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 w-full">
             {data?.map(

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, Lock, Mail, BookOpen, Calendar, CreditCard, Camera, Save } from 'lucide-react';
-import noimage from '../../public/noImage.webp';
+import noimage from '../assets/noImage.webp';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from "react-hot-toast"
 import { updateAvatar, updatePass } from '../redux/slices/settingsSlice';

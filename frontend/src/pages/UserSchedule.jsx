@@ -44,6 +44,23 @@ const UserSchedule = () => {
   const months = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"];
   const weekdays = isMobile ? ["S", "M", "T", "W", "T", "F", "S"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const colorClasses = [
+  'bg-fuchsia-600',
+
+'bg-violet-600',
+
+'bg-sky-500',
+
+'bg-cyan-500',
+
+'bg-emerald-500',
+
+'bg-amber-500',
+
+'bg-orange-500',
+
+'bg-rose-600',
+];
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();

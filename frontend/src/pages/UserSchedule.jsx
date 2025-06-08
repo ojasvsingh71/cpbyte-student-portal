@@ -6,7 +6,8 @@ import toast from 'react-hot-toast';
 const UserSchedule = () => {
   const user = useSelector(state => state.dashboard.data);
   const { event } = useSelector(state => state.event);
-  
+  const [addMode, setAddMode] = useState(false);
+
   const dispatch = useDispatch();
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -44,6 +45,23 @@ const UserSchedule = () => {
   const months = ["January", "February", "March", "April", "May", "June", 
                 "July", "August", "September", "October", "November", "December"];
   const weekdays = isMobile ? ["S", "M", "T", "W", "T", "F", "S"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const colorClasses = [
+  'bg-fuchsia-600',
+
+'bg-violet-600',
+
+'bg-sky-500',
+
+'bg-cyan-500',
+
+'bg-emerald-500',
+
+'bg-amber-500',
+
+'bg-orange-500',
+
+'bg-rose-600',
+];
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -134,59 +152,116 @@ const UserSchedule = () => {
             </div>
           </div>
         </header>
-        
-        <div className="grid grid-cols-7 gap-1 mb-1 md:mb-2">
-          {weekdays.map((day, index) => (
-            <div key={index} className="text-center py-1 md:py-2 text-gray-400 font-medium text-xs md:text-base">
-              {day}
+  {/* Weekday Names Row */}
+<div className="grid grid-cols-7 gap-1 mb-1 md:mb-2">
+  {weekdays.map((day, index) => {
+    const isWeekend = day === "Sat" || day === "Sun";
+
+    return (
+      <div
+        key={index}
+        className={`text-center py-1 md:py-2 font-medium text-xs md:text-base rounded ${
+          isWeekend ? "bg-[#0ec1e7] text-white" : "bg-white text-black"
+        }`}
+      >
+        {day}
+      </div>
+    );
+  })}
+</div>
+
+{/* Calendar Day Grid with alternating column colors */}
+<div className="grid grid-cols-7 gap-1 mb-4 md:mb-6">
+  {days.map((day, index) => {
+    const dateKey = day ? formatDateKey(day) : null;
+
+    const isToday =
+      day &&
+      day.getDate() === new Date().getDate() &&
+      day.getMonth() === new Date().getMonth() &&
+      day.getFullYear() === new Date().getFullYear();
+
+    const isSelected =
+      day &&
+      day.getDate() === selectedDate.getDate() &&
+      day.getMonth() === selectedDate.getMonth() &&
+      day.getFullYear() === selectedDate.getFullYear();
+
+    const dayEvents =
+      dateKey && event[formatMonthKey(currentMonth)]
+        ? event[formatMonthKey(currentMonth)][dateKey] || []
+        : [];
+
+    const cellHeightClass = isMobile ? "h-14 md:h-24" : "h-24";
+
+    const colIndex = index % 7;
+    const altBg = colIndex % 2 === 0 ? "bg-[#1f2937]" : "bg-[#2a3444]";
+
+    return (
+      <div
+        key={index}
+        className={`p-1 ${cellHeightClass} border border-gray-800 rounded ${
+          day ? `${altBg} hover:bg-gray-700 cursor-pointer` : "bg-gray-900"
+        } ${isSelected ? "ring-2 ring-[#0ec1e7]" : ""}`}
+        onClick={() => day && setSelectedDate(day)}
+      >
+        {day && (
+          <div className="relative group w-full h-full">
+            {/* Date Number */}
+            <div
+              className={`text-xs p-1 rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center mx-auto ${
+                isToday ? "bg-[#0ec1e7] text-white" : "text-white"
+              }`}
+            >
+              {day.getDate()}
             </div>
-          ))}
-        </div>
-        
-        <div className="grid grid-cols-7 gap-1 mb-4 md:mb-6">
-          {days.map((day, index) => {
-            const dateKey = day ? formatDateKey(day) : null;
-            const isToday = day ? 
-              day.getDate() === new Date().getDate() && 
-              day.getMonth() === new Date().getMonth() && 
-              day.getFullYear() === new Date().getFullYear() : false;
-            
-            const isSelected = day ?
-              day.getDate() === selectedDate.getDate() &&
-              day.getMonth() === selectedDate.getMonth() &&
-              day.getFullYear() === selectedDate.getFullYear() : false;
-              
-            const dayEvents = dateKey && event[formatMonthKey(currentMonth)] ? (event[formatMonthKey(currentMonth)][dateKey] || []) : [];
-            
-            const cellHeightClass = isMobile ? 'h-14 md:h-24' : 'h-24';
-            
-            return (
-              <div 
-                key={index} 
-                className={`p-1 ${cellHeightClass} border border-gray-800 rounded ${day ? 'bg-gray-800 hover:bg-gray-700 cursor-pointer' : 'bg-gray-900'} ${isSelected ? 'ring-2 ring-[#0ec1e7]' : ''}`}
-                onClick={() => day && setSelectedDate(day)}
-              >
-                {day && (
-                  <>
-                    <div className={`text-xs p-1 rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center ${isToday ? 'bg-[#0ec1e7] text-white' : 'text-gray-300'}`}>
-                      {day.getDate()}
+
+            {/* Visible Events (First 2) */}
+            <div className="mt-1 space-y-0.5">
+              {dayEvents.slice(0, 2).map((event) => {
+                const randomColor =
+                  colorClasses[event.id.charCodeAt(0) % colorClasses.length];
+                return (
+                  <div
+                    key={event.id}
+                    className={`flex items-center gap-1 px-1 py-0.5 rounded text-white text-xs truncate ${randomColor}`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-white opacity-80"></span>
+                    <span className="truncate" title={event.title}>
+                      {event.title}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Hover Tooltip for Remaining Events */}
+            {dayEvents.length > 2 && (
+              <div className="absolute z-10 hidden group-hover:flex flex-col bg-gray-900 text-white text-xs p-2 rounded-lg shadow-lg top-10 left-1/2 -translate-x-1/2 w-max max-w-[150px]">
+                {dayEvents.map((event) => {
+                  const randomColor =
+                    colorClasses[event.id.charCodeAt(0) % colorClasses.length];
+                  return (
+                    <div
+                      key={event.id}
+                      className={`flex items-center gap-1 mb-1 last:mb-0 rounded px-2 py-1 ${randomColor}`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-blue opacity-80"></span>
+                      <span className="truncate" title={event.title}>
+                        {event.title}
+                      </span>
                     </div>
-                    <div className="mt-1 overflow-y-auto max-h-8 md:max-h-16">
-                      {dayEvents.map(event => (
-                        <div 
-                          key={event.id} 
-                          className="bg-purple-500 text-white text-xs p-0.5 md:p-1 mb-0.5 md:mb-1 rounded truncate flex justify-between"
-                        >
-                          <span className="truncate text-xs">{event.title}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
+
         
         {user.role === "COORDINATOR" && (
           <>

@@ -7,7 +7,7 @@ function DaysCard(props) {
     
     const statusColors = {
         PRESENT: 'bg-green-500',
-        ABSENT: 'bg-red-500',
+        ABSENT_WITH_REASON: 'bg-blue-700',
        
     }
 
@@ -18,7 +18,7 @@ function DaysCard(props) {
     }
 
     return (
-        <div className='flex flex-col gap-1 bg-neutral-900 rounded-2xl overflow-hidden p-3 border border-neutral-800 transition-all duration-200 hover:bg-neutral-700'>
+        <div className='flex flex-col gap-1 bg-neutral-900 rounded-2xl overflow-hidden p-3 border border-neutral-800'>
             {/* Date and Status Row */}
             <div className='flex justify-between items-center p-1'>
                 <div className='flex justify-start items-center gap-2'>
@@ -27,8 +27,8 @@ function DaysCard(props) {
                         {date}
                     </span>
                 </div>
-                <div className={`w-3 h-3 rounded-full ${
-                    statusColors[status] || 'bg-gray-500' 
+                <div className={`w-4 h-4 rounded-full ${
+                    statusColors[status] || 'bg-red-500' 
                 }`}></div>
             </div>
             

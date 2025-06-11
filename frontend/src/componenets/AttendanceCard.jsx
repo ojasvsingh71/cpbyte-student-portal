@@ -170,7 +170,7 @@ function AttendanceCard() {
         </div>
       </div>
     </div>
-  );
+  );;
 }
 
 export default AttendanceCard;

@@ -32,8 +32,9 @@ function LoginPage() {
           })
         }}
 return (
-    <div className="flex items-center justify-center min-h-screen bg-[#070b0f]">
-      <div className="w-full max-w-md p-8 space-y-8 bg-gray-900 rounded-lg shadow-xl border border-gray-600">
+  <div className='bg-gradient-to-r from-[#020305] via-[#131d2c] to-[#050408] min-h-screen'>
+    <div className="flex items-center  justify-center min-h-screen ">
+      <div className="w-full max-w-md p-8 space-y-8 bg-transparent shadow-xl rounded-lg  border border-gray-800">
         <div className="text-center">
           <div className="flex justify-center ">
             <img src={logo} alt="" className='w-1/3 rounded-full mix-blend-color-dodge bg-gray-900' />
@@ -107,6 +108,7 @@ return (
           </div>
         </form>
       </div>
+    </div>
     </div>
 );
 }

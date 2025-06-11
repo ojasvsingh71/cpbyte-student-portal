@@ -11,14 +11,14 @@ function DetailCard() {
     
     return (
         <div className='w-full h-fit text-white p-2 md:p-5 mt-14 md:mt-5 md:mr-5'>
-            <div className='bg-gray-900 rounded-2xl border border-gray-600 p-4 md:p-8 flex flex-col gap-4'>
+            <div className=' rounded-2xl border border-gray-600 p-4 md:p-8 flex flex-col gap-4'>
                 <div className='flex gap-2 items-center mb-2 md:mb-4'>
                     <div className='w-2 h-8 bg-[#0ec1e7] rounded-2xl'></div>
-                    <span className='text-white text-lg md:text-2xl'>Detail Member</span>
+                    <span className='text-white text-lg md:text-2xl caret-transparent'>Detail Member</span>
                 </div>
                 
                 <div className='flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 items-center mb-4 whitespace-nowrap'>
-                    <div><div className="w-32 h-32 bg-gray-700 rounded-full overflow-hidden flex items-center justify-center">
+                    <div><div className="w-32 h-32 bg-gray-700 rounded-full overflow-hidden caret-transparent flex items-center justify-center">
                         <img 
                             src={user.avatar || noimage} 
                             alt="User avatar" 
@@ -27,22 +27,22 @@ function DetailCard() {
                     </div></div>
                     <div className='flex flex-col gap-2 md:gap-4 w-full'>
                         <div className='text-center md:text-left'>
-                            <span className='text-xl md:text-2xl font-semibold'>{user?.name}</span>
+                            <span className='text-xl md:text-2xl font-semibold caret-transparent'>{user?.name}</span>
                         </div>
                         <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-4'>
-                            <div className='flex flex-col gap-1'>
-                                <span className='text-[#949597]'>Role</span>
+                            <div className='flex flex-col caret-transparent gap-1'>
+                                <span className='text-[#949597] caret-transparent'>Role</span>
                                 <span className='truncate overflow-hidden whitespace-nowrap'>{user?.role}</span>
                             </div>
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col gap-1 caret-transparent'>
                                 <span className='text-[#949597]'>DSA/DEV</span>
                                 <span className='truncate overflow-hidden whitespace-nowrap'>{user?.domain_dsa}/{user?.domain_dev}</span>
                             </div>
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex caret-transparent flex-col gap-1'>
                                 <span className='text-[#949597]'>Email</span>
                                 <span className='break-all truncate overflow-hidden whitespace-nowrap'>{user?.email}</span>
                             </div>
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex  flex-col caret-transparent gap-1'>
                                 <span className='text-[#949597]'>Library ID</span>
                                 <span className='truncate overflow-hidden whitespace-nowrap'>{user?.library_id}</span>
                             </div>
@@ -50,7 +50,7 @@ function DetailCard() {
                     </div>
                 </div>
                 
-                <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
+                <div className='grid grid-cols-2 lg:grid-cols-4 gap-3 caret-transparent'>
                     <div className='flex gap-3 items-center bg-gray-800 p-3 rounded-2xl'>
                         <div className='rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center'>
                             <GiBattleGear size={30}/>

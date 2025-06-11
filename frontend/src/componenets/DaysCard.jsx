@@ -7,7 +7,7 @@ function DaysCard(props) {
   return (
     <div className='flex flex-col gap-1 bg-gray-800 rounded-2xl overflow-hidden p-2'>
         <div className='flex justify-between items-center p-1'>
-            <div className='flex justify-start items-center gap-2'>
+            <div className='flex justify-start caret-transparent items-center gap-2'>
                 <FiClock size={20}/>
                 <span>{date}</span>
             </div>
@@ -16,7 +16,7 @@ function DaysCard(props) {
         </div>
         <div className='flex gap-2 items-center p-2'>
             <TbCalendarCode size={20}/>
-            <span className={`${subject==="DSA"?"text-[#ffa000]":"text-[#f700ff]"}`}>{subject}</span>
+            <span className={`${subject==="DSA"?"text-[#ffa000]":"text-[#f700ff] caret-transparent"}`}>{subject}</span>
         </div>
     </div>
   )

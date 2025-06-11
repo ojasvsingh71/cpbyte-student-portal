@@ -22,7 +22,7 @@ const Leaderboard = () => {
   }, [users]);
 
   return (
-    <div className=" p-4 bg-gray-950 w-full lg:p-8 min-h-screen">
+    <div className=" p-4 bg-gray-800 w-full lg:p-8 min-h-screen">
       <div className="flex flex-col items-center">
         <h1 className="text-4xl font-extrabold my-4 text-center text-white drop-shadow-lg">
           Leaderboard🚀

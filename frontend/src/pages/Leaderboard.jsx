@@ -22,7 +22,7 @@ useEffect(()=>{
 let filteredData=users
 
 if(selectedLanguage!="All"){
-  filteredData=users.filter((user)=>{
+  filteredData=filteredData.filter((user)=>{
     return user.language===selectedLanguage
   })
 }
@@ -53,7 +53,7 @@ setData(filteredData)
   >
     <option value="All">All Languages</option>
     <option value="CPP">CPP</option>
-    <option value="Java">Java</option>
+    <option value="JAVA">Java</option>
 
   </select>
 

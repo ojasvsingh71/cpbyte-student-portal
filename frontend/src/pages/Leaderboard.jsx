@@ -49,7 +49,7 @@ setData(filteredData)
   <select
     className="px-4 py-2 rounded-lg bg-gray-800 text-white"
     value={selectedLanguage}
-    onChange={(e) => setSelectedLanguage(e.target.value)}
+    onChange={(e) => setSelectedLanguage(parseInt(e.target.value))}
   >
     <option value="All">All Languages</option>
     <option value="CPP">CPP</option>

@@ -16,6 +16,12 @@ const UserSchedule = () => {
   const [discription, setDiscription] = useState("");
   const [category, setCategory] = useState("General")
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [expandedSections, setExpandedSections] = useState({
+    "Past Events": false,
+    "Today": false,
+    "Upcoming Events": false
+  });
+  const [expandedDays, setExpandedDays] = useState({});
 
   useEffect(() => {
     const handleResize = () => {
@@ -261,7 +267,7 @@ const UserSchedule = () => {
               })}
             </div>
           </div>
-        <div className="w-full md:w-[25%] bg-gray-800 rounded-lg p-4 mb-6">
+          <div className="w-full md:w-[25%] bg-gray-800 rounded-lg p-4 mb-6">
             <h3 className="text-lg font-semibold mb-4 text-[#0ec1e7]">Monthly Overview</h3>
             {event[formatMonthKey(currentMonth)] ? (
               <div className="space-y-6 max-h-[450px] overflow-y-auto pr-2 text-sm">
@@ -279,25 +285,72 @@ const UserSchedule = () => {
 
                   if (eventsByCategory.length === 0) return null;
 
-                  const labelColor = (label === "Past Events" ? "text-red-400" : (label === "Today" ? "text-green-400" : "text-yellow-400"));
+                  const isExpanded = expandedSections[label];
+                  const visibleEvents = isExpanded ? eventsByCategory : eventsByCategory.slice(0, 3);
+
+                  const labelColor =
+                    label === "Past Events"
+                      ? "text-red-400"
+                      : label === "Today"
+                        ? "text-green-400"
+                        : "text-yellow-400";
 
                   return (
                     <div key={label}>
                       <h4 className="text-md text-white font-semibold mb-2">{label}</h4>
-                      {eventsByCategory.map(([date, events]) => (
-                        <div key={date} className="flex flex-col md:flex-row mb-2">
-                          <h5 className="text-gray-400 font-medium">{new Date(date).toLocaleDateString("en-US", {
-                            weekday: "short",
-                            day: "2-digit",
-                            month: "short",
-                          })}</h5>
-                          <ul className="list-disc pl-4 space-y-1 text-gray-300">
-                            {events.map(ev => (
-                              <li key={ev.id} className={`truncate ${labelColor}`}>{ev.title}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+                      {visibleEvents.map(([date, events]) => {
+                        const isDayExpanded = expandedDays[date];
+                        const visibleDayEvents = isDayExpanded ? events : events.slice(0, 3);
+
+                        return (
+                          <div key={date} className="flex flex-col md:flex-row mb-2">
+                            <h5 className="text-gray-400 font-medium w-[80px] shrink-0">
+                              {new Date(date).toLocaleDateString("en-US", {
+                                weekday: "short",
+                                day: "2-digit",
+                                month: "short",
+                              })}
+                            </h5>
+
+                            <div className="flex-1">
+                              <ul className="list-disc pl-4 space-y-1 text-gray-300">
+                                {visibleDayEvents.map(ev => (
+                                  <li key={ev.id} className={`truncate ${labelColor}`}>
+                                    {ev.title}
+                                  </li>
+                                ))}
+                              </ul>
+
+                              {events.length > 3 && (
+                                <button
+                                  onClick={() =>
+                                    setExpandedDays(prev => ({
+                                      ...prev,
+                                      [date]: !prev[date],
+                                    }))
+                                  }
+                                  className="text-xs text-blue-400 hover:underline mt-1 ml-4"
+                                >
+                                  {isDayExpanded ? "Show Less" : "Show More"}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {eventsByCategory.length > 5 && (
+                        <button
+                          className="text-xs text-blue-400 hover:underline mt-1"
+                          onClick={() =>
+                            setExpandedSections(prev => ({
+                              ...prev,
+                              [label]: !prev[label],
+                            }))
+                          }
+                        >
+                          {isExpanded ? "Show Less" : "Show More"}
+                        </button>
+                      )}
                     </div>
                   );
                 })}

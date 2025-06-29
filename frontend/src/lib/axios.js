@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://cpbyte-student-portal.onrender.com/api/v1",
+  baseURL: "http://localhost:8080/api",
   withCredentials: true,
 });

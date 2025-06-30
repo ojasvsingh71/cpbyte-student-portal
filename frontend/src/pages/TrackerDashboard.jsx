@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import * as THREE from "three";
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { skillIcons, FaCode } from "../componenets/SkillIcons"; 
 
 
 function TrackerDashboard() {
@@ -18,6 +19,7 @@ function TrackerDashboard() {
 
   const vantaRef = useRef(null);
   const vantaEffect = useRef(null);
+
 
   useEffect(() => {
     const date = new Date();
@@ -88,8 +90,8 @@ function TrackerDashboard() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <img
-                src="https://img.icons8.com/hatch/64/FA5252/checkmark--v1.png"
-                alt="ranking-icon"
+                src="public\TotalQuestions.png"
+                alt="TotalSolved-icon"
                 className="w-6 h-6 md:w-7 md:h-7"
               />
               <h2 className="font-medium text-lg md:text-xl">Total Questions</h2>
@@ -108,7 +110,7 @@ function TrackerDashboard() {
           <div>
               <div className="flex items-center gap-2 mb-1">
                 <img
-                  src="https://img.icons8.com/external-outline-lafs/64/FAB005/external-Leaderboard_medal-nft-and-gamefi-outline-lafs.png"
+                  src="public/Ranking.png"
                   alt="ranking-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />
@@ -126,7 +128,7 @@ function TrackerDashboard() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <img
-                src="https://img.icons8.com/parakeet-line/48/40C057/lightning-bolt.png"
+                src="public/Streak.png"
                 alt="Streak-icon"
                 className="w-6 h-6 md:w-7 md:h-7"
               />
@@ -159,7 +161,7 @@ function TrackerDashboard() {
 
           {/* Text Content */}
           <div className="flex flex-col lg:flex-row justify-between items-center w-full my-4 md:my-5 md:mb-10 gap-4">
-            <div className="space-y-8 text-base font-semibold md:text-xl">
+            <div className="space-y-8 text-base font-semibold md:text-xl ml-10">
               <div className="text-[#00e676]">
                 Easy:
                 <div className="text-white">{data?.leetcode.easy}</div>
@@ -174,7 +176,7 @@ function TrackerDashboard() {
               </div>
             </div>
             {/* Pie Chart */}
-            <div className="w-56 h-56 mr-40">
+            <div className="w-56 h-56 mr-25">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
 
@@ -239,28 +241,49 @@ function TrackerDashboard() {
 
           <div className="grid grid-cols-3 gap-2 md:gap-5 w-full my-4 md:my-5 md:mb-10">
             <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3">
-              <h1 className="text-cyan-400 text-2xl md:text-3xl font-medium">
+              <h1 className="text-green-500 text-2xl md:text-3xl font-medium">
                 {data?.github.contributions}
               </h1>
+              <span className="flex items-center gap-0.5">
+               <img
+                src="GitContribution.png"
+                alt="Contribution-icon"
+                className="w-6 h-6 md:w-7 md:h-7"
+              />
               <span className="text-base md:text-xl">Contributions</span>
+              </span>
             </div>
             <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3">
               <h1 className="text-2xl md:text-3xl text-orange-400 font-medium">
                 {data?.github.prs}
               </h1>
-              <span className="text-base md:text-xl">Total PRs</span>
+              <span className="flex items-center gap-0.5">
+                <img
+                  src="pull-request.png"
+                  alt="Pr-icon"
+                  className="w-6 h-6 md:w-7 md:h-7"
+                />
+                <span className="text-base md:text-xl">Total PRs</span>
+              </span>
             </div>
             <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3">
               <h1 className="text-2xl md:text-3xl text-red-700 font-medium">
                 {data?.github.repos}
               </h1>
-              <span className="text-base md:text-xl">Total Repos</span>
+              <span className="flex items-center gap-0.5">
+                <img
+                  src="code-fork.png"
+                  alt="Fork-icon"
+                  className="w-6 h-6 md:w-7 md:h-7"
+                />
+                <span className="text-base md:text-xl">Total Repos</span>
+              </span>
             </div>
           </div>
         </div> 
         <div className="backdrop-blur-sm rounded-2xl shadow-xl border border-white flex flex-col text-white p-4 md:p-7 justify-between">
-          <div className="mb-4 md:mb-8 h-auto md:h-1/3">
-            <div className="text-xl md:text-2xl flex items-center gap-2 font-medium mb-4 md:mb-7">
+          <div className="mb-4 md:mb-8 h-auto md:h-1/5">
+            <div className="text-xl md:text-2xl flex justify-between items-center w-full gap-2 font-medium mb-4 md:mb-5">
               <h2>Skills</h2>
               <Link
                 to="/ManageTracker/SkillManagement"
@@ -269,33 +292,53 @@ function TrackerDashboard() {
                 <LuPenLine />
               </Link>
             </div>
-            <div className="flex gap-2 md:gap-3 w-full h-fit flex-wrap">
-              {data?.skills?.length !== 0 ? (
-                data?.skills?.map((skill, index) => (
-                  <div
-                    key={index}
-                    className="border block items-center text-wrap justify-center bg-gray-800 border-gray-500 rounded-lg p-1 px-2 md:px-3 text-sm md:text-base"
-                  >
-                    <span>{skill}</span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-400">No Skills added yet..</p>
-              )}
+            <div className="border-t border-gray-600 mb-6" />
+
+            {data?.skills?.length !== 0 ? (
+            <div className="realtive w-full overflow-hidden">
+            
+              <div className="skill-marquee flex gap-6 w-fit">
+             
+                {data.skills.map((skill, index) => {
+                  const skillKey = skill.trim().toLowerCase();
+                  const Icon = skillIcons[skillKey] || FaCode;
+                  const isImageIcon = skillKey === "c++" || skillKey === "cpp";
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-col items-center gap-3 relative shrink-0"
+                    >
+                      {isImageIcon ? (
+                        <img src="/cppicon.svg" alt="C++" className="w-7 h-7 bg-[#0ec1e7]" />
+                      ) : (
+                        <Icon className="w-7 h-7 text-[#0ec1e7]" />
+                      )}
+                      <div className="border shadow-[0_0_8px_#0ec1e7]/50 backdrop-blur-sm border-[#0ec1e7]/40 rounded-lg px-3 py-1 text-sm md:text-base text-white">
+                        {skill}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
+            ) : (
+              <p className="text-gray-400">No Skills added yet..</p>
+            )}
           </div>
 
-          <div className="flex flex-col sm:flex-row w-full items-start sm:items-center sm:space-x-4 md:space-x-12 mt-4">
-            <div className="text-lg md:text-xl items-center gap-2 font-medium mb-3 flex">
+          <div className="flex flex-col items-start w-full">
+            <div className="text-xl md:text-2xl flex items-center gap-4 font-medium mb-4 md:mb-7">
               <h2>Language for DSA</h2>
             </div>
+            <div className="border-t border-gray-600 mb-6 w-full" />
             <span className="text-xl md:text-2xl w-fit font-medium border border-gray-700 rounded-lg p-2 md:p-3">
               {data?.dsaLanguage}
             </span>
           </div>
-
-          <div className="w-fit flex flex-col items-start md:items-center">
-            <div className="text-xl md:text-2xl flex items-center gap-2 font-medium mb-4 md:mb-7">
+          
+          <div className=" flex flex-col items-start w-full">
+            <div className="text-xl md:text-2xl flex justify-between items-center w-full gap-2 font-medium mb-4 md:mb-7">
               <h2>Platforms</h2>
               <Link
                 to="/ManageTracker"
@@ -304,6 +347,7 @@ function TrackerDashboard() {
                 <LuPenLine />
               </Link>
             </div>
+            <div className="border-t border-gray-600 mb-6 w-full" />
             <div className="flex">
               {data?.leetcode.url !== "" && (
                 <a

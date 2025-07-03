@@ -41,7 +41,7 @@ function App() {
           <Route path='' element={<AddPlatforms/>}/>
         </Route>
       </Route>
-    </Routes>
+     </Routes>
     </>
   )
 }

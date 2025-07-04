@@ -8,8 +8,20 @@ import { Star } from "lucide-react";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import * as THREE from "three";
+import folder from "../assets/folder.png";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import TotalQuestions from "../assets/TotalQuestions.png"
+import GitContribution from "../assets/GitContribution.png"
+import streak from "../assets/streak.png"
+import Ranking from "../assets/Ranking.png"
+import pr from "../assets/pull-request.png"
+import trophy from "../assets/trophy.png"
+import fork from "../assets/code-fork.png"
+import link from "../assets/Link.jpg"
+
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+
 
 function TrackerDashboard() {
   const { data } = useSelector((state) => state.tracker);
@@ -87,11 +99,13 @@ function TrackerDashboard() {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-          <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white w-full flex items-center justify-around p-4 lg:py-6 transition-transform duration-300 hover:scale-105">
+
+          <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white w-full flex items-center justify-around p-4 lg:py-6">
+
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <img
-                  src="src\assets\TotalQuestions.png"
+                  src={TotalQuestions}
                   alt="TotalSolved-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />
@@ -109,11 +123,11 @@ function TrackerDashboard() {
                 : data?.leetcode.solvedProblems}
             </span>
           </div>
-          <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white flex items-center justify-around p-4 lg:py-6 transition-transform duration-300 hover:scale-105">
+          <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white flex items-center justify-around p-4 lg:py-6">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <img
-                  src="src\assets\Ranking.png"
+                  src={Ranking}
                   alt="ranking-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />
@@ -127,11 +141,13 @@ function TrackerDashboard() {
               {data?.rank === -1 ? "N/A" : data?.rank}
             </span>
           </div>
-          <div className="backdrop-blur-sm rounded-4xl border border-[#0ec1e7] shadow-[0_0_15px_#0ec1e7]/50 text-white flex items-center justify-around p-4 lg:py-6 md:col-span-2 lg:col-span-1 transition-transform duration-300 hover:scale-105">
+
+          <div className="backdrop-blur-sm rounded-4xl border border-[#0ec1e7] shadow-[0_0_15px_#0ec1e7]/50 text-white flex items-center justify-around p-4 lg:py-6 md:col-span-2 lg:col-span-1">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <img
-                  src="src\assets\Streak.png"
+                  src={streak}
+
                   alt="Streak-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />
@@ -177,84 +193,81 @@ function TrackerDashboard() {
                   <div className="text-white">{data?.leetcode.hard}</div>
                 </div>
               </div>
-              {/* Pie Chart */}
-              <div className="w-56 h-56 mr-25 relative transition-transform duration-300 hover:scale-105">
+             
+              <div className="w-56 h-56 mr-25">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    {/* Easy Ring (Outer) */}
-                    <Pie
-                      data={[
+                    {/**Prepare pie chart data (filter out 0 values)*/}
+                    {(() => {
+                      const pieData = [
                         {
                           name: "Easy",
-                          value: data?.leetcode?.easy || 0,
+                          value: data?.leetcode.easy || 0,
                           fill: "#00e676",
                         },
                         {
-                          name: "Remaining",
-                          value: 883 - (data?.leetcode?.easy || 0),
-                          fill: "#1e1e1e",
-                        },
-                      ]}
-                      dataKey="value"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={58}
-                      outerRadius={65}
-                      startAngle={90}
-                      endAngle={-270}
-                      stroke="none"
-                      cornerRadius={10}
-                    ></Pie>
-
-                    {/* Medium Ring (Middle) */}
-                    <Pie
-                      data={[
-                        {
                           name: "Medium",
-                          value: data?.leetcode?.medium || 0,
+                          value: data?.leetcode.medium || 0,
                           fill: "#ff9100",
                         },
                         {
-                          name: "Remaining",
-                          value: 1872 - (data?.leetcode?.medium || 0),
-                          fill: "#1e1e1e",
-                        },
-                      ]}
-                      dataKey="value"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={46}
-                      outerRadius={53}
-                      startAngle={90}
-                      endAngle={-270}
-                      stroke="none"
-                      cornerRadius={10}
-                    ></Pie>
-
-                    {/* Hard Ring (Inner) */}
-                    <Pie
-                      data={[
-                        {
                           name: "Hard",
-                          value: data?.leetcode?.hard || 0,
+                          value: data?.leetcode.hard || 0,
                           fill: "#f44336",
                         },
-                        {
-                          name: "Remaining",
-                          value: 846 - (data?.leetcode?.hard || 0),
-                          fill: "#1e1e1e",
-                        },
-                      ]}
-                      dataKey="value"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={34}
-                      outerRadius={41}
-                      startAngle={90}
-                      endAngle={-270}
-                      stroke="none"
-                      cornerRadius={10}
-                    ></Pie>
+                      ].filter((item) => item.value > 0);
+
+                      return (
+                        <Pie
+                          data={pieData}
+                          dataKey="value"
+                          innerRadius={48}
+                          outerRadius={65}
+                          paddingAngle={5}
+                          cornerRadius={5}
+                          stroke="none"
+                          labelLine={true}
+                          /* Add space between label values and line pointing to the pie */
+                          label={({
+                            cx,
+                            cy,
+                            midAngle,
+                            outerRadius,
+                            value,
+                            fill,
+                          }) => {
+                            const RADIAN = Math.PI / 180;
+                            const offset = 30;
+                            const x =
+                              cx +
+                              (outerRadius + offset) *
+                                Math.cos(-midAngle * RADIAN);
+                            const y =
+                              cy +
+                              (outerRadius + offset) *
+                                Math.sin(-midAngle * RADIAN);
+
+                            return (
+                              <text
+                                x={x}
+                                y={y}
+                                fill={fill}
+                                fontSize={14}
+                                textAnchor="middle"
+                                dominantBaseline="central"
+                              >
+                                {value}
+                              </text>
+                            );
+                          }}
+                        >
+                          {pieData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.fill} />
+                          ))}
+                        </Pie>
+                      );
+                    })()}
+>>>>>>> main
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -269,39 +282,54 @@ function TrackerDashboard() {
             <div className="border-t border-gray-600 my-4" />
 
             <div className="grid grid-cols-3 gap-2 md:gap-5 w-full my-4 md:my-5 md:mb-10">
+
               <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3  transition-transform duration-300 hover:scale-105">
+
+              
                 <h1 className="text-green-500 text-2xl md:text-3xl font-medium">
                   {data?.github.contributions}
                 </h1>
                 <span className="flex items-center gap-0.5">
                   <img
-                    src="src\assets\GitContribution.png"
+
+                    src={GitContribution}
+
                     alt="Contribution-icon"
                     className="w-6 h-6 md:w-7 md:h-7"
                   />
                   <span className="text-base md:text-xl">Contributions</span>
                 </span>
               </div>
+
               <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3 transition-transform duration-300 hover:scale-105">
+
                 <h1 className="text-2xl md:text-3xl text-orange-400 font-medium">
                   {data?.github.prs}
                 </h1>
                 <span className="flex items-center gap-0.5">
                   <img
-                    src="src/assets/pull-request.png"
+
+
+                    src={pr}
+
                     alt="Pr-icon"
                     className="w-6 h-6 md:w-7 md:h-7"
                   />
                   <span className="text-base md:text-xl">Total PRs</span>
                 </span>
               </div>
+
               <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3 transition-transform duration-300 hover:scale-105">
+=======
+      
                 <h1 className="text-2xl md:text-3xl text-red-700 font-medium">
                   {data?.github.repos}
                 </h1>
                 <span className="flex items-center gap-0.5">
                   <img
-                    src="src/assets/code-fork.png"
+
+                    src={fork}
+
                     alt="Fork-icon"
                     className="w-6 h-6 md:w-7 md:h-7"
                   />
@@ -323,19 +351,23 @@ function TrackerDashboard() {
               </div>
               <div className="border-t border-gray-600 mb-6" />
 
-              <div className="flex gap-2 md:gap-3 w-full h-fit flex-wrap">
-                {data?.skills.length !== 0 ? (
-                  data?.skills.map((skill, index) => (
-                    <div
-                      key={index}
-                      className="border block items-center text-wrap justify-center shadow-[0_0_8px_#0ec1e7]/50 backdrop-blur-sm border-[#0ec1e7]/40 rounded-lg p-1 px-2 md:px-3 text-sm md:text-base"
-                    >
-                      <span>{skill}</span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-400">No Skills added yet..</p>
-                )}
+
+              <div className="w-full h-30 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-400 scrollbar-track-transparent  ">
+                <div className="flex flex-wrap gap-2 min-w-full">
+                  {data?.skills.length !== 0 ? (
+                    data?.skills.map((skill, index) => (
+                      <div
+                        key={index}
+                        className="border block items-center text-wrap justify-center shadow-[0_0_8px_#0ec1e7]/50 backdrop-blur-sm border-[#0ec1e7]/40 rounded-lg p-1 px-2 md:px-3 text-sm md:text-base"
+                      >
+                        <span>{skill}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-400">No Skills added yet..</p>
+                  )}
+                </div>
+
               </div>
             </div>
 
@@ -380,9 +412,15 @@ function TrackerDashboard() {
         <div className="w-full mt-4 md:mt-5">
           <div className="w-full h-full backdrop-blur-sm rounded-2xl shadow-xl border border-white p-4 px-4 md:px-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-white font-medium text-xl md:text-2xl">
+
+
+              
+                
+
+              <span className="text-white font-medium  md:text-2xl">
                 Projects
-              </h2>
+              </span>
+
               <Link
                 to="/ManageTracker/AddProject"
                 className="text-gray-400 hover:text-white duration-200"
@@ -393,9 +431,32 @@ function TrackerDashboard() {
 
             <div className="flex justify-center">
               {data?.projects?.length == 0 || !data.projects ? (
+<<<<<<< HEAD
                 <p className="text-gray-400 py-6">
                   Currently No Projects are added..
                 </p>
+=======
+                <div className="flex flex-col justify-center items-center">
+                  <div
+                    className="border rounded-md h-49 w-80 mt-6 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${folder})` }}
+                  ></div>
+
+                  {/* yahan pe img daal do project_folder ki */}
+                  <p className="text-gray-200 text-xl font-medium mt-6 mb-2">
+                    {" "}
+                    Currently no Projects are added.
+                  </p>
+                  <p className="text-gray-400 ">
+                    {" "}
+                    Add your project to showcase your skills!
+                  </p>
+
+                  <button className="shadow-[0_0_8px_#0ec1e7]/50 backdrop-blur-sm border border-[#0ec1e7]/40 rounded-lg items-center text-wrap justify-center text-white w-40 h-10 text-l mt-6 mb-6">
+                    <a href="/ManageTracker/AddProject">Add New Project</a>
+                  </button>
+                </div>
+>>>>>>> main
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
                   {showAll
@@ -403,13 +464,21 @@ function TrackerDashboard() {
                     : data.projects.slice(0, 3)?.map((project, index) => (
                         <div
                           key={index}
+<<<<<<< HEAD
                           className="bg-gray-800 rounded-lg border border-gray-600 flex flex-col gap-2"
+=======
+                          className="rounded-lg border border-[#0ec1e7]/60 flex flex-col gap-2 transition-transform duration-300 hover:scale-105"
+>>>>>>> main
                         >
                           <div className="w-full h-44 md:h-52 border-b-gray-600 border-b-2 rounded-t-lg overflow-hidden flex items-center justify-center">
                             <img
                               src={project.coverImage}
                               alt={project.projectName}
+<<<<<<< HEAD
                               className=""
+=======
+                              className="object-cover w-full h-full"
+>>>>>>> main
                             />
                           </div>
                           <div className="p-4 pt-0">
@@ -419,18 +488,33 @@ function TrackerDashboard() {
                             </p>
                             {project.websiteUrl !== "" && (
                               <a
+<<<<<<< HEAD
                                 href={project.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-white text-sm md:text-base mb-2"
                               >
                                 View Project
+=======
+                                href={project.websiteUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 flex gap-2 text-sm md:text-base mb-2"
+                              >
+                                <img src={link}  alt="" className="w-5 h-5 text-[#0ec1e7]/60"/>
+                                <p>View Project</p>
+                                
+>>>>>>> main
                               </a>
                             )}
                             <a
                               href={project.githubUrl}
                               target="blank"
+<<<<<<< HEAD
                               className="bg-gray-700 gap-2 flex text-gray-300 mb-1 p-1 px-2 rounded-full items-center xl:w-fit"
+=======
+                              className="border-[#0ec1e7]/60 border gap-2 flex text-gray-300 mb-1 p-1 px-2 rounded-full items-center xl:w-fit"
+>>>>>>> main
                             >
                               <img src={git} alt="git" className="w-5 h-5" />
                               <p className="overflow-hidden">

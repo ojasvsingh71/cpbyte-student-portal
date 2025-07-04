@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import * as THREE from "three";
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { fill } from "three/src/extras/TextureUtils.js";
 
 
 function TrackerDashboard() {
@@ -85,7 +86,7 @@ function TrackerDashboard() {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white w-full flex items-center justify-around p-4 lg:py-6">
+        <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white w-full flex items-center justify-around p-4 lg:py-6 transition-transform duration-300 hover:scale-105">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <img
@@ -105,7 +106,7 @@ function TrackerDashboard() {
               : data?.leetcode.solvedProblems}
           </span>
         </div>
-        <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white flex items-center justify-around p-4 lg:py-6">
+        <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white flex items-center justify-around p-4 lg:py-6 transition-transform duration-300 hover:scale-105">
           <div>
               <div className="flex items-center gap-2 mb-1">
                 <img
@@ -123,7 +124,7 @@ function TrackerDashboard() {
             {data?.rank === -1 ? "N/A" : data?.rank}
           </span>
         </div>
-        <div className="backdrop-blur-sm rounded-4xl border border-[#0ec1e7] shadow-[0_0_15px_#0ec1e7]/50 text-white flex items-center justify-around p-4 lg:py-6 md:col-span-2 lg:col-span-1">
+        <div className="backdrop-blur-sm rounded-4xl border border-[#0ec1e7] shadow-[0_0_15px_#0ec1e7]/50 text-white flex items-center justify-around p-4 lg:py-6 md:col-span-2 lg:col-span-1 transition-transform duration-300 hover:scale-105">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <img
@@ -175,60 +176,67 @@ function TrackerDashboard() {
               </div>
             </div>
             {/* Pie Chart */}
-            <div className="w-56 h-56 mr-25">
+            <div className="w-56 h-56 mr-25 relative transition-transform duration-300 hover:scale-105">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
+                  {/* Easy Ring (Outer) */}
+                  <Pie
+                    data={[
+                      { name: "Easy", value: data?.leetcode?.easy || 0 , fill:"#00e676"},
+                      { name: "Remaining", value: 883 - (data?.leetcode?.easy || 0), fill:"#1e1e1e" },
+                    ]}
+                    dataKey="value"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={58}
+                    outerRadius={65}
+                    startAngle={90}
+                    endAngle={-270}
+                    stroke="none"
+                    cornerRadius={10}
 
-                    {/**Prepare pie chart data (filter out 0 values)*/}
-                  {(() => {
-                    const pieData = [
-                      { name: "Easy", value: data?.leetcode.easy || 0, fill: "#00e676" },
-                      { name: "Medium", value: data?.leetcode.medium || 0, fill: "#ff9100" },
-                      { name: "Hard", value: data?.leetcode.hard || 0, fill: "#f44336" },
-                    ].filter(item => item.value > 0);
+                  >
+                  </Pie>
 
-                    return (
-                      <Pie
-                        data={pieData}
-                        dataKey="value"
-                        innerRadius={48}
-                        outerRadius={65}
-                        paddingAngle={5}
-                        cornerRadius={5}
-                        stroke="none"
-                        labelLine={true}
-                        /* Add space between label values and line pointing to the pie */
-                        label={({ cx, cy, midAngle, outerRadius, value, fill }) => {
-                          const RADIAN = Math.PI / 180;
-                          const offset = 30;
-                          const x = cx + (outerRadius + offset) * Math.cos(-midAngle * RADIAN);
-                          const y = cy + (outerRadius + offset) * Math.sin(-midAngle * RADIAN);
+                  {/* Medium Ring (Middle) */}
+                  <Pie
+                    data={[
+                      { name: "Medium", value: data?.leetcode?.medium || 0 , fill:"#ff9100"},
+                      { name: "Remaining", value: 1872 - (data?.leetcode?.medium || 0), fill:"#1e1e1e" },
+                    ]}
+                    dataKey="value"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={46}
+                    outerRadius={53}
+                    startAngle={90}
+                    endAngle={-270}
+                    stroke="none"
+                    cornerRadius={10}
+                  >
+                  </Pie>
 
-                          return (
-                            <text
-                              x={x}
-                              y={y}
-                              fill={fill}
-                              fontSize={14}
-                              textAnchor="middle"
-                              dominantBaseline="central"
-                            >
-                              {value}
-                            </text>
-                          );
-                        }}
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill} />
-                        ))}
-                      </Pie>
-                    );
-                  })()}
+                  {/* Hard Ring (Inner) */}
+                  <Pie
+                    data={[
+                      { name: "Hard", value: data?.leetcode?.hard || 0, fill:"#f44336" },
+                      { name: "Remaining", value: 846 - (data?.leetcode?.hard || 0), fill:"#1e1e1e" },
+                    ]}
+                    dataKey="value"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={34}
+                    outerRadius={41}
+                    startAngle={90}
+                    endAngle={-270}
+                    stroke="none"
+                    cornerRadius={10}
+                  >
+                  </Pie>
                 </PieChart>
               </ResponsiveContainer>
             </div>
-         </div>
-
+          </div>
 
           <h2 className="flex items-center gap-2">
             <img src={git} alt="" className="w-8" />
@@ -239,7 +247,7 @@ function TrackerDashboard() {
           <div className="border-t border-gray-600 my-4" />
 
           <div className="grid grid-cols-3 gap-2 md:gap-5 w-full my-4 md:my-5 md:mb-10">
-            <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3">
+            <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3  transition-transform duration-300 hover:scale-105">
               <h1 className="text-green-500 text-2xl md:text-3xl font-medium">
                 {data?.github.contributions}
               </h1>
@@ -252,7 +260,7 @@ function TrackerDashboard() {
               <span className="text-base md:text-xl">Contributions</span>
               </span>
             </div>
-            <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3">
+            <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3 transition-transform duration-300 hover:scale-105">
               <h1 className="text-2xl md:text-3xl text-orange-400 font-medium">
                 {data?.github.prs}
               </h1>
@@ -265,7 +273,7 @@ function TrackerDashboard() {
                 <span className="text-base md:text-xl">Total PRs</span>
               </span>
             </div>
-            <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3">
+            <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3 transition-transform duration-300 hover:scale-105">
               <h1 className="text-2xl md:text-3xl text-red-700 font-medium">
                 {data?.github.repos}
               </h1>

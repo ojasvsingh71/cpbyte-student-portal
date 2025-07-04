@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import * as THREE from "three";
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { skillIcons, FaCode } from "../componenets/SkillIcons"; 
 
 
 function TrackerDashboard() {
@@ -294,39 +293,22 @@ function TrackerDashboard() {
             </div>
             <div className="border-t border-gray-600 mb-6" />
 
-            {data?.skills?.length !== 0 ? (
-            <div className="realtive w-full overflow-hidden">
-            
-              <div className="skill-marquee flex gap-6 w-fit">
-             
-                {data.skills.map((skill, index) => {
-                  const skillKey = skill.trim().toLowerCase();
-                  const Icon = skillIcons[skillKey] || FaCode;
-                  const isImageIcon = skillKey === "c++" || skillKey === "cpp";
-
-                  return (
-                    <div
-                      key={index}
-                      className="flex flex-col items-center gap-3 relative shrink-0"
-                    >
-                      {isImageIcon ? (
-                        <img src="/cppicon.svg" alt="C++" className="w-7 h-7 bg-[#0ec1e7]" />
-                      ) : (
-                        <Icon className="w-7 h-7 text-[#0ec1e7]" />
-                      )}
-                      <div className="border shadow-[0_0_8px_#0ec1e7]/50 backdrop-blur-sm border-[#0ec1e7]/40 rounded-lg px-3 py-1 text-sm md:text-base text-white">
-                        {skill}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+             <div className="flex gap-2 md:gap-3 w-full h-fit flex-wrap">
+              {data?.skills.length !== 0 ? (
+                data?.skills.map((skill, index) => (
+                  <div
+                    key={index}
+                    className="border block items-center text-wrap justify-center shadow-[0_0_8px_#0ec1e7]/50 backdrop-blur-sm border-[#0ec1e7]/40 rounded-lg p-1 px-2 md:px-3 text-sm md:text-base"
+                  >
+                    <span>{skill}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400">No Skills added yet..</p>
+              )}
             </div>
-            ) : (
-              <p className="text-gray-400">No Skills added yet..</p>
-            )}
           </div>
-
+          
           <div className="flex flex-col items-start w-full">
             <div className="text-xl md:text-2xl flex items-center gap-4 font-medium mb-4 md:mb-7">
               <h2>Language for DSA</h2>

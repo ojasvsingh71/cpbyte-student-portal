@@ -46,7 +46,12 @@ function TrackerManagement() {
         }
       };
     }, []);
-
+      
+    useEffect(()=>{
+    if(vantaEffect.current){
+      vantaEffect.current.resize();
+    }
+    },[location.pathname])
 
   return (
     <div ref={vantaRef} className="min-h-screen  text-gray-900 dark:text-gray-100 w-full transition-colors duration-300">

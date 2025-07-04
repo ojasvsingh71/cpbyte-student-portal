@@ -89,11 +89,11 @@ const UserSchedule = () => {
 
   }, [currentMonth]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (vantaEffect.current) {
       vantaEffect.current.resize();
     }
-  }, [selectedDate,event]);
+  }, [selectedDate, event]);
 
   const months = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"];
@@ -255,10 +255,12 @@ const UserSchedule = () => {
                   return (
                     <div
                       key={index}
-                      className={`p-1 ${cellHeightClass} border border-gray-800 rounded ${day ? `${altBg} hover:bg-gray-700 cursor-pointer` : "bg-gray-900"
-                        } ${isSelected ? "ring-2 ring-[#0ec1e7]" : ""}`}
+                      className={`p-1 ${cellHeightClass} border border-gray-600 rounded
+                                ${isSelected ? "ring-2 ring-white" : ""}
+                                hover:backdrop-blur hover:bg-white/5 `}
                       onClick={() => day && setSelectedDate(day)}
                     >
+
                       {day && (
                         <div className="relative group w-full h-full">
                           {/* Date Number */}
@@ -315,93 +317,88 @@ const UserSchedule = () => {
                 })}
               </div>
             </div>
-            <div className="w-full md:w-[25%] bg-gray-800 rounded-lg p-4 mb-6">
+            <div className="w-full md:w-[25%] rounded-lg border border-gray-600 p-4 mb-6">
               <h3 className="text-lg font-semibold mb-4 text-[#0ec1e7]">Monthly Overview</h3>
               {event[formatMonthKey(currentMonth)] ? (
                 <div className="space-y-6 max-h-[450px] overflow-y-auto pr-2 text-sm">
-                  {["Past Events", "Today", "Upcoming Events"].map((label) => {
-                    const today = new Date();
-                    const eventsByCategory = Object.entries(event[formatMonthKey(currentMonth)])
-                      .filter(([dateStr]) => {
-                        const date = new Date(dateStr);
-                        if (label === "Past Events") return date < new Date(today.setHours(0, 0, 0, 0));
-                        if (label === "Today") return date.toDateString() === new Date().toDateString();
-                        if (label === "Upcoming Events") return date > new Date(today.setHours(23, 59, 59, 999));
-                        return false;
-                      })
-                      .sort((a, b) => new Date(a[0]) - new Date(b[0]));
+                  {["Past Events", "Today", "Upcoming Events"]
+                    .map((label, index, array) => {
+                      const today = new Date();
+                      const eventsByCategory = Object.entries(event[formatMonthKey(currentMonth)])
+                        .filter(([dateStr]) => {
+                          const date = new Date(dateStr);
+                          if (label === "Past Events") return date < new Date(today.setHours(0, 0, 0, 0));
+                          if (label === "Today") return date.toDateString() === new Date().toDateString();
+                          if (label === "Upcoming Events") return date > new Date(today.setHours(23, 59, 59, 999));
+                          return false;
+                        })
+                        .sort((a, b) => new Date(a[0]) - new Date(b[0]));
 
-                    if (eventsByCategory.length === 0) return null;
+                      if (eventsByCategory.length === 0) return null;
 
-                    const isExpanded = expandedSections[label];
-                    const visibleEvents = isExpanded ? eventsByCategory : eventsByCategory.slice(0, 3);
+                      const isExpanded = expandedSections[label];
+                      const visibleEvents = isExpanded ? eventsByCategory : eventsByCategory.slice(0, 3);
+                      const isLast = index === array.length - 1;
 
-                    const labelColor =
-                      label === "Past Events"
-                        ? "text-red-400"
-                        : label === "Today"
-                          ? "text-green-400"
-                          : "text-yellow-400";
+                      return (
+                        <div
+                          key={label}
+                          className={`${!isLast ? "pb-4 mb-4 border-b border-gray-600" : ""}`}
+                        >
+                          <h4 className="text-md text-white font-semibold mb-2">{label}</h4>
 
-                    return (
-                      <div key={label}>
-                        <h4 className="text-md text-white font-semibold mb-2">{label}</h4>
-                        {visibleEvents.map(([date, events]) => {
-                          const isDayExpanded = expandedDays[date];
-                          const visibleDayEvents = isDayExpanded ? events : events.slice(0, 3);
+                          {visibleEvents.map(([date, events]) => {
+                            const isDayExpanded = expandedDays[date];
+                            const defaultVisibleCount = label === "Today" ? 3 : 1;
+                            const visibleDayEvents = isDayExpanded ? events : events.slice(0, defaultVisibleCount);
 
-                          return (
-                            <div key={date} className="flex flex-col md:flex-row mb-2">
-                              <h5 className="text-gray-400 font-medium w-[80px] shrink-0">
-                                {new Date(date).toLocaleDateString("en-US", {
-                                  weekday: "short",
-                                  day: "2-digit",
-                                  month: "short",
-                                })}
-                              </h5>
+                            return (
+                              <div key={date} className="flex flex-col md:flex-row mb-2">
+                                <h5 className="text-gray-400 font-medium w-[80px] shrink-0">
+                                  {new Date(date).toLocaleDateString("en-US", {
+                                    weekday: "short",
+                                    day: "2-digit",
+                                    month: "short",
+                                  })}
+                                </h5>
 
-                              <div className="flex-1">
-                                <ul className="list-disc pl-4 space-y-1 text-gray-300">
-                                  {visibleDayEvents.map(ev => (
-                                    <li key={ev.id} className={`truncate ${labelColor}`}>
-                                      {ev.title}
-                                    </li>
-                                  ))}
-                                </ul>
+                                <div className="flex-1">
+                                  <ul className="list-disc pl-4 space-y-1 text-gray-300">
+                                    {visibleDayEvents.map((ev) => (
+                                      <li
+                                        key={ev.id}
+                                        className={`truncate ${label === "Past Events"
+                                            ? "text-red-400"
+                                            : label === "Today"
+                                              ? "text-green-400"
+                                              : "text-yellow-400"
+                                          }`}
+                                      >
+                                        {ev.title}
+                                      </li>
+                                    ))}
+                                  </ul>
 
-                                {events.length > 3 && (
-                                  <button
-                                    onClick={() =>
-                                      setExpandedDays(prev => ({
-                                        ...prev,
-                                        [date]: !prev[date],
-                                      }))
-                                    }
-                                    className="text-xs text-blue-400 hover:underline mt-1 ml-4"
-                                  >
-                                    {isDayExpanded ? "Show Less" : "Show More"}
-                                  </button>
-                                )}
+                                  {events.length > defaultVisibleCount && (
+                                    <button
+                                      onClick={() =>
+                                        setExpandedDays((prev) => ({
+                                          ...prev,
+                                          [date]: !prev[date],
+                                        }))
+                                      }
+                                      className="text-xs text-blue-400 hover:underline mt-1 ml-4"
+                                    >
+                                      {isDayExpanded ? "Show Less" : "Show More"}
+                                    </button>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                        {eventsByCategory.length > 5 && (
-                          <button
-                            className="text-xs text-blue-400 hover:underline mt-1"
-                            onClick={() =>
-                              setExpandedSections(prev => ({
-                                ...prev,
-                                [label]: !prev[label],
-                              }))
-                            }
-                          >
-                            {isExpanded ? "Show Less" : "Show More"}
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })}
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
                 </div>
               ) : (
                 <p className="text-gray-400 text-sm">No events available.</p>
@@ -409,36 +406,51 @@ const UserSchedule = () => {
             </div>
           </div>
 
+          <div className="mt-2 md:mt-4">
+            <h3 className="text-base md:text-lg font-medium mb-2 md:mb-3 text-[#0ec1e7]">
+              Events for {selectedDate.getDate()} {months[selectedDate.getMonth()]}
+            </h3>
+
+            {event[formatMonthKey(currentMonth)] &&
+              event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)] &&
+              event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].length > 0 ? (
+              <div className="space-y-1 md:space-y-2">
+                {event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].map((event) => (
+                  <div
+                    key={event.id}
+                    className="p-2 md:p-3 rounded border border-gray-600 border-b-2 border-b-[#0ec1e7]"
+                  >
+                    <div className="flex justify-between items-center gap-2">
+                      <div className="flex-1 pr-2">
+                        <span className="text-sm md:text-base font-medium text-white break-words">
+                          {event.title}
+                        </span>
+                        {event.discription && (
+                          <p className="text-xs md:text-sm text-gray-300 mt-1">
+                            {event.discription}
+                          </p>
+                        )}
+                      </div>
+
+                      {user.role === "COORDINATOR" && (
+                        <button
+                          onClick={() => removeEvent(event.id, formatDateKey(selectedDate))}
+                          className="p-1 text-red-500 cursor-pointer hover:bg-black hover:bg-opacity-20 rounded text-xs md:text-sm whitespace-nowrap"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm md:text-base">No events scheduled for this day.</p>
+            )}
+          </div>
           {user.role === "COORDINATOR" && (
             <>
-              <div className="mt-2 md:mt-4">
-                <h3 className="text-base md:text-lg font-medium mb-2 md:mb-3 text-[#0ec1e7]">
-                  Events for {selectedDate.getDate()} {months[selectedDate.getMonth()]}
-                </h3>
-
-                {event[formatMonthKey(currentMonth)] && event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)] && event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].length > 0 ? (
-                  <div className="space-y-1 md:space-y-2">
-                    {
-                      event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].map((event) => (
-                        <div
-                          key={event.id}
-                          className="p-2 md:p-3 rounded flex justify-between items-center border-b-2 border-[#0ec1e7] bg-gray-800"
-                        >
-                          <span className="text-sm md:text-base break-words flex-1 pr-2">{event.title}</span>
-                          <button
-                            onClick={() => removeEvent(event.id, formatDateKey(selectedDate))}
-                            className="p-1 text-red-500 cursor-pointer hover:bg-black hover:bg-opacity-20 rounded text-xs md:text-sm whitespace-nowrap"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-400 text-sm md:text-base">No events scheduled for this day.</p>
-                )}
-              </div>
-              <div className="bg-gray-800 mt-4 md:mt-6 p-3 md:p-4 rounded-lg shadow-lg">
+              <div className="mt-4 md:mt-6 p-3 md:p-4 rounded-lg border border-gray-600 shadow-lg">
                 <h3 className="text-base md:text-lg font-medium mb-2 md:mb-3 text-[#0ec1e7]">
                   {selectedDate.getDate()} {months[selectedDate.getMonth()]} {selectedDate.getFullYear()}
                 </h3>
@@ -448,20 +460,20 @@ const UserSchedule = () => {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Add event title"
-                    className="w-full p-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50"
+                    className="w-full p-2 rounded text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50"
                     rows="2"
                   />
-                  <select name="category" id="category" className='w-full p-2 mt-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50'
+                  <select name="category" id="category" className='w-full p-2 mt-2 rounded text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50'
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}>
-                    <option value="General">General</option>
-                    <option value="Class">Class</option>
+                    <option value="General" className='bg-black'>General</option>
+                    <option value="Class" className='bg-black'>Class</option>
                   </select>
                   <textarea
                     value={discription}
                     onChange={(e) => setDiscription(e.target.value)}
                     placeholder="Add event description"
-                    className="w-full p-2 mt-2 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50"
+                    className="w-full p-2 mt-2 rounded text-white placeholder-gray-400 border border-gray-600 focus:border-[#0ec1e7] focus:ring focus:ring-[#0ec1e7] focus:ring-opacity-50"
                     rows="2"
                   />
                 </div>

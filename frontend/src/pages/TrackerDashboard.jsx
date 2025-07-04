@@ -20,8 +20,6 @@ import fork from "../assets/code-fork.png"
 import link from "../assets/Link.jpg"
 
 
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-
 
 function TrackerDashboard() {
   const { data } = useSelector((state) => state.tracker);

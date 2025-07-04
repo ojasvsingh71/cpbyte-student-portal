@@ -10,16 +10,14 @@ import { useSelector } from "react-redux";
 import * as THREE from "three";
 import folder from "../assets/folder.png";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import TotalQuestions from "../assets/TotalQuestions.png"
-import GitContribution from "../assets/GitContribution.png"
-import streak from "../assets/streak.png"
-import Ranking from "../assets/Ranking.png"
-import pr from "../assets/pull-request.png"
-import trophy from "../assets/trophy.png"
-import fork from "../assets/code-fork.png"
-import link from "../assets/Link.jpg"
-
-
+import TotalQuestions from "../assets/TotalQuestions.png";
+import GitContribution from "../assets/GitContribution.png";
+import streak from "../assets/streak.png";
+import Ranking from "../assets/Ranking.png";
+import pr from "../assets/pull-request.png";
+import trophy from "../assets/trophy.png";
+import fork from "../assets/code-fork.png";
+import link from "../assets/Link.jpg";
 
 function TrackerDashboard() {
   const { data } = useSelector((state) => state.tracker);
@@ -97,9 +95,7 @@ function TrackerDashboard() {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-
           <div className="backdrop-blur-sm rounded-4xl shadow-[0_0_15px_#0ec1e7]/50 border border-[#0ec1e7] text-white w-full flex items-center justify-around p-4 lg:py-6">
-
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <img
@@ -145,7 +141,6 @@ function TrackerDashboard() {
               <div className="flex items-center gap-2 mb-1">
                 <img
                   src={streak}
-
                   alt="Streak-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />
@@ -191,7 +186,7 @@ function TrackerDashboard() {
                   <div className="text-white">{data?.leetcode.hard}</div>
                 </div>
               </div>
-             
+
               <div className="w-56 h-56 mr-25">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -265,7 +260,6 @@ function TrackerDashboard() {
                         </Pie>
                       );
                     })()}
->>>>>>> main
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -280,18 +274,13 @@ function TrackerDashboard() {
             <div className="border-t border-gray-600 my-4" />
 
             <div className="grid grid-cols-3 gap-2 md:gap-5 w-full my-4 md:my-5 md:mb-10">
-
               <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3  transition-transform duration-300 hover:scale-105">
-
-              
                 <h1 className="text-green-500 text-2xl md:text-3xl font-medium">
                   {data?.github.contributions}
                 </h1>
                 <span className="flex items-center gap-0.5">
                   <img
-
                     src={GitContribution}
-
                     alt="Contribution-icon"
                     className="w-6 h-6 md:w-7 md:h-7"
                   />
@@ -300,16 +289,12 @@ function TrackerDashboard() {
               </div>
 
               <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3 transition-transform duration-300 hover:scale-105">
-
                 <h1 className="text-2xl md:text-3xl text-orange-400 font-medium">
                   {data?.github.prs}
                 </h1>
                 <span className="flex items-center gap-0.5">
                   <img
-
-
                     src={pr}
-
                     alt="Pr-icon"
                     className="w-6 h-6 md:w-7 md:h-7"
                   />
@@ -318,16 +303,12 @@ function TrackerDashboard() {
               </div>
 
               <div className="border w-full flex flex-col justify-center items-center border-gray-700 rounded-lg py-3 transition-transform duration-300 hover:scale-105">
-=======
-      
                 <h1 className="text-2xl md:text-3xl text-red-700 font-medium">
                   {data?.github.repos}
                 </h1>
                 <span className="flex items-center gap-0.5">
                   <img
-
                     src={fork}
-
                     alt="Fork-icon"
                     className="w-6 h-6 md:w-7 md:h-7"
                   />
@@ -349,7 +330,6 @@ function TrackerDashboard() {
               </div>
               <div className="border-t border-gray-600 mb-6" />
 
-
               <div className="w-full h-30 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-400 scrollbar-track-transparent  ">
                 <div className="flex flex-wrap gap-2 min-w-full">
                   {data?.skills.length !== 0 ? (
@@ -365,7 +345,6 @@ function TrackerDashboard() {
                     <p className="text-gray-400">No Skills added yet..</p>
                   )}
                 </div>
-
               </div>
             </div>
 
@@ -410,11 +389,6 @@ function TrackerDashboard() {
         <div className="w-full mt-4 md:mt-5">
           <div className="w-full h-full backdrop-blur-sm rounded-2xl shadow-xl border border-white p-4 px-4 md:px-6">
             <div className="flex justify-between items-center mb-6">
-
-
-              
-                
-
               <span className="text-white font-medium  md:text-2xl">
                 Projects
               </span>
@@ -429,11 +403,6 @@ function TrackerDashboard() {
 
             <div className="flex justify-center">
               {data?.projects?.length == 0 || !data.projects ? (
-<<<<<<< HEAD
-                <p className="text-gray-400 py-6">
-                  Currently No Projects are added..
-                </p>
-=======
                 <div className="flex flex-col justify-center items-center">
                   <div
                     className="border rounded-md h-49 w-80 mt-6 bg-cover bg-center"
@@ -454,7 +423,6 @@ function TrackerDashboard() {
                     <a href="/ManageTracker/AddProject">Add New Project</a>
                   </button>
                 </div>
->>>>>>> main
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
                   {showAll
@@ -462,21 +430,13 @@ function TrackerDashboard() {
                     : data.projects.slice(0, 3)?.map((project, index) => (
                         <div
                           key={index}
-<<<<<<< HEAD
-                          className="bg-gray-800 rounded-lg border border-gray-600 flex flex-col gap-2"
-=======
                           className="rounded-lg border border-[#0ec1e7]/60 flex flex-col gap-2 transition-transform duration-300 hover:scale-105"
->>>>>>> main
                         >
                           <div className="w-full h-44 md:h-52 border-b-gray-600 border-b-2 rounded-t-lg overflow-hidden flex items-center justify-center">
                             <img
                               src={project.coverImage}
                               alt={project.projectName}
-<<<<<<< HEAD
-                              className=""
-=======
                               className="object-cover w-full h-full"
->>>>>>> main
                             />
                           </div>
                           <div className="p-4 pt-0">
@@ -486,33 +446,23 @@ function TrackerDashboard() {
                             </p>
                             {project.websiteUrl !== "" && (
                               <a
-<<<<<<< HEAD
-                                href={project.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-white text-sm md:text-base mb-2"
-                              >
-                                View Project
-=======
                                 href={project.websiteUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-400 flex gap-2 text-sm md:text-base mb-2"
                               >
-                                <img src={link}  alt="" className="w-5 h-5 text-[#0ec1e7]/60"/>
+                                <img
+                                  src={link}
+                                  alt=""
+                                  className="w-5 h-5 text-[#0ec1e7]/60"
+                                />
                                 <p>View Project</p>
-                                
->>>>>>> main
                               </a>
                             )}
                             <a
                               href={project.githubUrl}
                               target="blank"
-<<<<<<< HEAD
-                              className="bg-gray-700 gap-2 flex text-gray-300 mb-1 p-1 px-2 rounded-full items-center xl:w-fit"
-=======
                               className="border-[#0ec1e7]/60 border gap-2 flex text-gray-300 mb-1 p-1 px-2 rounded-full items-center xl:w-fit"
->>>>>>> main
                             >
                               <img src={git} alt="git" className="w-5 h-5" />
                               <p className="overflow-hidden">

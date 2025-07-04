@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import * as THREE from "three";
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { fill } from "three/src/extras/TextureUtils.js";
 
 
 function TrackerDashboard() {
@@ -36,8 +35,8 @@ function TrackerDashboard() {
       vantaEffect.current = VANTA.default({
         el: vantaRef.current,
         THREE: THREE,
-        mouseControls: true,
-        touchControls: true,
+        mouseControls: false,
+        touchControls: false,
         gyroControls: false,
         minHeight: 200.00,
         minWidth: 200.00,

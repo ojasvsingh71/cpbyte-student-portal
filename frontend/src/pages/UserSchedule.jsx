@@ -37,9 +37,9 @@ const UserSchedule = () => {
         vantaEffect.current = VANTA.default({
           el: vantaRef.current,
           THREE: THREE,
-          // mouseControls: true,
-          // touchControls: true,
-          // gyroControls: false,
+          mouseControls: false,
+          touchControls: false,
+          gyroControls: false,
           minHeight: 200.00,
           minWidth: 200.00,
           scale: 1.00,

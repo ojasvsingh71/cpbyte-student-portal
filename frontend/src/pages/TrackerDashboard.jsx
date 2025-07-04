@@ -89,7 +89,7 @@ function TrackerDashboard() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <img
-                src="public\TotalQuestions.png"
+                src="src\assets\TotalQuestions.png"
                 alt="TotalSolved-icon"
                 className="w-6 h-6 md:w-7 md:h-7"
               />
@@ -109,7 +109,7 @@ function TrackerDashboard() {
           <div>
               <div className="flex items-center gap-2 mb-1">
                 <img
-                  src="public/Ranking.png"
+                  src="src\assets\Ranking.png"
                   alt="ranking-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />
@@ -127,7 +127,7 @@ function TrackerDashboard() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <img
-                src="public/Streak.png"
+                src="src\assets\Streak.png"
                 alt="Streak-icon"
                 className="w-6 h-6 md:w-7 md:h-7"
               />
@@ -245,7 +245,7 @@ function TrackerDashboard() {
               </h1>
               <span className="flex items-center gap-0.5">
                <img
-                src="GitContribution.png"
+                src="src\assets\GitContribution.png"
                 alt="Contribution-icon"
                 className="w-6 h-6 md:w-7 md:h-7"
               />
@@ -258,7 +258,7 @@ function TrackerDashboard() {
               </h1>
               <span className="flex items-center gap-0.5">
                 <img
-                  src="pull-request.png"
+                  src="src/assets/pull-request.png"
                   alt="Pr-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />
@@ -271,7 +271,7 @@ function TrackerDashboard() {
               </h1>
               <span className="flex items-center gap-0.5">
                 <img
-                  src="code-fork.png"
+                  src="src/assets/code-fork.png"
                   alt="Fork-icon"
                   className="w-6 h-6 md:w-7 md:h-7"
                 />

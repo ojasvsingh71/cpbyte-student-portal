@@ -37,9 +37,9 @@ const UserSchedule = () => {
         vantaEffect.current = VANTA.default({
           el: vantaRef.current,
           THREE: THREE,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
+          // mouseControls: true,
+          // touchControls: true,
+          // gyroControls: false,
           minHeight: 200.00,
           minWidth: 200.00,
           scale: 1.00,
@@ -249,9 +249,6 @@ const UserSchedule = () => {
 
                   const cellHeightClass = isMobile ? "h-14 md:h-24" : "h-24";
 
-                  const colIndex = index % 7;
-                  const altBg = colIndex % 2 === 0 ? "bg-[#1f2937]" : "bg-[#2a3444]";
-
                   return (
                     <div
                       key={index}
@@ -317,7 +314,7 @@ const UserSchedule = () => {
                 })}
               </div>
             </div>
-            <div className="w-full md:w-[25%] rounded-lg border border-gray-600 p-4 mb-6">
+            <div className="w-full md:w-[25%] backdrop-blur rounded-lg border border-gray-600 p-4 mb-6">
               <h3 className="text-lg font-semibold mb-4 text-[#0ec1e7]">Monthly Overview</h3>
               {event[formatMonthKey(currentMonth)] ? (
                 <div className="space-y-6 max-h-[450px] overflow-y-auto pr-2 text-sm">
@@ -368,10 +365,10 @@ const UserSchedule = () => {
                                       <li
                                         key={ev.id}
                                         className={`truncate ${label === "Past Events"
-                                            ? "text-red-400"
-                                            : label === "Today"
-                                              ? "text-green-400"
-                                              : "text-yellow-400"
+                                          ? "text-red-400"
+                                          : label === "Today"
+                                            ? "text-green-400"
+                                            : "text-yellow-400"
                                           }`}
                                       >
                                         {ev.title}
@@ -418,7 +415,7 @@ const UserSchedule = () => {
                 {event[formatMonthKey(currentMonth)][formatDateKey(selectedDate)].map((event) => (
                   <div
                     key={event.id}
-                    className="p-2 md:p-3 rounded border border-gray-600 border-b-2 border-b-[#0ec1e7]"
+                    className="p-2 md:p-3 rounded border backdrop-blur border-gray-600 border-b-2 border-b-[#0ec1e7]"
                   >
                     <div className="flex justify-between items-center gap-2">
                       <div className="flex-1 pr-2">
@@ -450,7 +447,7 @@ const UserSchedule = () => {
           </div>
           {user.role === "COORDINATOR" && (
             <>
-              <div className="mt-4 md:mt-6 p-3 md:p-4 rounded-lg border border-gray-600 shadow-lg">
+              <div className="mt-4 md:mt-6 p-3 md:p-4 rounded-lg backdrop-blur border border-gray-600 shadow-lg">
                 <h3 className="text-base md:text-lg font-medium mb-2 md:mb-3 text-[#0ec1e7]">
                   {selectedDate.getDate()} {months[selectedDate.getMonth()]} {selectedDate.getFullYear()}
                 </h3>

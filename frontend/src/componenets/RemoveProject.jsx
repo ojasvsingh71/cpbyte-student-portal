@@ -46,12 +46,12 @@ return (
                 {projects?.map((project) => (
                     <li
                         key={project.id}
-                        className="flex justify-between items-center  p-4 rounded-md shadow-sm"
+                        className="flex justify-between items-center p-4 rounded-md shadow-md backdrop-blur-sm border border-[#0ec1e7]/40 shadow-[0_0_8px_#0ec1e7]/50"
                     >
                         <span className="text-gray-300">{project.projectName}</span>
                         <button
                             onClick={() => handleRemove(project.id)}
-                            className="bg-[#0ec1e7] text-white py-1 px-3 rounded-md hover:bg-[#0eb4e7] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                            className="bg-[#0ec1e7] text-white py-1 px-3 rounded-md hover:bg-[#0eb4e7] focus:outline-none focus:ring-2 focus:ring-[#0ec1e7] focus:ring-offset-2 cursor-pointer"
                         >
                             Delete
                         </button>

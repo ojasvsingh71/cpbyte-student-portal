@@ -4,7 +4,6 @@ import { Route, Routes } from 'react-router-dom'
 import UserDashboard from './pages/UserDashboard'
 import UserSchedule from './pages/UserSchedule'
 import UserSettings from './pages/UserSettings'
-import UserHelp from './pages/UserHelp'
 import MarkAttendance from './pages/MarkAttendance'
 import LoginPage from './pages/LoginPage'
 import UnauthProtected from './pages/UnauthProtected'
@@ -31,7 +30,6 @@ function App() {
           <Route path="Schedule" element={<UserSchedule/>} />
           <Route path="Attendance" element={<MarkAttendance/>} />
           <Route path="Settings" element={<UserSettings/>} />
-          <Route path="Help" element={<UserHelp/>} />
           <Route path='Tracker' element={<TrackerDashboard/>} />
           <Route path={`Tracker/:library_id`} element={<TargetUserDashboard/>} />
           <Route path='Leaderboard' element={<Leaderboard/>}/>

@@ -18,6 +18,7 @@ function AddPlatforms() {
   const [leetcodeUsername, setLeetcodeUsername] = useState(
     data.leetcode.username
   );
+  const [disable, setDisable] = useState(false)
 
   
   useEffect(()=>{
@@ -26,6 +27,7 @@ function AddPlatforms() {
   },[data])
 
   const handlePlatform = async (platform) => {
+    setDisable(true)
     if (platform === "Leetcode") {
       const toastId = toast.loading("Adding Leetcode")
       if(!leetcodeUsername){
@@ -55,6 +57,7 @@ function AddPlatforms() {
     } else if (platform === "codechef") {
     } else if (platform === "hackerrank") {
     }
+    setTimeout(()=>setDisable(false),5000)
   };
 
   return (
@@ -84,7 +87,8 @@ function AddPlatforms() {
           <button
             type="submit"
             onClick={() => handlePlatform("Leetcode")}
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2"
+            disabled={disable}
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2 cursor-pointer"
           >
             Submit
           </button>
@@ -109,7 +113,7 @@ function AddPlatforms() {
             type="submit"
             disabled
             onClick={() => handlePlatform("gfg")}
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2 cursor-pointer"
           >
             Submit
           </button>
@@ -133,7 +137,7 @@ function AddPlatforms() {
             type="submit"
             disabled
             onClick={() => handlePlatform("hackerank")}
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2 cursor-pointer"
           >
             Submit
           </button>
@@ -157,7 +161,7 @@ function AddPlatforms() {
             type="submit"
             disabled
             onClick={() => handlePlatform("codechef")}
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2 cursor-pointer"
           >
             Submit
           </button>
@@ -178,8 +182,9 @@ function AddPlatforms() {
           />
           <button
             type="submit"
+            disabled={disable}
             onClick={() => handlePlatform("github")}
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-white hover:bg-gray-800 dark:bg-blue-700 dark:hover:bg-blue-800 h-10 px-4 py-2 cursor-pointer"
           >
             Submit
           </button>

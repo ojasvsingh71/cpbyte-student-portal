@@ -9,10 +9,12 @@ function SkillManagement() {
   const data = useSelector((state) => state.tracker.data);
   const [skills, setSkills] = useState(data.skills);
   const [newSkill, setNewSkill] = useState("");
+  const [disable, setDisable] = useState(false)
 
   const dispatch = useDispatch();
 
   const addSkills = async () => {
+    setDisable(true)
     const toastId = toast.loading("Adding Skill");
     if (newSkill.trim() !== "") {
       const res = await dispatch(addSkill({ skill:newSkill }));
@@ -32,6 +34,7 @@ function SkillManagement() {
       });
     }
     setNewSkill("")
+    setDisable(false)
   };
 
   useEffect(() => {
@@ -81,7 +84,8 @@ function SkillManagement() {
           />
           <button
             onClick={() => addSkills()}
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 h-12 px-6 py-2 shadow-md"
+            disabled={disable}
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 h-12 px-6 py-2 shadow-md cursor-pointer"
           >
             Add Skill
           </button>
@@ -90,11 +94,11 @@ function SkillManagement() {
           {skills.map((skill, index) => (
             <div
               key={index}
-              className="flex relative items-center bg-gray-800 rounded-lg border border-gray-600 shadow-md"
+              className="border block items-center text-wrap justify-center shadow-[0_0_8px_#0ec1e7]/50 backdrop-blur-sm border-[#0ec1e7]/40 rounded-lg px-2 md:px-3 text-sm md:text-base relative"
             >
-              <div className="flex justify-center items-center border-r p-2 px-4 border-gray-600 text-gray-300 font-medium">
+              <span className="flex justify-center items-center p-2 px-4 border-gray-600 text-gray-300 font-medium">
                 {skill}
-              </div>
+              </span>
               <button
                 onClick={() => deleteSkill(skill)}
                 className="absolute text-sm font-medium text-red-500 hover:text-red-400 transition-transform transform hover:scale-110 top-[-8px] left-[-8px]"

@@ -54,7 +54,7 @@ function TrackerManagement() {
     },[location.pathname])
 
   return (
-    <div ref={vantaRef} className="min-h-screen  text-gray-900 dark:text-gray-100 w-full transition-colors duration-300">
+    <div ref={vantaRef} className="min-h-screen  text-gray-900 dark:text-gray-100 w-full transition-colors duration-300 bg-gray-950">
       <div className="container mx-auto px-[5vw] py-8">
         <div className='flex gap-2 items-center mb-2 md:mb-4'>
             <div className='w-2 h-8 bg-[#0ec1e7] rounded-2xl'></div>
@@ -63,48 +63,48 @@ function TrackerManagement() {
         <div className="flex flex-col lg:flex-row w-full min-h-[80vh]">
           <div className="w-full lg:w-1/4 p-4 backdrop-blur-sm border border-gray-50 rounded-lg lg:mr-4 mb-4 lg:mb-0">
             <nav>
-              <ul className="space-y-24 px-2 duration-200">
-                <li
+              <div className="space-y-24 px-2 duration-200">
+                <Link to={""}
                   className={`mb-2 flex items-center rounded-lg p-2 border-2 ${
                     location.pathname === "/ManageTracker" ? "border-gray-50 backdrop-blur-3xl" : "border-gray-900"
                   }`}
                 >
                   <FaListCheck className="w-5 h-5 mr-2" />
-                  <Link to={""} className="text-gray-800 w-full text-xl dark:text-gray-200">
+                  <div className="text-gray-800 w-full text-xl dark:text-gray-200">
                     Manage Platforms
-                  </Link>
-                </li>
-                <li
+                  </div>
+                </Link>
+                <Link to={"AddProject"}
                   className={`mb-2 flex items-center rounded-lg p-2 border-2 ${
                     location.pathname === "/ManageTracker/AddProject" ? "backdrop-blur-3xl border-gray-50" : "border-gray-900"
                   }`}
                 >
                   <PlusCircleIcon className="w-5 h-5 mr-2" />
-                  <Link to={"AddProject"} className="text-gray-800 w-full text-xl dark:text-gray-200">
+                  <div className="text-gray-800 w-full text-xl dark:text-gray-200">
                     Add Project
-                  </Link>
-                </li>
-                <li
+                  </div>
+                </Link>
+                <Link to={"RemoveProject"}
                   className={`mb-2 flex items-center rounded-lg p-2 border-2 ${
                     location.pathname === "/ManageTracker/RemoveProject" ? "backdrop-blur-3xl border-gray-50" : "border-gray-900"
                   }`}
                 >
                   <IoRemoveCircleOutline className="w-5 h-5 mr-2" />
-                  <Link to={"RemoveProject"} className="text-gray-800 w-full text-xl dark:text-gray-200">
+                  <div className="text-gray-800 w-full text-xl dark:text-gray-200">
                     Remove Project
-                  </Link>
-                </li>
-                <li
+                  </div>
+                </Link>
+                <Link to={"SkillManagement"}
                   className={`mb-2 flex items-center rounded-lg p-2 border-2 ${
                     location.pathname === "/ManageTracker/SkillManagement" ? "backdrop-blur-3xl border-gray-50" : "border-gray-900"
                   }`}
                 >
                   <LayoutDashboardIcon className="w-5 h-5 mr-2" />
-                  <Link to={"SkillManagement"} className="text-gray-800 w-full text-xl dark:text-gray-200">
+                  <div className="text-gray-800 w-full text-xl dark:text-gray-200">
                     Skill Management
-                  </Link>
-                </li>
-              </ul>
+                  </div>
+                </Link>
+              </div>
             </nav>
           </div>
           <div className="w-full lg:w-3/4 p-4 border border-gray-50 backdrop-blur-sm rounded-lg">

@@ -7,10 +7,10 @@ import * as THREE from 'three';
 const UserSchedule = () => {
   const user = useSelector(state => state.dashboard.data);
   const { event } = useSelector(state => state.event);
-  const [addMode, setAddMode] = useState(false);
 
   const dispatch = useDispatch();
 
+  const [disable, setDisable] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [title, setTitle] = useState("");
@@ -149,8 +149,12 @@ const UserSchedule = () => {
   };
 
   const addEvent = async () => {
+    setDisable(true)
     const toastId = toast.loading("Adding Event..")
-    if (!title.trim()) return;
+    if (!title.trim()){
+      setDisable(false)
+      return;
+    }
 
     const dateKey = new Date(selectedDate);
     const utcDateOnly = new Date(Date.UTC(
@@ -166,6 +170,7 @@ const UserSchedule = () => {
     setTitle("");
     setDiscription("");
     setCategory("General");
+    setDisable(false)
   };
 
   const removeEvent = async (eventId, eventDate) => {
@@ -180,7 +185,7 @@ const UserSchedule = () => {
   const days = getDaysInMonth(currentMonth);
 
   return (
-    <div ref={vantaRef} className="flex items-center justify-center min-h-screen w-full">
+    <div ref={vantaRef} className="flex items-center justify-center min-h-screen w-full bg-gray-950">
       <div className="pt-16 text-gray-100 p-2 md:p-4 w-full py-6 md:py-12">
         <div className="max-w-4xl mx-auto">
           <header className="mb-4 md:mb-8">
@@ -477,7 +482,8 @@ const UserSchedule = () => {
 
                 <button
                   onClick={addEvent}
-                  className="bg-[#0ec1e7] hover:bg-[#259fdc] text-white py-1.5 md:py-2 px-3 md:px-4 rounded focus:outline-none focus:ring-2 focus:ring-[#0ec1e7] focus:ring-opacity-50 text-sm md:text-base"
+                  disabled={disable}
+                  className="bg-[#0ec1e7] hover:bg-[#259fdc] text-white py-1.5 md:py-2 px-3 md:px-4 rounded focus:outline-none focus:ring-2 focus:ring-[#0ec1e7] focus:ring-opacity-50 text-sm md:text-base cursor-pointer"
                 >
                   Add Event
                 </button>

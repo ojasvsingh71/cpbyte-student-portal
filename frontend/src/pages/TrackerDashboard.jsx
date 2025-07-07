@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { SiLeetcode } from "react-icons/si";
+import { SiGithub, SiLeetcode } from "react-icons/si";
 import { LuPenLine } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import git from "../assets/github.webp";
@@ -69,7 +69,7 @@ function TrackerDashboard() {
   return (
     <div
       ref={vantaRef}
-      className="flex items-center justify-center min-h-screen w-full"
+      className="flex items-center justify-center min-h-screen w-full bg-gray-950"
     >
       <div className="flex-1 p-8 md:p-8 min-h-screen w-full z-10">
         <div className="mb-6 md:mb-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 lg:pt-0">
@@ -369,7 +369,7 @@ function TrackerDashboard() {
                 </Link>
               </div>
               <div className="border-t border-gray-600 mb-6 w-full" />
-              <div className="flex">
+              <div className="flex gap-1.5">
                 {data?.leetcode.url !== "" && (
                   <a
                     href={data?.leetcode.url}
@@ -382,6 +382,20 @@ function TrackerDashboard() {
                     </span>
                   </a>
                 )}
+                {
+                  data?.github.url !== '' && (
+                    <a
+                    href={data?.github.url}
+                    className="text-xl md:text-2xl w-fit font-medium border border-gray-700 rounded-lg p-2 md:p-3 hover:bg-gray-800 transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>
+                      <SiGithub />
+                    </span>
+                  </a>
+                  )
+                }
               </div>
             </div>
           </div>

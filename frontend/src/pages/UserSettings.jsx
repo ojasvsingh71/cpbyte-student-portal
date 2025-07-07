@@ -138,7 +138,7 @@ export default function UserSettings() {
               <div className="flex justify-end">
                 <button
                 type="submit"
-                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
+                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors cursor-pointer"
                 >
                   <Save className="mr-2" size={18} />
                   Save Changes
@@ -288,7 +288,7 @@ export default function UserSettings() {
               <div className="flex justify-end">
                 <button
                 type="submit"
-                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
+                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors cursor-pointer"
                 >
                   <Save className="mr-2" size={18} />
                   Save Changes

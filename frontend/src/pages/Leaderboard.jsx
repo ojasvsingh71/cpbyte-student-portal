@@ -4,7 +4,7 @@ import noimage from "../assets/noImage.webp";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAll } from "../redux/slices/Leaderboard";
-import { FiLoader } from "react-icons/fi";
+import SimpleSkeleton from "../componenets/SimpleSkeleton";
 
 const Leaderboard = () => {
   const dispatch = useDispatch();
@@ -209,9 +209,7 @@ setData(filteredData)
             </table>
           </div>
         </div>}
-        {
-          loading && <div className="w-full mt-16 flex justify-center items-center"><FiLoader size={40} color='white' className='animate-spin'/></div>
-        }
+       
       </div>
     </div>
   );

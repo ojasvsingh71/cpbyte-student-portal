@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAll } from "../redux/slices/Leaderboard";
 import SimpleSkeleton from "../componenets/SimpleSkeleton";  
-// import "./LeaderBoard.css";
+import "./LeaderBoard.css";
   
 
 const Leaderboard = () => {

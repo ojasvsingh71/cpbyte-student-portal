@@ -4,8 +4,9 @@ import noimage from "../assets/noImage.webp";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAll } from "../redux/slices/Leaderboard";
-import SimpleSkeleton from "../componenets/SimpleSkeleton";  
+import SimpleSkeleton from "../componenets/LeaderboardSkeleton";  
 import "./LeaderBoard.css";
+import LeaderboardSkeleton from "../componenets/LeaderboardSkeleton";
   
 
 const Leaderboard = () => {
@@ -74,7 +75,7 @@ setData(filteredData)
 
 
          {loading ? (  
-  <SimpleSkeleton />  
+  <LeaderboardSkeleton />  
 ) : (  <div className="w-full p-4 lg:p-12 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 w-full">
             {data?.map(

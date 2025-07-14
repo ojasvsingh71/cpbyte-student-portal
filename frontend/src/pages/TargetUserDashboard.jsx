@@ -9,6 +9,7 @@ import { IoStatsChartSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { getTrackerDataOfTargetUser } from "../redux/slices/targetUserSlice";
 import { FiLoader } from "react-icons/fi";
+import TargetUserSkeleton from '../componenets/TargetUserSkeleton'
 
 function TargetUserDashboard() {
   const { library_id } = useParams();
@@ -24,11 +25,7 @@ function TargetUserDashboard() {
   }, [user]);
 
   if (loading) {
-    return(
-        <div className="flex justify-center w-full items-center h-screen bg-gray-950">
-            <FiLoader size={40} color='white' className='animate-spin'/>
-        </div>
-    )
+    return <TargetUserSkeleton/>
   }
   else
   return (

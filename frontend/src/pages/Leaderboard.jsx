@@ -4,7 +4,9 @@ import noimage from "../assets/noImage.webp";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAll } from "../redux/slices/Leaderboard";
-import SimpleSkeleton from "../componenets/SimpleSkeleton";
+import SimpleSkeleton from "../componenets/SimpleSkeleton";  
+// import "./LeaderBoard.css";
+  
 
 const Leaderboard = () => {
   const dispatch = useDispatch();
@@ -71,21 +73,31 @@ setData(filteredData)
 </div>
 
 
-        {!loading && <div className="w-full p-4 lg:p-12 pt-4">
+         {loading ? (  
+  <SimpleSkeleton />  
+) : (  <div className="w-full p-4 lg:p-12 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 w-full">
             {data?.map(
-              (item, index) =>
-                index < 3 && (
-                  <div
-                    key={item.id}
-                    className={`relative w-full border-3 ${
-                      index == 0
-                        ? "md:col-span-2 lg:col-span-1 border-amber-400"
-                        : index == 1
-                        ? "border-gray-500"
-                        : "border-yellow-700"
-                    } flex shadow-lg shadow-gray-900 flex-col text-white text-2xl rounded-lg p-4`}
-                  >
+  (item, index) =>
+    index < 3 && (
+      <div
+        key={item.id}
+        className={`relative glow-card group w-full border-3 ${
+          index == 0
+            ? "md:col-span-2 lg:col-span-1 border-amber-400"
+            : index == 1
+            ? "border-gray-500"
+            : "border-yellow-700"
+        } flex shadow-lg shadow-gray-900 flex-col text-white text-2xl rounded-lg p-4`}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          e.currentTarget.style.setProperty("--x", `${x}px`);
+          e.currentTarget.style.setProperty("--y", `${y}px`);
+        }}
+      >
+
                     <div className="flex items-center justify-between font-bold w-full">
                       <Link
                         to={`/u/dashboard/${item.library_id}`}
@@ -208,8 +220,7 @@ setData(filteredData)
               </tbody>
             </table>
           </div>
-        </div>)} 
-       
+        </div>)}
       </div>
     </div>
   );

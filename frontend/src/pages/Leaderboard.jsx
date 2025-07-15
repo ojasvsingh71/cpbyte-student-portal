@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import trophy from "../assets/trophy.png";
 import noimage from "../assets/noImage.webp";
 import { Link } from "react-router-dom";
@@ -7,7 +7,8 @@ import { getAll } from "../redux/slices/Leaderboard";
 import SimpleSkeleton from "../componenets/LeaderboardSkeleton";  
 import "./LeaderBoard.css";
 import LeaderboardSkeleton from "../componenets/LeaderboardSkeleton";
-  
+import * as THREE from 'three';
+
 
 const Leaderboard = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,57 @@ const Leaderboard = () => {
       dispatch(getAll({}));
     }
   }, []);
+
+
+const vantaRef = useRef(null);
+  const vantaEffect = useRef(null); 
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadVanta = async () => {
+      const VANTA = await import('vanta/dist/vanta.net.min');
+
+      if (isMounted && !vantaEffect.current) {
+        vantaEffect.current = VANTA.default({
+          el: vantaRef.current,
+          THREE: THREE,
+          mouseControls: false,
+          touchControls: false,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0xfff5,
+          backgroundColor: 0x000000,
+          points: 20.00,
+          maxDistance: 10.00,
+          spacing: 20.00
+        });
+      }
+    };
+
+    loadVanta();
+
+    return () => {
+      isMounted = false;
+      if (vantaEffect.current) {
+        vantaEffect.current.destroy();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (vantaEffect.current) {
+      vantaEffect.current.resize();
+    }
+  }, [data]);
+
+
+
+
+
 
 useEffect(()=>{
 let filteredData=users
@@ -42,7 +94,10 @@ setData(filteredData)
 },[users,selectedLanguage,selectedYear])
 
   return (
-    <div className=" p-4 bg-gray-950 w-full lg:p-8 min-h-screen">
+     <div className="relative min-h-screen w-full bg-black">
+    <div ref={vantaRef} className="fixed inset-0 z-0"/>
+      <div className="relative z-10 min-h-screen w-full">
+    <div className=" p-4 w-full lg:p-8 min-h-screen">
       <div className="flex flex-col items-center">
         <h1 className="text-4xl font-extrabold my-4 text-center text-white drop-shadow-lg">
           Leaderboard🚀
@@ -224,7 +279,10 @@ setData(filteredData)
         </div>)}
       </div>
     </div>
+    </div>
+    </div>
   );
 };
+
 
 export default Leaderboard;

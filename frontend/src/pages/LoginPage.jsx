@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
-import logo from '../../public/CPBYTE_LOGO.jpg'
+import logo from '../assets/CPBYTE_LOGO.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slices/authSlice';
 import toast from 'react-hot-toast';
@@ -69,7 +69,7 @@ function LoginPage() {
   };
 
   return (
-    <div ref={vantaRef} className="flex items-center justify-center min-h-screen w-full">
+    <div ref={vantaRef} className="flex items-center justify-center min-h-screen w-full bg-gray-950">
       <div className="w-full max-w-md p-8 space-y-8 backdrop-blur-sm rounded-2xl shadow-xl border border-white z-10">
         <div className="text-center">
           <div className="flex justify-center">
@@ -132,7 +132,7 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className={`flex justify-center w-full px-4 py-2 text-sm font-medium text-white ${loading ? "bg-[#0ec1e7]" : "bg-[#0ec1e7]"} border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-800`}>
+              className={`flex justify-center w-full px-4 py-2 text-sm font-medium text-white ${loading ? "bg-[#5eacff]" : "bg-[#057eff]"} border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-800 cursor-pointer`}>
               <LogIn className="w-5 h-5 mr-2" />
               {loading ? "Signing In" : "Sign in"}
             </button>

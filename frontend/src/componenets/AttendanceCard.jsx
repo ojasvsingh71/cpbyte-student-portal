@@ -5,40 +5,8 @@ import { useSelector } from "react-redux";
 import * as THREE from "three";
 
 function AttendanceCard() {
-  const { attendances } = useSelector((state) => state.dashboard.data);
-
-  const vantaRef = useRef(null);
-  const vantaEffect = useRef(null);
-
-  useLayoutEffect(() => {
-    const loadVanta = async () => {
-      const VANTA = await import("vanta/dist/vanta.net.min");
-      if (!vantaEffect.current && vantaRef.current) {
-        vantaEffect.current = VANTA.default({
-          el: vantaRef.current,
-          THREE: THREE,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.0,
-          minWidth: 200.0,
-          scale: 1.0,
-          scaleMobile: 1.0,
-          color: 0xfff5,
-          backgroundColor: 0x0,
-          points: 20.0,
-          maxDistance: 10.0,
-          spacing: 20.0,
-        });
-      }
-    };
-
-    loadVanta();
-    return () => {
-      if (vantaEffect.current) vantaEffect.current.destroy();
-    };
-  }, []);
-
+  const {attendances} = useSelector(state=>state.dashboard.data)
+  
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Vanta background */}

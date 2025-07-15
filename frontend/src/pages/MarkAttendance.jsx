@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import SkeletonLoader from "../componenets/SkeletonLoader";
+import React, { useEffect, useState } from "react";
 import noimage from "../../public/noImage.webp";
 import { useDispatch, useSelector } from "react-redux";
 import { markAttendance } from "../redux/slices/attendanceSlice";

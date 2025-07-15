@@ -10,50 +10,60 @@ import {
   TextField,
 } from "@mui/material";
 import { checkStatus } from "../redux/slices/checkStatus";
+import toast from "react-hot-toast";
 
 function MarkAttendanceProtector({ setIsMarked }) {
   const { data } = useSelector((state) => state.checkStatus);
   const [domain, setDomain] = useState("");
-  let DSA = null;
   const [rawDate, setRawDate] = useState(
     new Date().toLocaleDateString("en-CA")
   );
   const dispatch = useDispatch();
   const user = useSelector((state) => state.dashboard.data);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!domain || !rawDate) {
-      alert("Please fill all the fields");
+      toast.error("Please fill all the fields!", {
+        style: {
+          background: "#1c1c1c",
+          color: "#fff",
+          border: "1px solid #0ec1e7",
+          padding: "12px 16px",
+        },
+      });
       return;
     }
-    if (domain === user?.domain_dsa) {
-      DSA = true;
-    } else {
-      DSA = false;
-    }
+
+    const DSA = domain === user?.domain_dsa;
     const date = new Date(rawDate + "T00:00:00.000Z");
     dispatch(checkStatus({ domain, date, DSA }));
-
   };
+
   useEffect(() => {
     if (data === null) {
       setIsMarked(0);
-    }
-    else if (data.marked) {
+    } else if (data.marked) {
       setIsMarked(2);
-
     } else if (!data.marked) {
       setIsMarked(1);
     }
   }, [data]);
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 flex justify-center items-center">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-2xl w-96 text-gray-100">
+    <div className="w-full min-h-screen flex items-center justify-center">
+      {/* 🔹 Glassmorphic Card */}
+      <div className="backdrop-blur-xl bg-white/10 p-8 rounded-2xl shadow-2xl w-[90%] max-w-md text-white border border-white/20">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <h2 className="text-3xl font-bold text-center text-white mb-6">
+          <h2 className="text-3xl font-bold text-center mb-6">
             Mark Attendance
           </h2>
+
+          <p className="text-sm text-center text-white/80">
+            Today's Date:{" "}
+            <span className="font-medium">{new Date().toDateString()}</span>
+          </p>
+
           <FormControl
             fullWidth
             variant="outlined"
@@ -82,7 +92,7 @@ function MarkAttendanceProtector({ setIsMarked }) {
               value={domain}
               required
               onChange={(e) => setDomain(e.target.value)}
-              className="bg-gray-700 text-gray-300"
+              className="bg-white/20"
               sx={{
                 color: "white",
                 "& .MuiSelect-icon": {
@@ -95,7 +105,7 @@ function MarkAttendanceProtector({ setIsMarked }) {
               MenuProps={{
                 PaperProps: {
                   sx: {
-                    backgroundColor: "#374254",
+                    backgroundColor: "#060606ff",
                     color: "white",
                   },
                 },
@@ -105,6 +115,7 @@ function MarkAttendanceProtector({ setIsMarked }) {
               <MenuItem value={user?.domain_dev}>{user?.domain_dev}</MenuItem>
             </Select>
           </FormControl>
+
           <TextField
             id="outlined-basic"
             type="text"
@@ -116,18 +127,22 @@ function MarkAttendanceProtector({ setIsMarked }) {
               style: { color: "white" },
             }}
             fullWidth
-            className="bg-gray-700 rounded-lg"
+            className="bg-white/20 rounded-lg"
             InputLabelProps={{
               style: { color: "white" },
             }}
           />
+
           <Button
             type="submit"
             variant="contained"
-            className=" font-semibold"
+            className="font-semibold"
             sx={{
               backgroundColor: "#0ec1e7",
               boxShadow: "none",
+              borderRadius: "28px",
+              paddingY: "10px",
+              fontWeight: "bold",
               "&:hover": {
                 backgroundColor: "#0daed1",
               },

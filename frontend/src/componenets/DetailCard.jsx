@@ -3,11 +3,52 @@ import { GiBattleGear } from "react-icons/gi";
 import { DiCodeigniter } from "react-icons/di";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { PiChalkboardTeacherBold } from "react-icons/pi";
-import noimage from "../assets/noImage.webp"
+import noimage from '../assets/noImage.webp';
 import { useSelector } from 'react-redux';
 
 function DetailCard() {
-    const user = useSelector((state) => state.dashboard.data)    
+    const { data: user, loading } = useSelector((state) => state.dashboard);   
+
+    if (loading) {
+        // Skeleton for DetailCard
+        return (
+            <div className='w-full p-5 mt-14'>
+                <div className='bg-gray-900 rounded-2xl border border-gray-600 p-8 animate-pulse'>
+                    <div className='flex items-center gap-2 mb-6'>
+                        <div className='w-2 h-8 bg-[#0ec1e7] rounded-2xl'></div>
+                        <div className='h-6 bg-gray-700 w-40 rounded'></div>
+                    </div>
+                    <div className='flex flex-col md:flex-row gap-6 items-center'>
+                        <div className="w-32 h-32 bg-gray-700 rounded-full"></div>
+                        <div className='flex flex-col gap-3 w-full'>
+                            <div className='h-6 bg-gray-700 w-32 rounded'></div>
+                            <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
+                                {Array(4).fill().map((_, i) => (
+                                    <div key={i} className='flex flex-col gap-2'>
+                                        <div className='h-4 bg-gray-600 w-20 rounded'></div>
+                                        <div className='h-5 bg-gray-700 w-full rounded'></div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6'>
+                        {Array(4).fill().map((_, i) => (
+                            <div key={i} className='bg-gray-800 p-4 rounded-2xl flex gap-4 items-center'>
+                                <div className='w-10 h-10 bg-gray-700 rounded-full'></div>
+                                <div className='flex flex-col gap-2'>
+                                    <div className='w-10 h-4 bg-gray-700 rounded'></div>
+                                    <div className='w-20 h-3 bg-gray-600 rounded'></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+
     
     return (
         <div className='w-full h-fit text-white p-2 md:p-5 mt-14 md:mt-5 md:mr-5'>

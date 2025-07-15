@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-
-
-import logo from "../assets/CPBYTE_LOGO.jpg";
-
+import logo from '../assets/CPBYTE_LOGO.jpg';
 import { RiHome4Line } from "react-icons/ri";
 import { GrSchedulePlay } from "react-icons/gr";
 import { IoMdSettings } from "react-icons/io";

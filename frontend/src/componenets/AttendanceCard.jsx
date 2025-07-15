@@ -4,8 +4,35 @@ import DaysCard from './DaysCard'
 import { useSelector } from 'react-redux';
 
 function AttendanceCard() {
-  const {attendances} = useSelector(state=>state.dashboard.data)
+  const { data: dashboardData, loading } = useSelector(state => state.dashboard);
+
   
+  if (loading) {
+    return (
+      <div className='w-full h-fit text-white p-5 mr-5'>
+        <div className='bg-gray-900 border border-gray-600 rounded-2xl p-8 animate-pulse'>
+          <div className='flex justify-between items-center mb-8'>
+            <div className='flex gap-2 items-center'>
+              <div className='w-2 h-8 bg-[#0ec1e7] rounded-2xl'></div>
+              <div className='h-6 w-48 bg-gray-700 rounded'></div>
+            </div>
+            <div className='flex gap-2 p-2 rounded border border-zinc-500'>
+              <div className='w-4 h-4 bg-gray-700 rounded'></div>
+              <div className='w-10 h-4 bg-gray-700 rounded'></div>
+            </div>
+          </div>
+          <div className='grid grid-cols-4 gap-4'>
+            {Array(4).fill().map((_, i) => (
+              <div key={i} className='h-20 bg-gray-800 rounded-lg'></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+ const attendances = dashboardData?.attendances || [];
+
   return (
     <div className='w-full h-fit text-white p-5 mr-5'>
       <div className='bg-gray-900 border border-gray-600 rounded-2xl p-8 flex flex-col gap-8'>

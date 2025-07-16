@@ -51,7 +51,7 @@ function MarkAttendanceProtector({ setIsMarked }) {
   }, [data]);
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center">
+    <div className="p-2 md:p-4 mt-14 md:mt-0 flex flex-col justify-center items-center text-center">
       {/* 🔹 Glassmorphic Card */}
       <div className="backdrop-blur-xl bg-white/10 p-8 rounded-2xl shadow-2xl w-[90%] max-w-md text-white border border-white/20">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

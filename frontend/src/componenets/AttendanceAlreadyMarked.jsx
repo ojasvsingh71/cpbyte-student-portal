@@ -55,8 +55,8 @@ function AttendanceAlreadyMarked({ setIsMarked }) {
 
       {/* Main Content */}
       <div className="relative z-10 text-white p-2 md:p-8">
-        <div className="p-2 md:p-4 mt-14 md:mt-0">
-          <div className="flex flex-col items-center justify-center h-full">
+        <div className=" md:p-4 mt-14 md:mt-0 flex flex-col justify-center items-center text-center p-6">
+        <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/60 ">
             <h1 className="text-3xl md:text-4xl font-bold text-red-500 mb-4">
               Attendance Marked
             </h1>

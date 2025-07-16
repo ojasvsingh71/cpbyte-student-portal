@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import noimage from "../assets/noImage.webp";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import MarkAttendanceProtector from "../componenets/MarkAttendanceProtector";
 import { updateStatus } from "../redux/slices/checkStatus";
 import { toast } from "react-hot-toast";
 import AttendanceAlreadyMarked from "../componenets/AttendanceAlreadyMarked";
+import SkeletonLoader from "../componenets/SkeletonLoader";
 import * as THREE from "three";
 
 const MarkAttendance = () => {

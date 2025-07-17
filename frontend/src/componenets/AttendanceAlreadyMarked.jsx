@@ -13,7 +13,7 @@ function AttendanceAlreadyMarked({setIsMarked}) {
     }
 
     return (
-        <div className="bg-[#070b0f] text-white min-h-screen w-full p-2 md:p-8 mt">
+        <div className="bg-black text-white min-h-screen w-full p-2 md:p-8 mt">
             <div className="p-2 md:p-4 mt-14 md:mt-0">
                 <div className="flex flex-col items-center justify-center h-full">
                     <h1 className="text-3xl md:text-4xl font-bold text-red-500 mb-4">Attendance Marked</h1>

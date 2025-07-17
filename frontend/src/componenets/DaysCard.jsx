@@ -18,7 +18,7 @@ function DaysCard(props) {
     }
 
     return (
-        <div className='flex flex-col gap-1 bg-neutral-900 rounded-2xl overflow-hidden p-3 border border-neutral-800'>
+        <div className='flex flex-col gap-1  rounded-2xl overflow-hidden bg-black p-3 border border-neutral-800'>
             {/* Date and Status Row */}
             <div className='flex justify-between items-center p-1'>
                 <div className='flex justify-start items-center gap-2'>

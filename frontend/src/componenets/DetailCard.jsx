@@ -97,7 +97,7 @@ const InfoField = ({ label, value, tooltip = false }) => (
 );
 
 const ProgressCard = ({ value, label, icon }) => (
-  <div className="flex gap-3 items-center bg-neutral-900 border border-neutral-800 p-3 rounded-2xl hover:scale-105 transition-transform duration-300 hover:shadow-[0_0_15px_rgba(14,193,231,0.4)]">
+  <div className="flex gap-3 items-center bg-black border border-neutral-800 p-3 rounded-2xl hover:scale-105 transition-transform duration-300 hover:shadow-[0_0_15px_rgba(14,193,231,0.4)]">
     <div className="relative w-12 h-12">
       <CircularProgressbar
         value={value}
@@ -119,7 +119,7 @@ const ProgressCard = ({ value, label, icon }) => (
 );
 
 const IconCard = ({ icon, label, value, assigned }) => (
-  <div className="flex gap-3 items-center bg-neutral-900 border border-neutral-800 p-3 rounded-2xl hover:scale-105 transition-transform duration-300 hover:shadow-[0_0_15px_rgba(14,193,231,0.4)]">
+  <div className="flex gap-3 items-center bg-black border border-neutral-800 p-3 rounded-2xl hover:scale-105 transition-transform duration-300 hover:shadow-[0_0_15px_rgba(14,193,231,0.4)]">
     <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-cyan-700 to-green-600 shadow-md">
       {icon}
     </div>

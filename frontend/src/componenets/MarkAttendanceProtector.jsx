@@ -49,6 +49,13 @@ function MarkAttendanceProtector({ setIsMarked }) {
       setIsMarked(1);
     }
   }, [data]);
+  
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   return (
     <div className="p-2 md:p-4 mt-14 md:mt-0 flex flex-col justify-center items-center text-center">

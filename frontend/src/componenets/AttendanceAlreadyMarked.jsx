@@ -16,6 +16,7 @@ function AttendanceAlreadyMarked({ setIsMarked }) {
   const vantaEffect = useRef(null);
 
   useLayoutEffect(() => {
+    document.body.style.overflow = "hidden";
     const loadVanta = async () => {
       const VANTA = await import("vanta/dist/vanta.net.min");
       if (!vantaEffect.current && vantaRef.current) {
@@ -40,12 +41,13 @@ function AttendanceAlreadyMarked({ setIsMarked }) {
 
     loadVanta();
     return () => {
+      document.body.style.overflow = "auto";
       if (vantaEffect.current) vantaEffect.current.destroy();
     };
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="relative h-screen w-full overflow-hidden flex item-center justify-center">
       {/* Vanta Background */}
       <div
         ref={vantaRef}
@@ -54,31 +56,31 @@ function AttendanceAlreadyMarked({ setIsMarked }) {
       />
 
       {/* Main Content */}
-      <div className="relative z-10 text-white p-2 md:p-8">
-        <div className=" md:p-4 mt-14 md:mt-0 flex flex-col justify-center items-center text-center p-6">
-        <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/60 ">
-            <h1 className="text-3xl md:text-4xl font-bold text-red-500 mb-4">
-              Attendance Marked
-            </h1>
-            <p className="text-base md:text-lg text-gray-300 mb-6">
-              Attendance has been successfully marked.
-            </p>
-            <Button
-              variant="contained"
-              onClick={reset}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-              sx={{
-                backgroundColor: "#0ec1e7",
-                "&:hover": {
-                  backgroundColor: "#0ea2e7",
-                },
-              }}
-            >
-              Go Back
-            </Button>
-          </div>
-        </div>
+      <div className=" text-white min-h-screen w-full flex items-center justify-center pt-10">
+  <div className="bg-white/10 backdrop-blur-md px-12 py-10 rounded-3xl shadow-2xl border border-white/60 text-center max-w-xl w-full">
+    <div className="flex flex-col items-center justify-center h-full">
+      <h1 className="text-4xl md:text-5xl font-bold text-red-500 mb-6">
+        Attendance Marked
+      </h1>
+      <p className="text-lg md:text-xl text-gray-300 mb-8">
+        Attendance has been successfully marked.
+      </p>
+      <Button
+        variant="contained"
+        onClick={reset}
+        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded text-lg"
+        sx={{
+          backgroundColor: "#0ec1e7",
+          "&:hover": {
+            backgroundColor: "#0ea2e7",
+          },
+        }}
+      >
+        Go Back
+      </Button>
       </div>
+    </div>
+  </div>
     </div>
   );
 }

@@ -1,24 +1,53 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import DaysCard from "./DaysCard";
 import { useSelector } from "react-redux";
 import * as THREE from "three";
+import NET from "vanta/dist/vanta.net.min"; // ✅ Import Vanta NET effect
 
 function AttendanceCard() {
-  const {attendances} = useSelector(state=>state.dashboard.data)
-  
+  const { attendances } = useSelector((state) => state.dashboard.data);
+
+  const vantaRef = useRef(null);
+  const [vantaEffect, setVantaEffect] = useState(null);
+
+  // ✅ Vanta Background Initialization
+  useLayoutEffect(() => {
+    if (!vantaEffect) {
+      setVantaEffect(
+        NET({
+          el: vantaRef.current,
+          THREE: THREE,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          scale: 1.0,
+          scaleMobile: 1.0,
+          color: 0x0ec1e7,
+          backgroundColor: 0x000000,
+        })
+      );
+    }
+
+    return () => {
+      if (vantaEffect) vantaEffect.destroy();
+    };
+  }, [vantaEffect]);
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Vanta background */}
+      {/* ✅ Vanta background */}
       <div
         ref={vantaRef}
         className="fixed top-0 left-0 w-full h-full z-[-1]"
         style={{ zIndex: -1 }}
       />
 
-      {/* Foreground Attendance Card */}
-      <div className="relative z-10 w-full h-fit text-white p-5 mr-5">
-        <div className="bg-gray-900 border border-gray-600 rounded-2xl p-8 flex flex-col gap-8">
+      {/* ✅ Centered Foreground Attendance Card */}
+      <div className="relative z-10 w-full min-h-screen flex items-center justify-center text-white p-5">
+        <div className="bg-gray-900 border border-gray-600 rounded-2xl p-8 flex flex-col gap-8 w-full max-w-6xl">
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center mb-4">
               <div className="w-2 h-8 bg-[#0ec1e7] rounded-2xl"></div>

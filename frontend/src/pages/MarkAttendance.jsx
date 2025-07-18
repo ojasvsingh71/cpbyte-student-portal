@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react"; // ✅ Correct
 import SkeletonLoader from "../componenets/SkeletonLoader";
 import noimage from "../assets/noImage.webp";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; // ✅ Correct
+import React, { useEffect, useState, useRef } from "react";
 import SkeletonLoader from "../componenets/SkeletonLoader";
 import noimage from "../assets/noImage.webp";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,77 +28,50 @@ const MarkAttendance = () => {
   const vantaRef = useRef(null);
   const vantaEffect = useRef(null);
 
+  const markAllPresent = () => {
+    setToggleAll(!toggleAll);
+    if (!toggleAll) {
+      const updated = {};
+      permissionRequests.forEach((item) => {
+        updated[item.library_id] = "PRESENT";
+      });
+      setSelectedStatus(updated);
+    } else {
+      setSelectedStatus({});
+    }
+  };
+
   useEffect(() => {
-    let mounted = true;
-
-    const initVanta = async () => {
+    const loadVanta = async () => {
       try {
-        // Ensure THREE is globally available
-        if (typeof window !== 'undefined') {
-          window.THREE = THREE;
+        const VANTA = await import("vanta/dist/vanta.net.min");
+        if (!vantaEffect.current && vantaRef.current) {
+          vantaEffect.current = VANTA.default({
+            el: vantaRef.current,
+            THREE: THREE,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            color: 0xfff5,
+            backgroundColor: 0x0,
+            points: 20.0,
+            maxDistance: 10.0,
+            spacing: 20.0,
+            material: new THREE.LineBasicMaterial({
+              color: 0xfff5,
+              vertexColors: false,
+            }),
+          });
         }
-
-        // Wait for DOM to be ready
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        if (!mounted || !vantaRef.current) return;
-
-        // Dynamic import of Vanta NET
-        const VANTA = await import('vanta/dist/vanta.net.min');
-        
-        if (!mounted || !vantaRef.current) return;
-
-        // Destroy existing effect
-        if (vantaEffect.current) {
-          vantaEffect.current.destroy();
-          vantaEffect.current = null;
-        }
-
-        // Create new effect
-        vantaEffect.current = VANTA.default({
-          el: vantaRef.current,
-          THREE: THREE,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.0,
-          minWidth: 200.0,
-          scale: 1.0,
-          scaleMobile: 1.0,
-          color: 0x3ffff5,
-          backgroundColor: 0x0a0a0a,
-          points: 15.0,
-          maxDistance: 20.0,
-          spacing: 15.0,
-        });
-
-        console.log('Vanta animation initialized successfully');
-
       } catch (error) {
-        console.error('Failed to initialize Vanta:', error);
+        console.error("Failed to load Vanta animation:", error);
       }
     };
 
-    initVanta();
-
-    // Handle window resize
-    const handleResize = () => {
-      if (vantaEffect.current && vantaEffect.current.resize) {
-        vantaEffect.current.resize();
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
+    loadVanta();
     return () => {
-      mounted = false;
-      window.removeEventListener('resize', handleResize);
       if (vantaEffect.current) {
-        try {
-          vantaEffect.current.destroy();
-        } catch (e) {
-          console.warn('Error destroying Vanta effect:', e);
-        }
+        vantaEffect.current.destroy();
         vantaEffect.current = null;
       }
     };
@@ -107,36 +80,35 @@ const MarkAttendance = () => {
   const confirmToast = (present, absent, excused) =>
     new Promise((resolve) => {
       toast.custom((t) => (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#1c1c1c] text-white p-6 rounded-2xl shadow-2xl w-[90vw] max-w-md border border-white/20 backdrop-blur-md z-50">
-          <h3 className="text-lg font-semibold mb-2">Confirm Attendance Submission</h3>
-          <p className="text-sm mb-1">Present: {present}</p>
-          <p className="text-sm mb-1">Absent: {absent}</p>
-          <p className="text-sm mb-3">Excused: {excused}</p>
-          <div className="flex justify-end gap-2">
-            <button
-              onClick={() => {
-                toast.dismiss(t.id);
-                resolve(false);
-              }}
-              className="bg-gray-600 hover:bg-gray-700 text-sm px-4 py-2 rounded-xl transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                toast.dismiss(t.id);
-                resolve(true);
-              }}
-              className="bg-[#0ec1e7] hover:bg-[#0ea2e7] text-sm px-4 py-2 rounded-xl transition-colors"
-            >
-              Confirm
-            </button>
+        <div className="fixed top-0 left-0 w-screen h-screen z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-[#212327] text-white p-6 rounded-2xl shadow-2xl w-[95vw] max-w-3xl border border-white/10">
+            <h3 className="text-3xl font-semibold mb-6">Confirm Attendance Submission</h3>
+            <p className="text-xl mb-2">Present: {present}</p>
+            <p className="text-xl mb-2">Absent: {absent}</p>
+            <p className="text-xl mb-4">Excused: {excused}</p>
+            <div className="flex justify-end gap-4 mt-4">
+              <button
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  resolve(false);
+                }}
+                className="bg-gray-600 hover:bg-gray-700 text-sm px-5 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  resolve(true);
+                }}
+                className="bg-[#0ec1e7] hover:bg-[#0ea2e7] text-sm px-5 py-2 rounded-lg"
+              >
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
-      ), {
-        duration: Infinity,
-        position: 'top-center',
-      });
+      ));
     });
 
   const handleSubmit = async (e) => {
@@ -192,19 +164,6 @@ const MarkAttendance = () => {
     }));
   };
 
-  const markAllPresent = () => {
-    setToggleAll(!toggleAll);
-    if (!toggleAll) {
-      const updated = {};
-      permissionRequests.forEach((item) => {
-        updated[item.library_id] = "PRESENT";
-      });
-      setSelectedStatus(updated);
-    } else {
-      setSelectedStatus({});
-    }
-  };
-
   useEffect(() => {
     setLoading(true);
     setDSA(subject);
@@ -220,30 +179,24 @@ const MarkAttendance = () => {
 
   if (role !== "COORDINATOR") {
     return (
-      <VantaBackground>
-        <div className="text-white min-h-screen w-full p-4 md:p-8 flex items-center justify-center">
-          <div className="flex flex-col items-center justify-center">
-            <h1 className="text-3xl font-bold text-red-500 mb-2">403</h1>
-            <p className="text-base text-gray-300">You are not authorized to access this page.</p>
-          </div>
+      <div className="text-white min-h-screen w-full p-4 md:p-8 bg-[#070b0f]">
+        <div className="flex flex-col items-center justify-center h-full">
+          <h1 className="text-3xl font-bold text-red-500 mb-2">403</h1>
+          <p className="text-base text-gray-300">You are not authorized to access this page.</p>
         </div>
-      </VantaBackground>
+      </div>
     );
   }
 
   return (
-    <div 
-      ref={vantaRef}
-      className="min-h-screen w-full text-white p-4 md:p-8 relative pb-16"
-      style={{
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%)',
-        minHeight: '100vh',
-        width: '100%',
-        position: 'relative'
-      }}
-    >
-        {/* User Profile Card */}
-        <div className="absolute top-6 right-6 bg-[#1c1c1c]/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2 shadow z-10">
+    <div className="relative min-h-screen w-full text-white pb-16 overflow-hidden">
+      <div
+        ref={vantaRef}
+        className="fixed inset-0 z-0 w-full h-full"
+      />
+      
+      <div className="relative z-10 p-4 md:p-8 min-h-screen">
+        <div className="absolute top-6 right-6 bg-[#1c1c1c]/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2 shadow z-10">
           <div className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">
             {name?.charAt(0)?.toUpperCase() || "C"}
           </div>
@@ -253,7 +206,6 @@ const MarkAttendance = () => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="relative z-10">
           <div className="mb-6">
             <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
@@ -267,7 +219,7 @@ const MarkAttendance = () => {
               <div className="inline-block mb-2 px-4 py-1 rounded-md bg-[#0ec1e7] text-black font-semibold text-sm shadow">
                 {DSA ? "DSA Attendance" : "DEV Attendance"}
               </div>
-
+              
               <p className="text-sm text-gray-300 mt-2 mb-6">
                 {permissionRequests.length} {DSA ? "DSA" : "DEV"} Members
                 <br />
@@ -280,7 +232,7 @@ const MarkAttendance = () => {
           {isMarked === 0 && <MarkAttendanceProtector setIsMarked={setIsMarked} />}
           
           {isMarked === 1 && (
-            <div className="rounded-xl overflow-hidden border border-white/10 bg-[#1c1c1c]/80 backdrop-blur-md shadow-lg">
+            <div className="rounded-xl overflow-hidden border border-white/10 bg-[#1c1c1c]/40 backdrop-blur-md shadow-lg">
               <div className="flex justify-between items-center p-4">
                 <div className="text-lg font-semibold">Mark all present</div>
                 <input
@@ -387,6 +339,7 @@ const MarkAttendance = () => {
           
           {isMarked === 2 && <AttendanceAlreadyMarked setIsMarked={setIsMarked} />}
         </div>
+      </div>
     </div>
   );
 };

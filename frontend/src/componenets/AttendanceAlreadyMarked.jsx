@@ -36,42 +36,26 @@ function AttendanceCard() {
     };
   }, [vantaEffect]);
 
-  return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      {/* ✅ Vanta background */}
-      <div
-        ref={vantaRef}
-        className="fixed top-0 left-0 w-full h-full z-[-1]"
-        style={{ zIndex: -1 }}
-      />
-
-      {/* Foreground Attendance Card */}
-      <div className="relative z-10 w-full h-fit text-white p-5 mr-5">
-        <div className="bg-gray-900 border border-gray-600 rounded-2xl p-8 flex flex-col gap-8">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2 items-center mb-4">
-              <div className="w-2 h-8 bg-[#0ec1e7] rounded-2xl"></div>
-              <span className="text-white text-2xl">Attendance History</span>
+    return (
+        <div className="bg-[#070b0f] text-white min-h-screen w-full p-2 md:p-8 mt">
+            <div className="p-2 md:p-4 mt-14 md:mt-0">
+                <div className="flex flex-col items-center justify-center h-full">
+                    <h1 className="text-3xl md:text-4xl font-bold text-red-500 mb-4">Attendance Marked</h1>
+                    <p className="text-base md:text-lg text-gray-300 mb-6">
+                        Attendance has been successfully marked.
+                    </p>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => reset()}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                    >
+                        Go Back
+                    </Button>
+                </div>
             </div>
-            <div className="flex gap-2 p-1 px-4 rounded-lg justify-center items-center border border-zinc-500 cursor-pointer">
-              <FaFilter /> <span>Filter</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {attendances?.map((day, index) => (
-              <DaysCard
-                key={index}
-                date={new Date(day.date).toDateString()}
-                subject={day.subject}
-                status={day.status}
-              />
-            ))}
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default AttendanceCard;

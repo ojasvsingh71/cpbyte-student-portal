@@ -85,6 +85,7 @@ const Leaderboard = () => {
   }, [users, selectedLanguage, selectedYear]);
 
   return (
+
     <div className="relative min-h-screen w-full bg-black">
       <div ref={vantaRef} className="fixed inset-0 z-0"/>
       
@@ -195,6 +196,7 @@ const Leaderboard = () => {
                               </h1>
                             </div>
                           </div>
+
                         </div>
                       )
                   )}

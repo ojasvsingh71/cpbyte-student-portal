@@ -13,6 +13,7 @@ function LoginPage() {
   const dispatch = useDispatch();
   const { error, loading } = useSelector(state => state.authSlice);
 
+
   const vantaRef = useRef(null);
   const vantaEffect = useRef(null);
 
@@ -141,6 +142,7 @@ function LoginPage() {
       </div>
     </div>
   );
+
 }
 
 export default LoginPage;

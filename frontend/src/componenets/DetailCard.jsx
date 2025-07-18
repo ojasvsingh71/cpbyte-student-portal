@@ -3,7 +3,7 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiBattleGear } from "react-icons/gi";
 import { DiCodeigniter } from "react-icons/di";
 import { PiChalkboardTeacherBold } from "react-icons/pi";
-import noimage from "../../public/noImage.webp";
+import noimage from "../assets/noImage.webp";
 import { useSelector } from 'react-redux';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';

@@ -17,33 +17,36 @@ import Leaderboard from './pages/Leaderboard'
 import TargetUserDashboard from './pages/TargetUserDashboard'
 
 function App() {
-
   return (
     <>
-    <Routes>
-      <Route path="/login" element={<LoginPage/>} />
-      <Route path="/" element={<UnauthProtected>
-        <UserLayout/>
-      </UnauthProtected>}>
-
-          <Route path="" element={<UserDashboard/>} />
-          <Route path="Schedule" element={<UserSchedule/>} />
-          <Route path="Attendance" element={<MarkAttendance/>} />
-          <Route path="Settings" element={<UserSettings/>} />
-          <Route path='Tracker' element={<TrackerDashboard/>} />
-          <Route path={`Tracker/:library_id`} element={<TargetUserDashboard/>} />
-          <Route path='Leaderboard' element={<Leaderboard/>}/>
-          <Route path='ManageTracker' element={<TrackerManagement/>}>
-            <Route path='AddProject' element={<AddProject/>}/>
-            <Route path='RemoveProject' element={<RemoveProject/>}/>
-            <Route path='SkillManagement' element={<SkillManagement/>}/>
-            <Route path='' element={<AddPlatforms/>}/>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <UnauthProtected>
+              <UserLayout />
+            </UnauthProtected>
+          }
+        >
+          <Route path="" element={<UserDashboard />} />
+          <Route path="Schedule" element={<UserSchedule />} />
+          <Route path="Attendance" element={<MarkAttendance />} />
+          <Route path="Settings" element={<UserSettings />} />
+          
+          <Route path="Tracker" element={<TrackerDashboard />} />
+          <Route path="Tracker/:library_id" element={<TargetUserDashboard />} />
+          <Route path="Leaderboard" element={<Leaderboard />} />
+          <Route path="ManageTracker" element={<TrackerManagement />}>
+            <Route path="AddProject" element={<AddProject />} />
+            <Route path="RemoveProject" element={<RemoveProject />} />
+            <Route path="SkillManagement" element={<SkillManagement />} />
+            <Route path="" element={<AddPlatforms />} />
           </Route>
-       </Route>
-    </Routes>
-
+        </Route>
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

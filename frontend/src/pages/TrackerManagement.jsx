@@ -15,37 +15,36 @@ function TrackerManagement() {
       let isMounted = true;
   
       const loadVanta = async () => {
-        const VANTA = await import('vanta/dist/vanta.net.min');
-  
-        if (isMounted && !vantaEffect.current) {
-          vantaEffect.current = VANTA.default({
-            el: vantaRef.current,
-            THREE: THREE,
-            mouseControls: false,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0xfff5,
-            backgroundColor: 0x000000,
-            points: 20.00,
-            maxDistance: 10.00,
-            spacing: 20.00
-          });
-        }
-      };
-  
-      loadVanta();
-  
-      return () => {
-        isMounted = false;
-        if (vantaEffect.current) {
-          vantaEffect.current.destroy();
-        }
-      };
-    }, []);
+            const VANTA = await import("vanta/dist/vanta.net.min");
+      
+            if (isMounted && !vantaEffect.current) {
+              vantaEffect.current = VANTA.default({
+                el: vantaRef.current,
+                THREE: THREE,
+                mouseControls: false,
+                touchControls: false,
+                gyroControls: false,
+                minHeight: 200.0,
+                minWidth: 200.0,
+                scale: 1.0,
+                scaleMobile: 1.0,
+                color: 0xfff5,
+                backgroundColor: 0x0,
+                points: 20.0,
+                maxDistance: 10.0,
+                spacing: 20.0,
+              });
+            }
+          };
+      
+          loadVanta();
+      
+          return () => {
+            isMounted = false;
+            if (vantaEffect.current) vantaEffect.current.destroy();
+          };
+        }, []);
+      
       
     useEffect(()=>{
     if(vantaEffect.current){

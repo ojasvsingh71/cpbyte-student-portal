@@ -48,6 +48,8 @@ function MarkAttendanceProtector({ setIsMarked }) {
     } else if (!data.marked) {
       setIsMarked(1);
     }
+    console.log(data);
+    
   }, [data]);
   
   useEffect(() => {
@@ -58,9 +60,9 @@ function MarkAttendanceProtector({ setIsMarked }) {
   }, []);
 
   return (
-    <div className="p-2 md:p-4 mt-14 md:mt-0 flex flex-col justify-center items-center text-center">
+    <div className="p-2 md:p-4 mt-14 md:mt-0 flex h-[70vh] justify-center items-center text-center">
       {/* 🔹 Glassmorphic Card */}
-      <div className="backdrop-blur-xl bg-white/10 p-8 rounded-2xl shadow-2xl w-[90%] max-w-md text-white border border-white/20">
+      <div className="bg-[#000000b2] p-8 rounded-2xl shadow-2xl w-[90%] max-w-md text-white border border-white/20">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <h2 className="text-3xl font-bold text-center mb-6">
             Mark Attendance

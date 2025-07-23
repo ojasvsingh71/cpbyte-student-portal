@@ -23,7 +23,7 @@ function DetailCard() {
         </defs>
       </svg>
 
-      <div className="rounded-2xl border border-gray-700 p-4 md:p-8 flex flex-col gap-6 shadow-[0_0_20px_rgba(14,193,231,0.15)]">
+      <div className="rounded-2xl border bg-[#000000b2] border-gray-700 p-4 md:p-8 flex flex-col gap-6 shadow-[0_0_20px_rgba(14,193,231,0.15)]">
         <div className="flex gap-2 items-center mb-2 md:mb-4">
           <div className="w-2 h-8 bg-[#0ec1e7] rounded-2xl"></div>
           <span className="text-white text-lg md:text-2xl font-bold">Detail Member</span>

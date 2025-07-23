@@ -189,7 +189,7 @@ const MarkAttendance = () => {
   }
 
   return (
-    <div className="relative min-h-screen w-full text-white pb-16 overflow-hidden">
+    <div className="relative min-h-screen w-full text-white pb-16 overflow-hidden bg-gray-950">
       <div
         ref={vantaRef}
         className="fixed inset-0 z-0 w-full h-full"
@@ -215,7 +215,8 @@ const MarkAttendance = () => {
           </div>
 
           {isMarked === 1 && (
-            <>
+            <div className="flex justify-between w-full items-center">
+              <div>
               <div className="inline-block mb-2 px-4 py-1 rounded-md bg-[#0ec1e7] text-black font-semibold text-sm shadow">
                 {DSA ? "DSA Attendance" : "DEV Attendance"}
               </div>
@@ -226,14 +227,8 @@ const MarkAttendance = () => {
                 Attendance for Date:{" "}
                 <span className="font-medium">{new Date().toDateString()}</span>
               </p>
-            </>
-          )}
-
-          {isMarked === 0 && <MarkAttendanceProtector setIsMarked={setIsMarked} />}
-          
-          {isMarked === 1 && (
-            <div className="rounded-xl overflow-hidden border border-white/10 bg-[#1c1c1c]/40 backdrop-blur-md shadow-lg">
-              <div className="flex justify-between items-center p-4">
+              </div>
+              <div className="flex gap-2 items-center p-4">
                 <div className="text-lg font-semibold">Mark all present</div>
                 <input
                   type="checkbox"
@@ -243,31 +238,36 @@ const MarkAttendance = () => {
                 />
               </div>
 
+
+            </div>
+          )}
+
+          {isMarked === 0 && <MarkAttendanceProtector setIsMarked={setIsMarked} />}
+          
+          {isMarked === 1 && (
+            <div className="rounded-xl overflow-hidden border border-white/10 bg-[#1c1c1c]/40 backdrop-blur-md shadow-lg">
               {loading ? (
                 <SkeletonLoader />
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                      <thead className="bg-[#2c2f34] text-gray-300 text-sm font-medium">
-                        <tr>
-                          <th className="px-4 py-2 w-12">S No.</th>
-                          <th className="px-4 py-2">Member</th>
-                          <th className="px-4 py-2">Library ID</th>
-                          <th className="px-4 py-2">Attended</th>
-                          <th className="px-4 py-2">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {permissionRequests
+                  <div className="max-h-[600px] overflow-y-auto border border-[#2c2f34] rounded">
+                      <table className="min-w-full text-sm text-left text-white">
+                        <thead className="sticky top-0 bg-[#1f1f1f] z-10">
+                          <tr>
+                            <th className="px-4 py-2">S No.</th>
+                            <th className="px-4 py-2">Name</th>
+                            <th className="px-4 py-2">Library ID</th>
+                            <th className="px-4 py-2">Attendance</th>
+                            <th className="px-4 py-2">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#2c2f34]">
+                          {permissionRequests
                           .filter((req) => req && req.name && req.library_id)
                           .map((req, idx) => (
-                            <tr
-                              key={req.library_id}
-                              className="border-b border-[#2c2f34]"
-                            >
-                              <td className="px-4 py-2">{idx + 1}</td>
-                              <td className="px-4 py-2 flex items-center gap-2">
+                            <tr key={req.library_id} className="border-b border-[#2c2f34]">
+                              <td className="px-4 py-4">{idx + 1}</td>
+                              <td className="px-4 py-4 flex items-center gap-2">
                                 <img
                                   src={noimage}
                                   className="h-6 w-6 rounded-full object-cover"
@@ -275,44 +275,40 @@ const MarkAttendance = () => {
                                 />
                                 {req.name}
                               </td>
-                              <td className="px-4 py-2">{req.library_id}</td>
-                              <td className="px-4 py-2">
+                              <td className="px-4 py-4">{req.library_id}</td>
+                              <td className="px-4 py-4">
                                 {DSA ? req.dsaAttendance : req.devAttendance}%
                               </td>
-                              <td className="px-4 py-2">
+                              <td className="px-4 py-4">
                                 <div className="flex gap-2 flex-wrap">
-                                  {[
-                                    "PRESENT",
-                                    "ABSENT_WITHOUT_REASON",
-                                    "ABSENT_WITH_REASON",
-                                  ].map((status) => {
-                                    const isSelected =
-                                      selectedStatus[req.library_id] === status;
-                                    let bg = {
-                                      PRESENT: isSelected
-                                        ? "bg-green-600"
-                                        : "bg-green-900",
-                                      ABSENT_WITHOUT_REASON: isSelected
-                                        ? "bg-red-600"
-                                        : "bg-red-900",
-                                      ABSENT_WITH_REASON: isSelected
-                                        ? "bg-blue-600"
-                                        : "bg-blue-900",
-                                    }[status];
+                                  {["PRESENT", "ABSENT_WITHOUT_REASON", "ABSENT_WITH_REASON"].map(
+                                    (status) => {
+                                      const isSelected =
+                                        selectedStatus[req.library_id] === status;
+                                      let bg = {
+                                        PRESENT: isSelected ? "bg-green-600" : "bg-green-900",
+                                        ABSENT_WITHOUT_REASON: isSelected
+                                          ? "bg-red-600"
+                                          : "bg-red-900",
+                                        ABSENT_WITH_REASON: isSelected
+                                          ? "bg-blue-600"
+                                          : "bg-blue-900",
+                                      }[status];
 
-                                    return (
-                                      <button
-                                        key={status}
-                                        type="button"
-                                        onClick={() =>
-                                          handleStatusChange(req.library_id, status)
-                                        }
-                                        className={`text-xs px-2 py-1 rounded text-white ${bg} hover:opacity-80 transition-opacity`}
-                                      >
-                                        {status.replace(/_/g, " ")}
-                                      </button>
-                                    );
-                                  })}
+                                      return (
+                                        <button
+                                          key={status}
+                                          type="button"
+                                          onClick={() =>
+                                            handleStatusChange(req.library_id, status)
+                                          }
+                                          className={`text-xs px-2 py-1 rounded text-white ${bg} hover:opacity-80 transition-opacity`}
+                                        >
+                                          {status.replace(/_/g, " ")}
+                                        </button>
+                                      );
+                                    }
+                                  )}
                                 </div>
                               </td>
                             </tr>

@@ -32,13 +32,13 @@ function AttendanceCard() {
 
   return (
     <div className='w-full h-fit p-5 mr-5'>
-      <div className='bg-transparent rounded-2xl border border-gray-600 p-4 md:p-8 flex flex-col gap-4 shadow-lg hover:shadow-[0_0_15px_rgba(14,193,231,0.4)] transition-all duration-300'>
+      <div className='bg-[#000000b2] rounded-2xl border border-gray-600 p-4 md:p-8 flex flex-col gap-4 shadow-lg hover:shadow-[0_0_15px_rgba(14,193,231,0.4)] transition-all duration-300'>
 
         {/* Header */}
         <div className='flex justify-between items-center'>
           <div className='flex gap-3 items-center'>
             <div className='w-2 h-8 bg-gradient-to-b from-[#0ec1e7] to-[#0ec1e7] rounded-2xl'></div>
-            <span className='text-white text-2xl font-semibold bg-gradient-to-r from-[#0ec1e7] to-[#7ef9ff] bg-clip-text text-transparent'>
+            <span className='text-white text-2xl font-semibold bg-gradient-to-r from-[#0ec1e7] to-[#7ef9ff] bg-clip-text'>
               Attendance History
             </span>
           </div>

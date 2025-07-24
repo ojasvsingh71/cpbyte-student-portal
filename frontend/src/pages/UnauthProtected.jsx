@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { FiLoader } from 'react-icons/fi'
+import load from '../assets/Animation - 1751523503507.webm'
 import { userProfile } from '../redux/slices/profileSlice'
 import { getMembersOfDomain } from '../redux/slices/getDomainUserSlice'
 import { getTrackerDataOfUser } from "../redux/slices/TrackerSlice";
@@ -54,7 +54,7 @@ function UnauthProtected({children}) {
     if(isloading) {
       return (
           <div className="flex justify-center items-center h-screen bg-gray-950">
-              <FiLoader size={40} color='white' className='animate-spin'/>
+              <video src={load} autoPlay muted loop></video>
           </div>
       )
     }else{

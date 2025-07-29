@@ -130,7 +130,7 @@ const UserSchedule = () => {
   return (
     <div ref={vantaRef} className="flex items-center justify-center min-h-screen w-full bg-gray-950">
       <div className="pt-16 text-gray-100 p-2 md:p-4 w-full py-6 md:py-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <header className="mb-4 md:mb-8">
             <div className="flex justify-between items-center mb-4 md:mb-6">
               <div className="flex items-center space-x-2">
@@ -155,7 +155,7 @@ const UserSchedule = () => {
             </div>
           </header>
           {/* Weekday Names Row */}
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4">
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-4">
             <div className="w-full md:w-[75%]">
               <div className="grid grid-cols-7 gap-1 mb-1 md:mb-2">
                 {weekdays.map((day, index) => {

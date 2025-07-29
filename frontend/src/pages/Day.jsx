@@ -47,7 +47,7 @@ function Day({
       ? event[formatMonthKey(currentMonth)][dateKey] || []
       : [];
 
-  const cellHeightClass = isMobile ? "h-14 md:h-24" : "h-24";
+  const cellHeightClass = isMobile ? "h-20 md:h-24" : "h-24";
 
   return (
     <div
@@ -57,7 +57,7 @@ function Day({
       onClick={() => day && setSelectedDate(day)}
     >
       {day && (
-        <div className="relative group w-full h-full">
+        <div className="relative -z-2 group w-full h-full backdrop-blur cursor-pointer">
           {/* Date Number */}
           <div
             className={`text-xs p-1 rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center mx-auto ${
@@ -88,7 +88,7 @@ function Day({
 
           {/* Hover Tooltip for Remaining Events */}
           {dayEvents.length > 2 && (
-            <div className="absolute z-10 hidden group-hover:flex flex-col bg-gray-900 text-white text-xs p-2 rounded-lg shadow-lg top-10 left-1/2 -translate-x-1/2 w-max max-w-[150px]">
+            <div className="absolute z-10 hidden group-hover:flex flex-col bg-gray-900 text-white text-xs p-2 rounded-lg shadow-lg top-1/2 left-1/2 -translate-x-1/2 w-max max-w-[150px]">
               {dayEvents.map((event) => {
                 const randomColor =
                   colorClasses[event.id.charCodeAt(0) % colorClasses.length];

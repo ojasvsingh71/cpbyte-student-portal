@@ -195,7 +195,7 @@ const MarkAttendance = () => {
         className="fixed inset-0 z-0 w-full h-full"
       />
       
-      <div className="relative z-10 p-4 md:p-8 min-h-screen">
+      <div className="relative z-10 p-4 mt-10 md:mt-0 md:p-8 min-h-screen">
         <div className="absolute top-6 right-6 bg-[#1c1c1c]/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2 shadow z-10">
           <div className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">
             {name?.charAt(0)?.toUpperCase() || "C"}

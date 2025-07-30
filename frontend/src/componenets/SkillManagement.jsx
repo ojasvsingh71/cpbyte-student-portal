@@ -64,32 +64,37 @@ function SkillManagement() {
         Update your skill set to showcase your expertise.
       </p>
       <div className="rounded-lg p-6 w-full flex flex-col space-y-6 border border-gray-800 backdrop-blur-2xl shadow-2xl">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
-          <LucidePenLine className="text-2xl text-blue-500" />
-          <label
-            htmlFor="skill"
-            className="text-lg font-semibold text-gray-200"
-          >
-            Add a New Skill
-          </label>
-          <input
-            type="text"
-            id="skill"
-            value={newSkill}
-            placeholder="Enter a skill..."
-            className="flex h-12 w-full sm:w-1/3 rounded-lg disabled:cursor-not-allowed disabled:opacity-50  bg-white  border border-gray-700  px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500   dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400  "
-            onChange={(e) => setNewSkill(e.target.value)}
+        <div className="flex flex-col space-y-4 sm:space-y-6">
+  {/* Header Section */}
+  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
+    <LucidePenLine className="text-xl sm:text-2xl text-blue-500 flex-shrink-0" />
+    <label
+      htmlFor="skill"
+      className="text-base sm:text-lg font-semibold text-gray-200"
+    >
+      Add a New Skill
+    </label>
+  </div>
 
-    
-          />
-          <button
-            onClick={() => addSkills()}
-            disabled={disable}
-            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-600 h-12 px-6 py-2 shadow-md cursor-pointer"
-          >
-            Add Skill
-          </button>
-        </div>
+  {/* Input Section */}
+  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+    <input
+      type="text"
+      id="skill"
+      value={newSkill}
+      placeholder="Enter a skill..."
+      className="flex h-12 w-full sm:flex-1 lg:w-80 xl:w-96 rounded-lg disabled:cursor-not-allowed disabled:opacity-50 bg-white border border-gray-700 px-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent dark:focus:ring-gray-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400 transition-all duration-200"
+      onChange={(e) => setNewSkill(e.target.value)}
+    />
+    <button
+      onClick={() => addSkills()}
+      disabled={disable}
+      className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 bg-blue-600 text-white hover:bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-600 dark:disabled:bg-blue-800 h-12 px-6 py-2 shadow-md whitespace-nowrap"
+    >
+      Add Skill
+    </button>
+  </div>
+</div>
         <div className="flex flex-wrap gap-4">
           {skills.map((skill, index) => (
             <div

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiGithub, SiLeetcode } from "react-icons/si";
 import { LuPenLine } from "react-icons/lu";
 import { Link } from "react-router-dom";
@@ -15,7 +14,6 @@ import GitContribution from "../assets/GitContribution.png";
 import streak from "../assets/streak.png";
 import Ranking from "../assets/Ranking.png";
 import pr from "../assets/pull-request.png";
-import trophy from "../assets/trophy.png";
 import fork from "../assets/code-fork.png";
 import link from "../assets/Link.jpg";
 
@@ -78,20 +76,6 @@ function TrackerDashboard() {
               Hello, {data?.name}
             </h1>
             <p className="text-sm text-gray-400">Today is {date}</p>
-          </div>
-          <div className="flex space-x-5">
-            <span className="cursor-pointer hover:opacity-80 transition-opacity">
-              <FaInstagram color="white" size={"1.5rem"} />
-            </span>
-            <span className="cursor-pointer hover:opacity-80 transition-opacity">
-              <FaFacebook color="white" size={"1.5rem"} />
-            </span>
-            <span className="cursor-pointer hover:opacity-80 transition-opacity">
-              <FaLinkedin color="white" size={"1.5rem"} />
-            </span>
-            <span className="cursor-pointer hover:opacity-80 transition-opacity">
-              <FaTwitter color="white" size={"1.5rem"} />
-            </span>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
@@ -170,99 +154,122 @@ function TrackerDashboard() {
             </h2>
             <div className="border-t border-gray-600 my-4" />
 
-            {/* Text Content */}
             <div className="flex flex-col lg:flex-row justify-between items-center w-full my-4 md:my-5 md:mb-10 gap-4">
-              <div className="space-y-8 text-base font-semibold md:text-xl ml-10">
-                <div className="text-[#00e676]">
+              <div className="space-y-8 text-base flex lg:flex-col flex-row justify-between w-full font-semibold md:text-xl px-10">
+                <div className="text-[#00e676] flex">
                   Easy:
                   <div className="text-white">{data?.leetcode.easy}</div>
                 </div>
-                <div className="text-[#ff9100]">
+                <div className="text-[#ff9100] flex">
                   Medium:
                   <div className="text-white">{data?.leetcode.medium}</div>
                 </div>
-                <div className="text-[#f44336]">
+                <div className="text-[#f44336] flex">
                   Hard:
                   <div className="text-white">{data?.leetcode.hard}</div>
                 </div>
               </div>
 
-              <div className="w-56 h-56 mr-25">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    {/**Prepare pie chart data (filter out 0 values)*/}
-                    {(() => {
-                      const pieData = [
-                        {
-                          name: "Easy",
-                          value: data?.leetcode.easy || 0,
-                          fill: "#00e676",
-                        },
-                        {
-                          name: "Medium",
-                          value: data?.leetcode.medium || 0,
-                          fill: "#ff9100",
-                        },
-                        {
-                          name: "Hard",
-                          value: data?.leetcode.hard || 0,
-                          fill: "#f44336",
-                        },
-                      ].filter((item) => item.value > 0);
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+  <div className="aspect-square w-full">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        {(() => {
+          const pieData = [
+            {
+              name: "Easy",
+              value: data?.leetcode.easy || 0,
+              fill: "#00e676",
+            },
+            {
+              name: "Medium",
+              value: data?.leetcode.medium || 0,
+              fill: "#ff9100",
+            },
+            {
+              name: "Hard",
+              value: data?.leetcode.hard || 0,
+              fill: "#f44336",
+            },
+          ].filter((item) => item.value > 0);
 
-                      return (
-                        <Pie
-                          data={pieData}
-                          dataKey="value"
-                          innerRadius={48}
-                          outerRadius={65}
-                          paddingAngle={5}
-                          cornerRadius={5}
-                          stroke="none"
-                          labelLine={true}
-                          /* Add space between label values and line pointing to the pie */
-                          label={({
-                            cx,
-                            cy,
-                            midAngle,
-                            outerRadius,
-                            value,
-                            fill,
-                          }) => {
-                            const RADIAN = Math.PI / 180;
-                            const offset = 30;
-                            const x =
-                              cx +
-                              (outerRadius + offset) *
-                                Math.cos(-midAngle * RADIAN);
-                            const y =
-                              cy +
-                              (outerRadius + offset) *
-                                Math.sin(-midAngle * RADIAN);
+          const getResponsiveSizes = () => {
+            return {
+              innerRadius: "35%", 
+              outerRadius: "65%", 
+              labelOffset: 25,
+              fontSize: 12,
+            };
+          };
 
-                            return (
-                              <text
-                                x={x}
-                                y={y}
-                                fill={fill}
-                                fontSize={14}
-                                textAnchor="middle"
-                                dominantBaseline="central"
-                              >
-                                {value}
-                              </text>
-                            );
-                          }}
-                        >
-                          {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.fill} />
-                          ))}
-                        </Pie>
-                      );
-                    })()}
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+          const { innerRadius, outerRadius, labelOffset, fontSize } = getResponsiveSizes();
+
+          return (
+            <Pie
+              data={pieData}
+              dataKey="value"
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+              paddingAngle={5}
+              cornerRadius={5}
+              stroke="none"
+              labelLine={false}
+              label={({
+                cx,
+                cy,
+                midAngle,
+                outerRadius: pieOuterRadius,
+                value,
+                fill,
+              }) => {
+                const RADIAN = Math.PI / 180;
+                const radius = typeof pieOuterRadius === 'string' 
+                  ? Math.min(cx, cy) * 0.65 // Fallback calculation
+                  : pieOuterRadius;
+                
+                const x = cx + (radius + labelOffset) * Math.cos(-midAngle * RADIAN);
+                const y = cy + (radius + labelOffset) * Math.sin(-midAngle * RADIAN);
+
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    fill={fill}
+                    fontSize={fontSize}
+                    fontWeight="600"
+                    textAnchor={x > cx ? 'start' : 'end'}
+                    dominantBaseline="central"
+                    className="drop-shadow-sm"
+                  >
+                    {value}
+                  </text>
+                );
+              }}
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.fill} />
+              ))}
+            </Pie>
+          );
+        })()}
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+  <div className="flex justify-center gap-4 mt-4 flex-wrap">
+    <div className="flex items-center gap-2">
+      <div className="w-3 h-3 rounded-full bg-green-400"></div>
+      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Easy</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <div className="w-3 h-3 rounded-full bg-orange-400"></div>
+      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Medium</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Hard</span>
+    </div>
+  </div>
+</div>
             </div>
 
             <h2 className="flex items-center gap-2">

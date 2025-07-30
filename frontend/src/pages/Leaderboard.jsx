@@ -92,13 +92,13 @@ const Leaderboard = () => {
       <div className="relative z-10 min-h-screen w-full">
         <div className="p-4 w-full lg:p-8 min-h-screen">
           <div className="flex flex-col items-center">
-            <h1 className="text-4xl font-extrabold my-4 text-center text-white drop-shadow-lg bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              Leaderboard 🚀
+            <h1 className="text-4xl font-extrabold my-4 text-center text-white drop-shadow-lg bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text">
+              Leaderboard 
             </h1>
             
             <div className="flex flex-wrap gap-4 justify-center mb-8">
               <select
-                className="px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+                className="px-4 py-2 rounded-lg cursor-pointer bg-[#000000b2] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
                 value={selectedLanguage}
                 onChange={(e) => setSelectedLanguage(e.target.value)}
               >
@@ -108,7 +108,7 @@ const Leaderboard = () => {
               </select>
 
               <select
-                className="px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+                className="px-4 py-2 rounded-lg cursor-pointer bg-[#000000b2] text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value === "All" ? "All" : parseInt(e.target.value))}
               >
@@ -124,15 +124,15 @@ const Leaderboard = () => {
               <LeaderboardSkeleton />  
             ) : (  
               <div className="w-full p-4 lg:px-0 lg:py-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full mb-12 px-4 sm:px-0">
                   {data?.map(
                     (item, index) =>
                       index < 3 && (
                         <div
                           key={item.id}
-                          className={`relative glow-card group w-full flex flex-col text-white rounded-xl p-5 backdrop-blur-sm bg-gradient-to-br ${
+                          className={`relative glow-card group w-full flex flex-col text-white rounded-xl p-4 sm:p-5 backdrop-blur-sm bg-gradient-to-br ${
                             index === 0
-                              ? "from-amber-500/10 to-amber-600/10 border border-amber-500/30"
+                              ? "from-amber-500/10 to-amber-600/10 border border-amber-500/30 sm:col-span-2 lg:col-span-1"
                               : index === 1
                               ? "from-gray-500/10 to-gray-600/10 border border-gray-500/30"
                               : "from-yellow-700/10 to-yellow-800/10 border border-yellow-700/30"
@@ -145,8 +145,8 @@ const Leaderboard = () => {
                             e.currentTarget.style.setProperty("--y", `${y}px`);
                           }}
                         >
-                         
-                          <div className="absolute top-4 right-4 w-14 h-14 flex items-center justify-center">
+                        
+                          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center z-10">
                             <div className={`absolute w-full h-full rounded-full ${
                               index === 0 ? "bg-amber-500/20" : 
                               index === 1 ? "bg-gray-500/20" : "bg-yellow-700/20"
@@ -154,12 +154,12 @@ const Leaderboard = () => {
                             <img 
                               src={trophy} 
                               alt="trophy" 
-                              className={`w-10 h-10 ${index === 0 ? "filter drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" : ""}`}
+                              className={`w-8 h-8 sm:w-10 sm:h-10 ${index === 0 ? "filter drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" : ""}`}
                             />
                           </div>
                           
-                          <div className="flex items-center gap-4 mb-5">
-                            <div className="w-14 h-14 rounded-full overflow-hidden flex items-center justify-center border-2 border-cyan-400/50">
+                          <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-5 pr-16 sm:pr-20">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden flex items-center justify-center border-2 border-cyan-400/50 flex-shrink-0">
                               <img
                                 src={item?.avatar || noimage}
                                 alt="avatar"
@@ -167,42 +167,42 @@ const Leaderboard = () => {
                               />
                             </div>
                             <Link
-                              to={`/u/dashboard/${item.library_id}`}
-                              className="font-bold text-xl hover:text-cyan-400 transition-colors"
+                              to={`/Tracker/${item.library_id}`}
+                              className="font-bold text-lg sm:text-xl hover:text-cyan-400 transition-colors truncate min-w-0 flex-1"
                             >
                               {item?.name}
                             </Link>
                           </div>
                           
                           <div className="grid grid-cols-3 gap-2 mt-auto">
-                            <div className="flex flex-col items-center p-3 bg-gray-900/50 rounded-lg">
-                              <h2 className="text-gray-400 text-sm font-medium">Rank</h2>
-                              <h1 className="text-white text-xl font-bold mt-1">
+                            <div className="flex flex-col items-center p-2 sm:p-3 bg-gray-900/50 rounded-lg">
+                              <h2 className="text-gray-400 text-xs sm:text-sm font-medium">Rank</h2>
+                              <h1 className="text-white text-lg sm:text-xl font-bold mt-1">
                                 {index + 1}
                               </h1>
                             </div>
-                            
-                            <div className="flex flex-col items-center p-3 bg-gray-900/50 rounded-lg">
-                              <h2 className="text-gray-400 text-sm font-medium">Total</h2>
-                              <h1 className="text-white text-xl font-bold mt-1">
+
+                            <div className="flex flex-col items-center p-2 sm:p-3 bg-gray-900/50 rounded-lg">
+                              <h2 className="text-gray-400 text-xs sm:text-sm font-medium">Total</h2>
+                              <h1 className="text-white text-lg sm:text-xl font-bold mt-1">
                                 {item?.solvedProblems}
                               </h1>
                             </div>
-                            
-                            <div className="flex flex-col items-center p-3 bg-gray-900/50 rounded-lg">
-                              <h2 className="text-gray-400 text-sm font-medium">Language</h2>
-                              <h1 className="text-white text-xl font-bold mt-1">
+
+                            <div className="flex flex-col items-center p-2 sm:p-3 bg-gray-900/50 rounded-lg">
+                              <h2 className="text-gray-400 text-xs sm:text-sm font-medium">Language</h2>
+                              <h1 className="text-white text-base sm:text-xl font-bold mt-1 truncate">
                                 {item?.language}
                               </h1>
                             </div>
                           </div>
-
+                          
                         </div>
                       )
                   )}
                 </div>
 
-                <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-700 overflow-hidden">
+                <div className="bg-[#000000b2] backdrop-blur-sm rounded-xl border border-gray-700 overflow-auto">
                   <table className="min-w-full">
                     <thead className="bg-gray-800">
                       <tr className="text-left">
@@ -213,13 +213,13 @@ const Leaderboard = () => {
                           Name
                         </th>
                         <th className="py-4 px-6 text-gray-300 text-sm font-bold uppercase tracking-wider">
+                          Total
+                        </th>
+                        <th className="py-4 px-6 text-gray-300 text-sm font-bold uppercase tracking-wider">
                           Year
                         </th>
                         <th className="py-4 px-6 text-gray-300 text-sm font-bold uppercase tracking-wider">
                           Language
-                        </th>
-                        <th className="py-4 px-6 text-gray-300 text-sm font-bold uppercase tracking-wider">
-                          Total
                         </th>
                         <th className="py-4 px-6 text-gray-300 text-sm font-bold uppercase tracking-wider">
                           Previous
@@ -230,7 +230,7 @@ const Leaderboard = () => {
                       {data?.map((item, index) => (
                         <tr 
                           key={item.id} 
-                          className="border-b border-gray-800 hover:bg-gray-800/50 transition-colors"
+                          className="border-b border-gray-800 hover:bg-[#141414b8] transition-colors"
                         >
                           <td className="py-4 px-6 text-white font-medium">
                             <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full ${
@@ -255,15 +255,18 @@ const Leaderboard = () => {
                                 />
                               </div>
                               <Link
-                                to={`/Tracker`}
-                                className="text-white hover:text-cyan-400 transition-colors"
+                                to={`/Tracker/${item?.library_id}`}
+                                className="text-white hover:text-cyan-400 transition-colors text-nowrap md:w-fit w-24 overflow-clip truncate"
                               >
                                 {item.name}
                               </Link>
                             </div>
                           </td>
+                          <td className="py-4 px-6 text-white font-bold">
+                            {item.solvedProblems}
+                          </td>
                           <td className="py-4 px-6 text-white">
-                            <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">
+                            <span className="bg-gray-800 px-3 py-1 rounded-full text-sm text-nowrap">
                               Year {item.year}
                             </span>
                           </td>
@@ -275,9 +278,6 @@ const Leaderboard = () => {
                             }`}>
                               {item.language}
                             </span>
-                          </td>
-                          <td className="py-4 px-6 text-white font-bold">
-                            {item.solvedProblems}
                           </td>
                           <td className="py-4 px-6">
                             <div className="flex gap-1">

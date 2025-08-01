@@ -49,8 +49,8 @@ const MarkAttendance = () => {
           vantaEffect.current = VANTA.default({
             el: vantaRef.current,
             THREE: THREE,
-            mouseControls: true,
-            touchControls: true,
+            mouseControls: false,
+            touchControls: false,
             gyroControls: false,
             color: 0xfff5,
             backgroundColor: 0x0,

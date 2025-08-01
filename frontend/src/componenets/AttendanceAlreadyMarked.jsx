@@ -22,8 +22,8 @@ function AttendanceAlreadyMarked({ setIsMarked }) {
         vantaEffect.current = VANTA.default({
           el: vantaRef.current,
           THREE: THREE,
-          mouseControls: true,
-          touchControls: true,
+          mouseControls: false,
+          touchControls: false,
           gyroControls: false,
           minHeight: 200.0,
           minWidth: 200.0,

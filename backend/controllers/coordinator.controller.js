@@ -197,7 +197,7 @@ export const updateStatus = asyncHandler(async (req, res) => {
   if (!date)
     throw new ResponseError("Date is required", 400);
 
-  const istDate = dayjs(date, "YYYY-MM-DD").tz("Asia/Kolkata").startOf("day").toDate();
+  const istDate = dayjs(date, "YYYY-MM-DD").tz("Asia/Kolkata").endOf("day").toDate();
 
   await prisma.attendanceLog.create({
     data: {

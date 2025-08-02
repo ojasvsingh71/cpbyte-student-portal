@@ -195,7 +195,7 @@ const MarkAttendance = () => {
         className="fixed inset-0 z-0 w-full h-full"
       />
       
-      <div className="relative z-10 p-4 mt-10 md:mt-0 md:p-8 min-h-screen">
+      <div className="relative z-10 p-4 mt-10 md:mt-0 md:p-8 flex flex-col items-center justify-center min-h-screen">
         <div className="absolute top-6 right-6 bg-[#1c1c1c]/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2 shadow z-10">
           <div className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">
             {name?.charAt(0)?.toUpperCase() || "C"}
@@ -206,7 +206,7 @@ const MarkAttendance = () => {
           </div>
         </div>
 
-        <div className="relative z-10">
+        <div className="w-full max-w-6xl relative z-10">
           <div className="mb-6">
             <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
               <div className="w-2 h-8 bg-[#0ec1e7] rounded-sm" />
@@ -215,18 +215,17 @@ const MarkAttendance = () => {
           </div>
 
           {isMarked === 1 && (
-            <div className="flex justify-between w-full items-center">
+            <div className="flex flex-col md:flex-row justify-between w-full items-start md:items-center">
               <div>
-              <div className="inline-block mb-2 px-4 py-1 rounded-md bg-[#0ec1e7] text-black font-semibold text-sm shadow">
-                {DSA ? "DSA Attendance" : "DEV Attendance"}
-              </div>
-              
-              <p className="text-sm text-gray-300 mt-2 mb-6">
-                {permissionRequests.length} {DSA ? "DSA" : "DEV"} Members
-                <br />
-                Attendance for Date:{" "}
-                <span className="font-medium">{new Date().toDateString()}</span>
-              </p>
+                <div className="inline-block mb-2 px-4 py-1 rounded-md bg-[#0ec1e7] text-black font-semibold text-sm shadow">
+                  {DSA ? "DSA Attendance" : "DEV Attendance"}
+                </div>
+                <p className="text-sm text-gray-300 mt-2 mb-6">
+                  {permissionRequests.length} {DSA ? "DSA" : "DEV"} Members
+                  <br />
+                  Attendance for Date:{" "}
+                  <span className="font-medium">{new Date().toDateString()}</span>
+                </p>
               </div>
               <div className="flex gap-2 items-center p-4">
                 <div className="text-lg font-semibold">Mark all present</div>
@@ -234,16 +233,14 @@ const MarkAttendance = () => {
                   type="checkbox"
                   onChange={markAllPresent}
                   checked={toggleAll}
-                  className="w-4 h-4 text-[#0ec1e7] bg-gray-700 border-gray-600 rounded focus:ring-[#0ec1e7]"
+                  className="w-4 h-4 text-[#0ec1e7] bg-gray-700 border-gray-600 rounded focus:ring-[#0ec1e7] cursor-pointer"
                 />
               </div>
-
-
             </div>
           )}
 
           {isMarked === 0 && <MarkAttendanceProtector setIsMarked={setIsMarked} />}
-          
+
           {isMarked === 1 && (
             <div className="rounded-xl overflow-hidden border border-white/10 bg-[#1c1c1c]/40 backdrop-blur-md shadow-lg">
               {loading ? (
@@ -251,36 +248,38 @@ const MarkAttendance = () => {
               ) : (
                 <form onSubmit={handleSubmit}>
                   <div className="max-h-[600px] overflow-y-auto border border-[#2c2f34] rounded">
-                      <table className="min-w-full text-sm text-left text-white">
-                        <thead className="sticky top-0 bg-[#1f1f1f] z-10">
-                          <tr>
-                            <th className="px-4 py-2">S No.</th>
-                            <th className="px-4 py-2">Name</th>
-                            <th className="px-4 py-2">Library ID</th>
-                            <th className="px-4 py-2">Attendance</th>
-                            <th className="px-4 py-2">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[#2c2f34]">
-                          {permissionRequests
+                    <table className="min-w-full text-sm text-white text-center table-fixed">
+                      <thead className="sticky top-0 bg-[#1f1f1f] z-10">
+                        <tr>
+                          <th className="px-4 py-2 w-[8%]">S No.</th>
+                          <th className="px-4 py-2 w-[25%]">Name</th>
+                          <th className="px-4 py-2 w-[22%]">Library ID</th>
+                          <th className="px-4 py-2 w-[20%]">Attendance</th>
+                          <th className="px-4 py-2 w-[25%]">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#2c2f34]">
+                        {permissionRequests
                           .filter((req) => req && req.name && req.library_id)
                           .map((req, idx) => (
                             <tr key={req.library_id} className="border-b border-[#2c2f34]">
                               <td className="px-4 py-4">{idx + 1}</td>
-                              <td className="px-4 py-4 flex items-center gap-2">
-                                <img
-                                  src={noimage}
-                                  className="h-6 w-6 rounded-full object-cover"
-                                  alt="Member"
-                                />
-                                {req.name}
+                              <td className="px-4 py-4 h-full">
+                                <div className="flex items-center justify-center gap-2 h-full">
+                                  <img
+                                    src={noimage}
+                                    className="h-6 w-6 rounded-full object-cover"
+                                    alt="Member"
+                                  />
+                                  <span>{req.name}</span>
+                                </div>
                               </td>
                               <td className="px-4 py-4">{req.library_id}</td>
                               <td className="px-4 py-4">
                                 {DSA ? req.dsaAttendance : req.devAttendance}%
                               </td>
                               <td className="px-4 py-4">
-                                <div className="flex gap-2 flex-wrap">
+                                <div className="flex gap-2 flex-wrap justify-center">
                                   {["PRESENT", "ABSENT_WITHOUT_REASON", "ABSENT_WITH_REASON"].map(
                                     (status) => {
                                       const isSelected =
@@ -302,7 +301,7 @@ const MarkAttendance = () => {
                                           onClick={() =>
                                             handleStatusChange(req.library_id, status)
                                           }
-                                          className={`text-xs px-2 py-1 rounded text-white ${bg} hover:opacity-80 transition-opacity`}
+                                          className={`text-xs px-2 py-1 rounded text-white ${bg} hover:opacity-80 transition-opacity cursor-pointer`}
                                         >
                                           {status.replace(/_/g, " ")}
                                         </button>
@@ -321,9 +320,8 @@ const MarkAttendance = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`bg-[#0ec1e7] hover:bg-[#0ea2e7] px-4 py-2 rounded text-white text-sm transition-colors ${
-                        isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
+                      className={`bg-[#0ec1e7] hover:bg-[#0ea2e7] px-4 py-2 rounded text-white text-sm transition-colors cursor-pointer ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                     >
                       {isSubmitting ? "Submitting..." : "Submit"}
                     </button>
@@ -332,7 +330,7 @@ const MarkAttendance = () => {
               )}
             </div>
           )}
-          
+
           {isMarked === 2 && <AttendanceAlreadyMarked setIsMarked={setIsMarked} />}
         </div>
       </div>

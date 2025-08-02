@@ -195,8 +195,8 @@ const MarkAttendance = () => {
         className="fixed inset-0 z-0 w-full h-full"
       />
       
-      <div className="relative z-10 p-4 mt-10 md:mt-0 md:p-8 flex flex-col items-center justify-center min-h-screen">
-        <div className="absolute top-6 right-6 bg-[#1c1c1c]/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2 shadow z-10">
+      <div className="relative z-10 p-4 mt-10 md:mt-0 md:p-8 flex flex-col items-center min-h-screen">
+        <div className="absolute top-14 sm:top-6 right-6 bg-[#1c1c1c]/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2 shadow z-10">
           <div className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">
             {name?.charAt(0)?.toUpperCase() || "C"}
           </div>
@@ -265,7 +265,7 @@ const MarkAttendance = () => {
                             <tr key={req.library_id} className="border-b border-[#2c2f34]">
                               <td className="px-4 py-4">{idx + 1}</td>
                               <td className="px-4 py-4 h-full">
-                                <div className="flex items-center justify-center gap-2 h-full">
+                                <div className="flex items-center justify-start gap-2 h-full">
                                   <img
                                     src={noimage}
                                     className="h-6 w-6 rounded-full object-cover"
@@ -303,7 +303,7 @@ const MarkAttendance = () => {
                                           }
                                           className={`text-xs px-2 py-1 rounded text-white ${bg} hover:opacity-80 transition-opacity cursor-pointer`}
                                         >
-                                          {status.replace(/_/g, " ")}
+                                          {status=="ABSENT_WITHOUT_REASON"?"Absent":status=="ABSENT_WITH_REASON"?"Excused":"Prsent"}
                                         </button>
                                       );
                                     }

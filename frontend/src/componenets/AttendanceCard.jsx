@@ -91,8 +91,8 @@ function AttendanceCard() {
               />
               <defs>
                 <linearGradient id="grad" x1="1" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#0ec1e7" />
-                  <stop offset="100%" stopColor="#029e14" />
+                  <stop offset="0%" stopColor="#8aeefd" />
+                  <stop offset="100%" stopColor="#0ec1e7" />
                 </linearGradient>
               </defs>
               <circle

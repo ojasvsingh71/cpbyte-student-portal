@@ -11,7 +11,7 @@ import folder from "../assets/folder.png";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import TotalQuestions from "../assets/TotalQuestions.png";
 import GitContribution from "../assets/GitContribution.png";
-import streak from "../assets/streak.png";
+import streak from "../assets/Streak.png";
 import Ranking from "../assets/Ranking.png";
 import pr from "../assets/pull-request.png";
 import fork from "../assets/code-fork.png";

@@ -1,6 +1,19 @@
 # CPByte Student Portal
 
-This is the internal management portal for CPByte club @ KIET 
+Welcome to the internal management system of **CPByte**, the Technical Club of **KIET Group of Institutions**.
+
+This portal is made exclusively for **CPByte Club members**, providing tools to manage and monitor club activities. It helps streamline participation, progress tracking, and administrative tasks — all in one place.
+
+---
+
+## 🌟 Features
+
+- 🏆 **Leaderboard**: Track members’ coding progress and performance across platforms.
+- 📊 **Tracker**: Monitor problem-solving activity over time with visual analytics.
+- 🎯 **Attendance System**: Manage and view attendance for regular club meetings or contests.
+- 📅 **Event Management**: Create, schedule, and manage internal and public CPByte events, like mock contests, discussions, and workshops.
+
+---
 
 ## Getting Started
 
@@ -16,7 +29,7 @@ The backend is written in NodeJS, Express, PrismaORM and PostgreSQL.
 
 1. Clone this repo
 ```sh
-git clone git@github.com:Nemesis-AS/cpbyte-student-portal.git
+git clone https://github.com/CPBYTE/cpbyte-student-portal.git
 ```
 
 2. Navigate to the `backend` directory
@@ -39,8 +52,12 @@ npm install
 ```sh
 npx prisma migrate dev
 ```
+6. Seed the database
+```sh
+npx prisma db seed
+```
 
-6. Start the server
+7. Start the server
 ```sh
 npm run dev
 ```

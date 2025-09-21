@@ -17,8 +17,8 @@ function DetailCard() {
       <svg style={{ height: 0 }}>
         <defs>
           <linearGradient id="gradient" gradientTransform="rotate(90)">
-            <stop offset="0%" stopColor="#0ec1e7" />
-            <stop offset="100%" stopColor="#029e14" />
+            <stop offset="0%" stopColor="#8aeefd" />
+            <stop offset="100%" stopColor="#0ec1e7" />
           </linearGradient>
         </defs>
       </svg>
@@ -30,8 +30,8 @@ function DetailCard() {
         </div>
 
         {/* Avatar + Details */}
-        <div className="flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 items-center">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#0ec1e7] shadow-md">
+        <div className="flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 items-center w-full">
+          <div className="lg:w-32 lg:h-32 h-24 w-24 rounded-full overflow-hidden border-2 border-cyan-600 shadow-md">
             <img
               src={user?.avatar || noimage}
               alt="User avatar"
@@ -39,7 +39,7 @@ function DetailCard() {
             />
           </div>
 
-          <div className="flex flex-col gap-3 w-full">
+          <div className="flex flex-col gap-3 w-[80%]">
             <div className="text-center md:text-left">
               <span className="text-2xl font-semibold">{user?.name}</span>
             </div>
@@ -120,7 +120,7 @@ const ProgressCard = ({ value, label, icon }) => (
 
 const IconCard = ({ icon, label, value, assigned }) => (
   <div className="flex gap-3 items-center bg-black border border-neutral-800 p-3 rounded-2xl hover:scale-105 transition-transform duration-300 hover:shadow-[0_0_15px_rgba(14,193,231,0.4)]">
-    <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-cyan-700 to-green-600 shadow-md">
+    <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-cyan-700 to-[#8aeefd] shadow-md">
       {icon}
     </div>
     <div className="flex flex-col gap-1 truncate">

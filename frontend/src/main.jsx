@@ -6,11 +6,13 @@ import {Provider} from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import store from './redux/store.js'
 import {Toaster} from "react-hot-toast"
+import ScrollToTop from './componenets/ScrollToTop.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
     <BrowserRouter>
+      <ScrollToTop/>
       <App />
       <Toaster toastOptions={{
           style: {

@@ -17,6 +17,9 @@ function AddEvent({ selectedDate, months }) {
 
     if (!title.trim()) {
       setDisable(false);
+      toast.error("Title is required",{
+        id:toastId
+      })
       return;
     }
 

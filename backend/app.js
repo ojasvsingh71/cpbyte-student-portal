@@ -29,7 +29,7 @@ cron.schedule(CRON_TIMING, async () => {
 app.use(express.json({ limit: "20mb" }));
 app.use(
     cors({
-      origin: "http://localhost:5173",
+      origin: "https://cpbytestudentportal.netlify.app",
       credentials: true,
     })
   );

@@ -15,8 +15,29 @@ import SkillManagement from './componenets/SkillManagement'
 import AddPlatforms from './componenets/AddPlatform'
 import Leaderboard from './pages/Leaderboard'
 import TargetUserDashboard from './pages/TargetUserDashboard'
+import { useEffect } from 'react'
+import {setAccessToken, axiosInstance} from '../src/lib/axios.js'
+import { useNavigate } from "react-router-dom";
+import {toast} from 'react-hot-toast'
 
 function App() {
+    const navigate = useNavigate();
+
+
+   useEffect(() => {
+    (async () => {
+      try {
+        const res = await axiosInstance.get("/auth/refresh");
+        setAccessToken(res.data.accessToken);
+      } catch (err) {
+        console.log("No refresh token or expired → redirecting to login");
+        toast.error("Session expired, please login again.")
+        navigate("/login"); 
+      }
+    })();
+  }, [navigate]);
+
+
   return (
     <>
       <Routes>

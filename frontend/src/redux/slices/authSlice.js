@@ -25,7 +25,7 @@ export const logoutUser = createAsyncThunk(
                 }
             })
         return res.data;
-        } catch (error) {
+        } catch (err) {
             return rejectWithValue(err.response?.data?.message || "Logout failed");
         }
     }
@@ -52,8 +52,8 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = action.payload.user || null;
+        state.token = action.payload.data;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -67,6 +67,7 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled,(state)=>{
         state.user=null;
         state.token=null;
+         localStorage.removeItem("token"); 
       })
       .addCase(logoutUser.rejected,(state,action)=>{
         state.error=action.payload;

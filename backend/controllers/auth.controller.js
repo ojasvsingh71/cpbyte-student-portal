@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
-import { generateRefreshToken, hashToken, REFRESH_TOKEN_DAYS, generateAccessToken} from "../utils/authTokens.js";
+import { generateRefreshToken, hashToken, REFRESH_TOKEN_DAYS, generateAccessToken } from "../utils/authTokens.js";
 import prisma from "../config/db.js";
 import ResponseError from "../types/ResponseError.js";
 
@@ -23,7 +23,7 @@ export const login = asyncHandler(async (req, res) => {
   const tokenHash = hashToken(rawRefresh);
   const expiresAt = new Date(Date.now() + REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000);
 
-    await prisma.refreshToken.create({
+  await prisma.refreshToken.create({
     data: {
       userId: user.id,
       tokenHash,
@@ -35,35 +35,36 @@ export const login = asyncHandler(async (req, res) => {
 
 
 
-res.cookie("refreshToken", rawRefresh, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'none',
-  path: '/api/v1/auth',
-  maxAge: REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000,
-});
+  res.cookie("refreshToken", rawRefresh, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/api/v1/auth',
+    maxAge: REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000,
+  });
 
 
-  res.json({ success: true, message: "Login successfull", data: token });
+  res.json({ success: true, message: "Login successfull", data: token,refreshToken: rawRefresh });
 });
 
 
 export const refresh = asyncHandler(async (req, res) => {
-const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
-  if (!rawToken) return res.status(401).json({ error: 'No refresh token' });
-
-  const tHash = hashToken(rawToken);
-
+  
   // Transactional rotation -> create new token, mark old revoked and link
   try {
-    const result = await prisma.$transaction( async (tx) => {
+    // console.log(req);
+    const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
+    console.log(rawToken);
+    const tHash = hashToken(rawToken);
+    if (!rawToken) return res.status(401).json({ error: 'No refresh token' });
+    const result = await prisma.$transaction(async (tx) => {
       // find token
       const existing = await tx.refreshToken.findUnique({
         where: { tokenHash: tHash },
       });
 
       if (!existing) {
-       
+
         return { ok: false, reason: 'invalid' };
       }
 
@@ -108,7 +109,7 @@ const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
     res.cookie('refreshToken', result.newRaw, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: 'lax',
       path: '/api/v1/auth',
       maxAge: REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000,
     });
@@ -186,7 +187,7 @@ export const register = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-    const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
+  const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
   if (rawToken) {
     const tHash = hashToken(rawToken);
     await prisma.refreshToken.updateMany({
@@ -195,12 +196,12 @@ export const logout = asyncHandler(async (req, res) => {
     });
   }
 
- res.clearCookie("refreshToken", {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "none",
-  path: "/api/v1/auth",   
-});
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/api/v1/auth",
+  });
 
   res.status(200).json({ success: true, message: "Logout successful" });
 });

@@ -33,7 +33,13 @@ export const login = asyncHandler(async (req, res) => {
     }
   });
 
-
+    res.cookie("token", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 1000, // 1 hour
+  });
 
   res.cookie("refreshToken", rawRefresh, {
     httpOnly: true,
@@ -55,8 +61,9 @@ export const refresh = asyncHandler(async (req, res) => {
     // console.log(req);
     const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
     console.log(rawToken);
-    const tHash = hashToken(rawToken);
     if (!rawToken) return res.status(401).json({ error: 'No refresh token' });
+    const tHash = hashToken(rawToken);
+
     const result = await prisma.$transaction(async (tx) => {
       // find token
       const existing = await tx.refreshToken.findUnique({

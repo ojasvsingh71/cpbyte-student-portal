@@ -1,8 +1,8 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET;
-export const ACCESS_TOKEN_EXPIRES = 30; 
+export const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET;
+export const ACCESS_TOKEN_EXPIRES = "30m"; 
 export const REFRESH_TOKEN_DAYS = 30;
 
 export function generateRefreshToken() {
@@ -18,9 +18,9 @@ export function generateAccessToken(user) {
       library_id: user.library_id, 
       role: user.role 
     },
-    process.env.JWT_SECRET,
+    ACCESS_TOKEN_SECRET,
     { 
-      expiresIn: '30m' 
+      expiresIn: ACCESS_TOKEN_EXPIRES 
     }
   );
 }

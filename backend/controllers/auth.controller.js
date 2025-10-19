@@ -37,7 +37,7 @@ export const login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    path: "/",
+    path: "/api/v1/auth",
     maxAge: 60 * 60 * 1000, // 1 hour
   });
 
@@ -45,7 +45,7 @@ export const login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    path: '/',
+    path: "/api/v1/auth",
     maxAge: REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000,
   });
 
@@ -126,9 +126,10 @@ export const refresh = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      path: '/',
+      path: "/api/v1/auth",
       maxAge: REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000,
     });
+console.log("Sent new refresh token cookie:", result.newRaw);
 
     return res.json({ accessToken: result.newAccess });
   } catch (err) {
@@ -216,7 +217,7 @@ export const logout = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    path: "/",
+    path: "/api/v1/auth",
   });
 
   res.status(200).json({ success: true, message: "Logout successful" });

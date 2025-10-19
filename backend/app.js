@@ -20,7 +20,6 @@ import { refreshProfiles } from "./utils/cron.js";
 config();
 
 const app = express();
-app.use(cookieParser());
 
 const CRON_TIMING = process.env.CRON_TIMING || "0 */2 * * *";
 cron.schedule(CRON_TIMING, async () => {
@@ -31,13 +30,15 @@ cron.schedule(CRON_TIMING, async () => {
 
 app.use(express.json({ limit: "20mb" }));
 app.use(
-    cors({
-      origin: ["https://cpbytestudentportal.netlify.app",
-        "http://localhost:5173"
-      ],
-      credentials: true,
-    })
-  );
+  cors({
+    origin: ["https://cpbytestudentportal.netlify.app",
+      "http://localhost:5173"
+    ],
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
 

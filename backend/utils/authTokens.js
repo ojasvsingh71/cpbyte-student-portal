@@ -1,5 +1,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import { config } from "dotenv";
+config();
 
 export const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET;
 export const ACCESS_TOKEN_EXPIRES = "30m"; 

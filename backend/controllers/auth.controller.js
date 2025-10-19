@@ -33,7 +33,7 @@ export const login = asyncHandler(async (req, res) => {
     }
   });
 
-    res.cookie("token", accessToken, {
+  res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -45,17 +45,17 @@ export const login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    path: '/api/v1/auth',
+    path: '/',
     maxAge: REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000,
   });
 
 
-  res.json({ success: true, message: "Login successfull", data: token,refreshToken: rawRefresh });
+  res.json({ success: true, message: "Login successfull", data: token, refreshToken: rawRefresh });
 });
 
 
 export const refresh = asyncHandler(async (req, res) => {
-  
+
   // Transactional rotation -> create new token, mark old revoked and link
   try {
     // console.log(req);
@@ -63,6 +63,10 @@ export const refresh = asyncHandler(async (req, res) => {
     console.log(rawToken);
     if (!rawToken) return res.status(401).json({ error: 'No refresh token' });
     const tHash = hashToken(rawToken);
+
+    console.log("Incoming refresh token:", rawToken);
+    console.log("Token hash:", tHash);
+
 
     const result = await prisma.$transaction(async (tx) => {
       // find token
@@ -106,7 +110,12 @@ export const refresh = asyncHandler(async (req, res) => {
       const user = await tx.user.findUnique({ where: { id: existing.userId } });
       const newAccess = generateAccessToken(user);
       return { ok: true, newRaw, newAccess, userId: user.id };
-    });
+    },
+      {
+        timeout: 10000,
+        maxWait: 5000,
+      }
+    );
 
     if (!result.ok) {
       return res.status(401).json({ error: 'Refresh failed', reason: result.reason });
@@ -117,7 +126,7 @@ export const refresh = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      path: '/api/v1/auth',
+      path: '/',
       maxAge: REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000,
     });
 
@@ -207,7 +216,7 @@ export const logout = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    path: "/api/v1/auth",
+    path: "/",
   });
 
   res.status(200).json({ success: true, message: "Logout successful" });

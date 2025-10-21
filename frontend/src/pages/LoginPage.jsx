@@ -70,7 +70,7 @@ function LoginPage() {
   };
 
   return (
-    <div ref={vantaRef} className="flex items-center justify-center min-h-screen w-full bg-gray-950">
+    <div ref={vantaRef} className="flex flex-col items-center justify-center min-h-screen w-full bg-gray-950 p-4">
       <div className="w-full max-w-md p-8 space-y-8 backdrop-blur-sm rounded-2xl shadow-xl border border-white z-10">
         <div className="text-center">
           <div className="flex justify-center">
@@ -139,6 +139,41 @@ function LoginPage() {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Testing Credentials */}
+      <div className="w-full max-w-md mt-6 p-4 backdrop-blur-sm rounded-lg border border-gray-700 bg-gray-900/50 z-10">
+        <h3 className="text-sm font-semibold text-gray-300 mb-3 text-center">Test Credentials</h3>
+        
+        {/* Coordinator Credentials */}
+        <div className="mb-3">
+          <p className="text-xs font-semibold text-indigo-400 mb-1">Coordinator:</p>
+          <div className="space-y-1 text-xs text-gray-400">
+            <p className="flex justify-between">
+              <span className="font-medium text-gray-300">Library ID:</span>
+              <span className="font-mono text-gray-200">2327CSE1241</span>
+            </p>
+            <p className="flex justify-between">
+              <span className="font-medium text-gray-300">Password:</span>
+              <span className="font-mono text-gray-200">rajatjain</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Member Credentials */}
+        <div>
+          <p className="text-xs font-semibold text-blue-400 mb-1">Member:</p>
+          <div className="space-y-1 text-xs text-gray-400">
+            <p className="flex justify-between">
+              <span className="font-medium text-gray-300">Library ID:</span>
+              <span className="font-mono text-gray-200">2428CSEAI1029</span>
+            </p>
+            <p className="flex justify-between">
+              <span className="font-medium text-gray-300">Password:</span>
+              <span className="font-mono text-gray-200">CPBYTE123</span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

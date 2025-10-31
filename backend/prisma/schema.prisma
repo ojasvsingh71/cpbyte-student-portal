@@ -32,6 +32,7 @@ model User {
   updatedAt   DateTime     @updatedAt
   attendances Attendance[]
   tracker     TrackerDashboard?
+  refreshToken RefreshToken[]
 }
 
 model TrackerDashboard {
@@ -126,6 +127,24 @@ model AttendanceLog {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+
+model RefreshToken {
+  id           Int      @id @default(autoincrement())
+  tokenHash    String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  revoked      Boolean  @default(false)
+  revokedAt    DateTime?
+  replacedById Int?
+  createdByIp  String?
+  userAgent    String?
+
+  @@index([userId])
+}
+
 
 enum Role {
   ADMIN

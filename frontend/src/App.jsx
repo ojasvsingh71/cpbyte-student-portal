@@ -15,8 +15,55 @@ import SkillManagement from './componenets/SkillManagement'
 import AddPlatforms from './componenets/AddPlatform'
 import Leaderboard from './pages/Leaderboard'
 import TargetUserDashboard from './pages/TargetUserDashboard'
+import { useEffect } from 'react'
+import { setAccessToken, axiosInstance } from '../src/lib/axios.js'
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-hot-toast'
 
 function App() {
+  const navigate = useNavigate();
+
+
+  // useEffect(() => {
+  //   if (location.pathname === "/login" || location.pathname === "/register") return;
+
+  //   (async () => {
+  //     try {
+  //       const res = await axiosInstance.post("/auth/refresh", {}, { withCredentials: true });
+  //       console.log("Refresh response:", res);
+  //       setAccessToken(res.data.accessToken);
+  //     } catch (err) {
+  //       console.log("No refresh token or expired → redirecting to login",err);
+  //       toast.error("Session expired, please login again.")
+  //       navigate("/login");
+  //     }
+  //   })();
+  // }, [navigate, location.pathname]);
+
+  useEffect(() => {
+  if (location.pathname === "/login" || location.pathname === "/register") return;
+
+  let refreshing = false;
+
+  (async () => {
+    if (refreshing) return; // prevent duplicate calls
+    refreshing = true;
+
+    try {
+      const res = await axiosInstance.post("/auth/refresh", {}, { withCredentials: true });
+      setAccessToken(res.data.accessToken);
+    } catch (err) {
+      console.log("No refresh token or expired → redirecting to login", err);
+      toast.error("Session expired, please login again.");
+      navigate("/login");
+    } finally {
+      refreshing = false;
+    }
+  })();
+}, [navigate, location.pathname]);
+
+
+
   return (
     <>
       <Routes>

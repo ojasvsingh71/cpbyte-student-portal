@@ -99,6 +99,8 @@ model Attendance {
   subject   Subject
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
+
+  @@unique([userId, date, subject])
 }
 
 model Schedule {

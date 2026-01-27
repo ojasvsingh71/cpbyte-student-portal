@@ -54,7 +54,24 @@ app.use("/api/v1/schedule", scheduleRoutes)
 
 app.use("/api/v1/Tracker", trackerRoutes);
 
+app.get("/api/v1/health", (req, res)=>{
+
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date(),
+  });
+
+})
+
 app.use(errorHandler);
+
+app.get("/api/v1/delete", (req, res)=>{
+
+res.status(200).json({
+  "message" : "User deleted successfully"
+})
+})
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server is running on Port ${PORT}`));
